@@ -116,16 +116,35 @@
                                 ?> 
                                 <div class="row" id="loadDetail">
                                     <div class="col-lg-8">
-                                        <img src="Content/images/<?php echo $detail['img']; ?>" alt="" width="100%">
+                                        <div class="image-container">
+                                            <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big">
+                                            <div class="image-row">
+                                                <?php 
+                                                    $item_img = $detail['img_name'];
+                                                    $img_arr = explode(' - ', $item_img);
+                                                    $img_num = count($img_arr);
+                                                    for($i = 0; $i < $img_num; $i++){
+                                                        echo "<img src='Content/images/".$img_arr[$i]."' class='image-small'";
+                                                    }
+                                                ?>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="row d-flex justify-content-between">
                                             <h4>Thông tin chung</h4>
-                                            <span><i class="fas fa-pencil-ruler fa-lg" style="color: #0d6efd;"></i></i><?php echo " " . $detail['square_meter'] . "m²";?></span>
-                                            <span><i class="fas fa-users fa-lg" style="color: #0d6efd";></i><?php echo " " . $detail['quantity'] . " khách"; ?></span>
+                                            <div>
+                                                <ul>
+                                                    <li><?php echo " " . $detail['square_meter'] . "m²";?></li>
+                                                    <li><?php echo " " . $detail['quantity'] . " khách"; ?></li>
+                                                </ul>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div>
+                                                <hr>
+                                                <h4>Tiện ích</h4>
                                                 <?php  
                                                     $item = $detail['service_name'];
                                                     $service = explode(" - ", $item);
@@ -136,7 +155,16 @@
                                                             <li><?php echo $service[$i]; ?></li>
                                                         <?php endfor; ?>
                                                     </ul>
-                                                
+                                                <hr>
+                                                <h4>Về phòng này</h4>
+                                                <?php
+                                                    $item_des  = $detail['description'];
+                                                    $des = explode(' - ', $item_des);
+                                                    $des_num = count($des);
+                                                    for($i = 0; $i < $des_num; $i++){
+                                                        echo "- $des[$i] </br>";
+                                                    }
+                                                ?>                                                
                                             </div>
                                         </div>
                                     </div>
@@ -167,3 +195,28 @@
 </script>
 
 <script src="ajax/detail_modal.js"></script>
+<style>
+    .image-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .image-big {
+        width: 500px; /* Adjust width as needed */
+        height: auto;
+        margin-bottom: 20px; /* Adjust spacing as needed */
+    }
+
+    .image-row {
+        display: flex;
+        justify-content: space-between;
+        width: 100%; /* Match width of the parent container */
+    }
+
+    .image-small {
+        width: 150px; /* Adjust width of each small image */
+        height: auto;
+    }
+
+</style>
