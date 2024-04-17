@@ -248,17 +248,11 @@
                 $id = $_GET['id'];
                 $room = new room();
                 $detail =  $room->getDetailRooms($id);
-                $result = $detail->execute();
+                $results = $detail->execute();
                 if($result){
-                    $res = array(
-                        "status" => "success",
-                        "message" => "Đã lấy được detail_room"
-                    );
+                    $result = $results;
                 }else{
-                    $res = array(
-                        "status"=> "fail",
-                        "message" => "Chưa lấy được detail_room"
-                    );
+                    $result = 0;
                 };
                 echo json_encode($res);
             }

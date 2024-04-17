@@ -100,82 +100,86 @@
                         
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal<?php echo $set['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-xl">*
-                            <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <?php echo $set['name']; ?></h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <?php 
-                                    $id = $set['id'];
-                                    $detail = $room->getDetailRooms($id);
-                                    $detail = $detail->fetch()
-                                ?> 
-                                <div class="row" id="loadDetail">
-                                    <div class="col-lg-8">
-                                        <div class="image-container">
-                                            <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big">
-                                            <div class="image-row">
-                                                <?php 
-                                                    $item_img = $detail['img_name'];
-                                                    $img_arr = explode(' - ', $item_img);
-                                                    $img_num = count($img_arr);
-                                                    for($i = 0; $i < $img_num; $i++){
-                                                        echo "<img src='Content/images/".$img_arr[$i]."' class='image-small'";
-                                                    }
-                                                ?>
-                                            </div>
-                                        </div>
-                                        
+                            <div class="modal-dialog modal-xl">*
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <?php echo $set['name']; ?></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <div class="row d-flex justify-content-between">
-                                            <h4>Thông tin chung</h4>
-                                            <div>
-                                                <ul>
-                                                    <li><?php echo " " . $detail['square_meter'] . "m²";?></li>
-                                                    <li><?php echo " " . $detail['quantity'] . " khách"; ?></li>
-                                                </ul>
+                                    <div class="modal-body">
+                                        <?php 
+                                            $id = $set['id'];
+                                            $detail = $room->getDetailRooms($id);                                            
+                                            $detail = $detail->fetch()
+                                        ?> 
+                                        <div class="row" id="loadDetail">
+                                            <?php if(isset($detail['id'])){ ?>
+                                            <div class="col-lg-8 bg-dark card image-container">
+                                                <img src="Content/images/<?php echo $detail['img']; ?>" class="img-fluid rounded-start mb-4" width="90%">
+                                                <div class="image-row">
+                                                    <?php 
+                                                        $item_img = $detail['img_name'];
+                                                        $img_arr = explode(' - ', $item_img);
+                                                        $img_num = count($img_arr);
+                                                        for($i = 0; $i < $img_num; $i++){
+                                                            echo "<img src='Content/images/".$img_arr[$i]."' class='image-small'>";
+                                                        }
+                                                    ?>
+                                                </div>                                        
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div>
-                                                <hr>
-                                                <h4>Tiện ích</h4>
-                                                <?php  
-                                                    $item = $detail['service_name'];
-                                                    $service = explode(" - ", $item);
-                                                    $set_sv = count($service);    
-                                                ?>
-                                                    <ul>
-                                                        <?php for($i = 0; $i < $set_sv; $i++): ?>
-                                                            <li><?php echo $service[$i]; ?></li>
-                                                        <?php endfor; ?>
-                                                    </ul>
-                                                <hr>
-                                                <h4>Về phòng này</h4>
-                                                <?php
-                                                    $item_des  = $detail['description'];
-                                                    $des = explode(' - ', $item_des);
-                                                    $des_num = count($des);
-                                                    for($i = 0; $i < $des_num; $i++){
-                                                        echo "- $des[$i] </br>";
-                                                    }
-                                                ?>                                                
+                                            <div class="col-lg-4">
+                                                <div class="row d-flex justify-content-between">
+                                                    <h4>Thông tin chung</h4>
+                                                    <div>
+                                                        <ul>
+                                                            <li><?php echo " " . $detail['square_meter'] . "m²";?></li>
+                                                            <li><?php echo " " . $detail['quantity'] . " khách"; ?></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div>
+                                                        <hr>
+                                                        <h4>Tiện ích</h4>
+                                                        <?php  
+                                                            $item = $detail['service_name'];
+                                                            $service = explode(" - ", $item);
+                                                            $set_sv = count($service);    
+                                                        ?>
+                                                            <ul>
+                                                                <?php for($i = 0; $i < $set_sv; $i++): ?>
+                                                                    <li><?php echo $service[$i]; ?></li>
+                                                                <?php endfor; ?>
+                                                            </ul>
+                                                        <hr>
+                                                        <h4>Về phòng này</h4>
+                                                        <?php
+                                                            $item_des  = $detail['description'];
+                                                            $des = explode(' - ', $item_des);
+                                                            $des_num = count($des);
+                                                            for($i = 0; $i < $des_num; $i++){
+                                                                echo "- $des[$i] </br>";
+                                                            }
+                                                        ?> 
+                                                        <br>
+                                                        <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded text-center fw-bolder fs-6">
+                                                            <?php
+                                                                echo "Khởi điểm từ <span style='color: rgb(255, 94, 31);'>".$detail['sale']."</span> VNĐ/phòng/đêm";
+                                                            ?>
+                                                            <a class="btn btn-primary" width=""100% href="admin_index.php?action=admin_room_book">Chọn phòng này</a>
+                                                        </div>                                               
+                                                    </div>
+                                                </div>
                                             </div>
+                                            <?php }else{
+                                                echo "<h3 class='text-center'>Chưa có thông tin chi tiết của phòng này</h3>";
+                                            } ?>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                            </div>
-                        </div>
                         </div>
                         <?php endwhile; ?>
                     </tbody>
@@ -202,21 +206,17 @@
         align-items: center;
     }
 
-    .image-big {
-        width: 500px; /* Adjust width as needed */
-        height: auto;
-        margin-bottom: 20px; /* Adjust spacing as needed */
-    }
-
     .image-row {
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         width: 100%; /* Match width of the parent container */
     }
 
     .image-small {
-        width: 150px; /* Adjust width of each small image */
+        width: 200px; /* Adjust width of each small image */
         height: auto;
+        border-radius: 10px
     }
+
 
 </style>

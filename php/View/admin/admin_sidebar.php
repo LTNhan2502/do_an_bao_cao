@@ -37,7 +37,7 @@
         <div id="collapseRoom" class="collapse" aria-labelledby="headingRoom" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=create_room">Đặt phòng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=room_bin">Xem phòng theo lịch</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=room_bin">Xem phòng đã hủy</a>
             </div>
