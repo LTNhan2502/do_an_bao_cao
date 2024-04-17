@@ -32,11 +32,51 @@
             return $result;
         }
 
+        //Phương thức lấy ra chi tiết một room
+        function getDetailRooms($id){
+            $db = new connect();
+            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.id = $id";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức thay đổi name
+        function changeName($id, $value_name){
+            $db = new connect();
+            $query = "UPDATE room SET room.name = '$value_name' WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
         //Phương thức lấy kind
         function getKind(){
             $db = new connect();
             $select = "SELECT * FROM kind";
             $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức thay đổi kind
+        function changeKind($id, $kind_id){
+            $db = new connect();
+            $query = "UPDATE room SET room.kind_id = $kind_id WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi price
+        function changePrice($id, $price_value){
+            $db = new connect();
+            $query = "UPDATE room SET room.price = $price_value WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi sale
+        function changeSale($id, $sale_value){
+            $db = new connect();
+            $query = "UPDATE room SET room.sale = $sale_value WHERE room.id = $id";
+            $result = $db->exec($query);
             return $result;
         }
 
@@ -49,9 +89,9 @@
         }
 
         //Phương thức thêm room mới vào database
-        function createRoom($name, $kind, $price, $sale, $img){
+        function createRoom($name, $kind, $price, $sale, $status_id, $img){
             $db = new connect();
-            $query = "INSERT INTO room(id, name, kind_id, price, sale, img) VALUES(NULL, '$name', $kind, $price, $sale, '$img')";
+            $query = "INSERT INTO room(id, name, kind_id, price, sale, status_id, img) VALUES(NULL, '$name', $kind, $price, $sale, $status_id, '$img')";
             $result = $db->exec($query);
             return $result;
         }

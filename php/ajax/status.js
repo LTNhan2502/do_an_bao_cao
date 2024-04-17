@@ -1,4 +1,129 @@
 $(document).ready(function(){
+    //Chỉnh sửa name
+    $(document).on('change', '#name', function(){
+        let id = $(this).data('id');
+        let name_value  =$(this).val();
+        let action = "update_name";
+        $.ajax({
+            url: 'Controller/admin/admin_room_list.php?act=update_name',
+            method: "POST",
+            data: {
+                id,
+                name_value,
+                action
+            },
+            success: function(res){
+                let data = JSON.parse(res);
+                if(data.status == 'success'){
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: "Thay đổi thành công!",
+                        icon: "success",
+                        timer: 900
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        icon: "error",
+                        timer: 2700
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                    title: "Thất bại!",
+                    text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
+                    icon: "error",
+                    timer: 3500
+                })
+            }
+        })
+    });
+
+    //Chỉnh sửa price
+    $(document).on('change', '#price', function(){
+        let price_value = $(this).val();
+        let id = $(this).data('id');
+        $.ajax({
+            url: 'Controller/admin/admin_room_list.php?act=update_price',
+            method: "POST",
+            data: {
+                price_value,
+                id
+            },
+            success: function(res){
+                let data = JSON.parse(res);
+                if(data.status == 'success'){
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: "Thay đổi thành công!",
+                        icon: "success",
+                        timer: 900
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: "Thay đổi thất bại!",
+                        icon: "error",
+                        timer: 2700
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                    title: "Thất bại!",
+                    text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
+                    icon: "error",
+                    timer: 3000
+                });
+            }
+        })
+    });
+
+    //Chỉnh sửa sale
+    $(document).on('change', '#sale', function(){
+        let sale_value = $(this).val();
+        let id = $(this).data('id');
+        let price_value = $(this).closest('tr').find("#price").val(); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
+        $.ajax({
+            url: 'Controller/admin/admin_room_list.php?act=update_sale',
+            method: "POST",
+            data: {
+                sale_value,
+                id,
+                price_value
+            },
+            success: function(res){
+                let data = JSON.parse(res);
+                if(data.status == 'success'){
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: "Thay đổi thành công!",
+                        icon: "success",
+                        timer: 900
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: data.message,
+                        icon: "error",
+                        timer: 2500
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                    title: "Thất bại!",
+                    text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
+                    icon: "error",
+                    timer: 3000
+                });
+            }
+        })
+    });
+
+    //Chỉnh sửa status
    $(document).on('change', '#status', function() {
         let status_id = $(this).val();
         let id = $(this).find(":selected").data('id'); //Lấy ra data-id của option đang chọn
@@ -15,14 +140,14 @@ $(document).ready(function(){
                         title: "Thành công",
                         text: "Thay đổi thành công!",
                         icon: "success",
-                        timer: 1000
+                        timer: 900
                     });                
                 }else{
                     Swal.fire({
                         title: "Thất bại",
-                        text: "Thay đổi không thành công! Kiểm tra lại",
+                        text: "Thay đổi thất bại! Kiểm tra lại",
                         icon: "error",
-                        timer: 1000
+                        timer: 2500
                     })
                 }
             },
@@ -31,9 +156,54 @@ $(document).ready(function(){
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL",
                     icon: "error",
-                    timer: 1000
+                    timer: 3000
                 });
             }
         })
-   })
+   });
+
+   //Chỉnh sửa kind
+   $(document).on('change', '#kind', function(){
+        let kind_id = $(this).val();
+        let id = $(this).find(":selected").data("id");
+        let kind_name = $(this).find(":selected").data("act");    
+        $.ajax({
+            url: "Controller/admin/admin_room_list.php?act="+kind_name,
+            method: "POST",
+            data: {
+                kind_id,
+                id,
+                kind_name
+            },
+            success: function(res){
+                let data = JSON.parse(res);
+                console.log(data);
+                if(data.status == "success"){
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: "Thay đổi thành công!",
+                        icon: "success",
+                        timer: 900
+                    });
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: "Thay đổi không thành công! Kiểm tra lại!",
+                        icon: "error",
+                        timer: 2500
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                    title: "Lỗi",
+                    text: "Lỗi khác ở hệ thống, connect, CSDL!",
+                    icon: "error",
+                    timer: 3000
+                });
+            }
+        })
+   });
+
+   
 })

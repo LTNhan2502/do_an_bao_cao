@@ -21,11 +21,12 @@
                 $kind = $_POST['kind'];
                 $price = $_POST['price'];
                 $sale = $_POST['sale'];
+                $status_id = $_POST['status_id'];
                 $img = $_FILES['img']['name'];
 
                 if ($flag == false) {                 
                     $room = new room();
-                    $result = $room->createRoom($name, $kind, $price, $sale, $img);                    
+                    $result = $room->createRoom($name, $kind, $price, $sale, $status_id, $img);                    
                     echo "
                         <script>
                             Swal.fire({
@@ -34,7 +35,7 @@
                                 icon: 'success'
                             });
                             setTimeout(() => {
-                                window.location.href = './admin_index.php?action=admin_room_list&act=room_create';
+                                window.location.href = './admin_index.php?action=admin_room_list&act=create_room';
                             }, 1600);
                       </script>";
                     // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list&act=room_create"/>';
@@ -57,47 +58,6 @@
         case "update_room":
             include_once "View/admin/admin_room_insert.php";
             break;
-        case "update_action": 
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
-                $id = $_POST['id'];
-                $name = $_POST['name'];
-                $price = $_POST['price'];
-                $sale = $_POST['sale'];
-                $img = $_FILES['img']['name'];
-                $kind_id = $_POST['kind'];
-                $status_id = $_POST['status_id'];
-
-                $room = new room();
-                $result = $room->updateRoom($id, $name, $kind_id, $price, $sale, $status_id, $img);
-                if($result){
-                    echo "
-                        <script>
-                            Swal.fire({
-                                title: 'Thành công!',
-                                text: 'Cập nhật thành công!',
-                                icon: 'success'
-                            });
-                            setTimeout(() => {
-                                window.location.href = './admin_index.php?action=admin_room_list';
-                            }, 1600);
-                      </script>";
-                    // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list"/>';
-                }else{
-                    echo "
-                        <script>
-                            Swal.fire({
-                                title: 'Thất bại!',
-                                text: 'Cập nhật thất bại!',
-                                icon: 'error'
-                            });
-                            setTimeout(() => {
-                                window.location.href = './admin_index.php?action=admin_room_list';
-                            }, 1600);
-                      </script>";
-                    // include_once "View/admin/admin_room_list.php";
-                }
-            }       
-            break;
         case "set_empty":            
             $id = $_POST['id'];
             $room = new room();
@@ -112,7 +72,7 @@
             } else {
                 $res = array(
                     "status" => "fail",
-                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode"
+                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode, value view"
                 );
             }
             echo json_encode($res);
@@ -131,7 +91,7 @@
             }else{
                 $res = array(
                     "status" => "fail",
-                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode"
+                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode, value view"
                 );
                 // include_once "View/admin/admin_room_list.php";
             }
@@ -151,11 +111,158 @@
             }else{
                 $res = array(
                     "status" => "success",
-                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode"
+                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode, value view"
                 );
             }
             echo json_encode($res);
-            break;     
+            break; 
+        case "Single":
+            $id = $_POST['id'];
+            $Kind_id = $_POST['kind_id'];
+            $room = new room();
+            $result = $room->changeKind($id, $Kind_id);
+            // print_r($result);exit;
+            if($result){
+                $res = array(
+                    "status" => "success",
+                    "message" => "changed"
+                );
+            }else{
+                $res = array(
+                    "status" => "fail",
+                    "message" => "Lenh SQL, kieu du lieu(JSON), json_encode, value view"
+                );
+            }
+            echo json_encode($res);
+            break;
+        case "Family":
+            $id = $_POST['id'];
+            $kind_id = $_POST['kind_id'];
+            $room = new room();
+            $result = $room->changeKind($id, $kind_id);
+            if($result){
+                $res = array(
+                    "status" => "success",
+                    "message" => "changed"
+                );
+            }else{
+                $res = array(
+                    "status" => "fail",
+                    "message" => "Lenh SQL, kieu du lieu (JSON), json_encode, value view"
+                );
+            }
+            echo json_encode($res);
+            break;
+        case "Presidential":
+            $id = $_POST['id'];
+            $kind_id = $_POST['kind_id'];
+            $room = new room();
+            $result = $room->changeKind($id, $kind_id);
+            if($result){
+                $res = array(
+                    "status" => "success",
+                    "message" => "changed"
+                );
+            }else{
+                $res = array(
+                    "status" => "fail",
+                    "message" => "Lenh SQL, kieu du lieu (JSON), json_encode, value view"
+                );
+            }
+            echo json_encode($res);
+            break;
+        case "update_name":
+            if(isset($_POST['name_value']) && isset($_POST['id'])){
+                $id = $_POST['id'];
+                $name_value = $_POST['name_value'];
+                $room = new room();
+                $result = $room->changeName($id, $name_value);
+                if($result){
+                    $res = array(
+                        "status" => "success",
+                        "message" => "changed"
+                    );
+                }else{
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Lenh SQL, kieu du lieu (JOSN), json_encode, value view"
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case "update_price":
+            if(isset($_POST['price_value']) && isset($_POST['id'])){
+                $id = $_POST['id'];
+                $price_value = $_POST['price_value'];
+                $room = new room();
+                $result = $room->changePrice($id, $price_value);
+                if($result){
+                    $res = array(
+                        "status" => "success",
+                        "message" => "changed"
+                    );
+                }else{
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Lenh SQL, kieu du lieu (JSON), json_encode, value view"
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case "update_sale":
+            if(isset($_POST['id']) && isset($_POST['sale_value']) && isset($_POST['price_value'])){
+                $flag = false;
+                $id = $_POST['id'];
+                $sale_value = $_POST['sale_value'];
+                $price_value = $_POST['price_value'];
+                $room = new room();
+                if($sale_value < $price_value){
+                    $result = $room->changeSale($id, $sale_value);
+                    $flag = false;
+                }else{
+                    $flag = true;
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Lệnh SQL, kiểu dữ liệu (JSON), json_encode, value view",
+                    );
+                }
+                if($flag == false){
+                    $res = array(
+                        "status" => "success",
+                        "message" => "changed"
+                    );
+                }else{
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Sale phải nhỏ hơn Price!"
+                    );
+                }
+                
+                echo json_encode($res);
+            }
+            break;
+        case "detail":
+            if(isset($_GET['id'])){
+                $id = $_GET['id'];
+                $room = new room();
+                $detail =  $room->getDetailRooms($id);
+                $result = $detail->execute();
+                if($result){
+                    $res = array(
+                        "status" => "success",
+                        "message" => "Đã lấy được detail_room"
+                    );
+                }else{
+                    $res = array(
+                        "status"=> "fail",
+                        "message" => "Chưa lấy được detail_room"
+                    );
+                };
+                echo json_encode($res);
+            }
             
+            break;
     }
 ?>
