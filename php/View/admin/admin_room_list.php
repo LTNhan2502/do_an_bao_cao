@@ -1,6 +1,16 @@
 <div class="container-fluid">
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+    <div class="shadow-lg p-3 mb-5 bg-white rounded row">
+        <div class="col-lg-5">
+            <input type="date" class="form-control" name="arrive" id="arrive">
+        </div>
+        <div class="col-lg-5">
+            <input type="date" class="form-control" name="leave" id="leave">
+        </div>
+        <div class="col-lg-2">
+            <button class="btn btn-primary"><i class="fas fa-search"></i> Tìm khách sạn</button>
+        </div>
+    </div>    
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">

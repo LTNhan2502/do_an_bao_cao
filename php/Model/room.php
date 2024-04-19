@@ -32,10 +32,26 @@
             return $result;
         }
 
-        //Phương thức lấy ra chi tiết một room
+        //Phương thức lấy ra chi tiết một room (admin)
         function getDetailRooms($id){
             $db = new connect();
             $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.id = $id";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả detail_room
+        function getDetail_room(){
+            $db = new connect();
+            $select = "SELECT * FROM detail_room";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả, như getDetailRooms nhưng không cần ID
+        function getAllDetailRoom(){
+            $db = new connect();
+            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id";
             $result = $db->getList($select);
             return $result;
         }

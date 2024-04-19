@@ -7,6 +7,10 @@
         $path = "Model/";
         include $path.$classname.'.php';
     }
+
+    // if(!isset($_SESSION['admin'])){
+    //     header("Location:./View/admin/admin_login.php");
+    // }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -113,7 +117,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="admin_index.php?action=admin_login&act=logout">Logout</a>
                 </div>
             </div>
         </div>

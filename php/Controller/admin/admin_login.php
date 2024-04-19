@@ -26,5 +26,11 @@
                 }
             }
             break;
+        case "logout":
+            unset($_SESSION["admin"]);
+            unset($_SESSION["tenadmin"]);
+            echo "<script> alert('Đăng xuất thành công'); </script>";
+            include_once "./View/admin/admin_login.php";
+            break;
     }
 ?>
