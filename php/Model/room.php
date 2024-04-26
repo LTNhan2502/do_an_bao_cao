@@ -32,6 +32,14 @@
             return $result;
         }
 
+        //Phương thức lấy ra cácc room chưa đặt
+        function getEmptyRoom(){
+            $db = new connect();
+            $select = "SELECT * FROM room WHERE room.arrive IS NULL AND room.status_id = 1";
+            $result = $db->getList($select);
+            return $result;
+        }
+
         //Phương thức lấy ra chi tiết một room (admin)
         function getDetailRooms($id){
             $db = new connect();
@@ -104,7 +112,7 @@
             return $result;
         }
 
-        //Phương thức thêm room mới vào database
+        //Phương thức thêm room mới vào database (thêm chi tiết)
         function createRoom($name, $kind, $price, $sale, $status_id, $img){
             $db = new connect();
             $query = "INSERT INTO room(id, name, kind_id, price, sale, status_id, img) VALUES(NULL, '$name', $kind, $price, $sale, $status_id, '$img')";
@@ -112,7 +120,7 @@
             return $result;
         }
 
-        //Phương thức lấy ra thông tin của một room thông qua id
+        //Phương thức lấy ra thông tin của một room thông qua id (xem chi tiết)
         function getRoomID($id){
             $db = new connect();
             $select = "SELECT * FROM room WHERE room.id = $id";
@@ -163,8 +171,68 @@
         //Phương thức đóng room ngừng cho thuê
         function deleteRoom($id){
             $db = new connect();
-            $query = "UPDATE room SET room.deleted_at = CURRENT_TIMESTAMP WHERE room.id = $id";
+            $query = "UPDATE room SET room.left_at = CURRENT_TIMESTAMP WHERE room.id = $id";
             $result = $db->exec($query);
+            return $result;
+        }
+
+        
+        //Phương thức đặt phòng
+        function bookRoom($id){
+            $db = new connect();
+            $query = "";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức lấy ra thông tin khách hàng đã đặt phòng và chi tiết phòng đã đặt
+        // function getBookdedRoom(){
+        //     $db = new connect();
+        //     $select = "";
+        //     $result = $db->exec($select);
+        //     return $result;
+        // }
+
+        //Phương thức set thời gian nhận/trả phòng và set full cho room
+        function updateTime($id, $arrive, $quit){
+            $db = new connect();
+            $str = "ORD_";
+            $random = rand(0, 99999999);
+            $str_rand = $str . $random;
+            $query = "UPDATE room SET room.arrive = '$arrive', room.quit = '$quit', room.status_id = 2, room.booked_room_id = '$str_rand' WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thêm id của phòng đã đặt vào customers (đặt phòng)
+        function addRoomID($id, $customer_id){
+            $db = new connect();
+            $select = "UPDATE customers SET customers.room_id = $id WHERE customers.customer_id = $customer_id";
+            $result = $db->exec($select);
+            return $result;
+        }      
+
+        //Phương thức hiển thị thông tin tất cả phòng đã đặt
+        function getBookedRoom(){
+            $db = new connect();
+            $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id WHERE r.id = c.room_id AND r.left_at IS NULL AND r.arrive IS NOT NULL AND r.quit IS NOT NULL AND r.booked_room_id IS NOT NULL AND c.room_id != 0";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức thu hồi phòng đã đặt
+        function undoBookedRoom($booked_room_id){
+            $db = new connect();
+            $query = "UPDATE room SET room.left_at = CURRENT_TIMESTAMP, room.status_id = 1 WHERE room.booked_room_id = '$booked_room_id'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả các phòng đã thu hồi đặt
+        function getUndoRoom(){
+            $db = new connect();
+            $select = "SELECT * FROM room, customers WHERE room.id = customers.room_id AND room.left_at IS NOT NULL AND customers.done_session = 1";
+            $result = $db->getList($select);
             return $result;
         }
     }

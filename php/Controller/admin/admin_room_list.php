@@ -250,11 +250,11 @@
                 $detail =  $room->getDetailRooms($id);
                 $results = $detail->execute();
                 if($result){
-                    $result = $results;
+                    $result = $resadsasd;
                 }else{
                     $result = 0;
                 };
-                echo json_encode($res);
+                echo json_encode($result);
             }
             
             break;

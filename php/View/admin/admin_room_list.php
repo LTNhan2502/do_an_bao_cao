@@ -124,7 +124,7 @@
                                             $detail = $room->getDetailRooms($id);                                            
                                             $detail = $detail->fetch()
                                         ?> 
-                                        <div class="row" id="loadDetail">
+                                        <div class="row" ">
                                             <?php if(isset($detail['id'])){ ?>
                                             <div class="col-lg-8 bg-dark card image-container">
                                                 <img src="Content/images/<?php echo $detail['img']; ?>" class="img-fluid rounded-start mb-4" width="90%">
@@ -208,7 +208,9 @@
     }
 </script>
 
-<script src="ajax/detail_modal.js"></script>
+<script src="ajax/room/status.js"></script>
+
+<!-- <script src="ajax/detail_modal.js"></script> -->
 <style>
     .image-container {
         display: flex;

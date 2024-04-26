@@ -38,8 +38,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=room_bin">Xem phòng theo lịch</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=room_bin">Xem phòng đã hủy</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_check">Xác nhận phòng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ đặt phòng</a>
             </div>
         </div>
     </li>
@@ -53,9 +53,7 @@
         </a>
         <div id="collapseBill" class="collapse" aria-labelledby="headingBill" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="utilities-color.html">Hóa đơn đặt phòng</a>
-                <a class="collapse-item" href="utilities-border.html">Hóa đơn nhận phòng</a>
-                <a class="collapse-item" href="utilities-animation.html">Hóa đơn trả phòng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_bill_list">Danh sách hóa đơn</a>
             </div>
         </div>
     </li>

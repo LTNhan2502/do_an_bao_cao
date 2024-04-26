@@ -176,6 +176,7 @@ $(document).on('change','#name',function(){
     }
 });
 
+//Kiểm tra giá
 $(document).on('change', '#price', function(){
     let value = $(this).val();
 
@@ -198,6 +199,7 @@ $(document).on('change', '#price', function(){
     }
 });
 
+//Kiểm tra giảm giá
 $(document).on('change', '#sale', function(){
     let value = $(this).val();
     var price = parseInt($('#price').val());
@@ -242,7 +244,7 @@ $(document).on('submit','#roomForm', function(){
 <style>
     .disabled:disabled{
         color: #fff;
-        pointer_events: none;
+        pointer-events: none;
         
     }
 </style>

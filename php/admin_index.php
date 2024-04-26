@@ -35,7 +35,8 @@
         rel="stylesheet">
     <script src="Content/vendor/jquery/jquery.min.js"></script>
     
-
+    <!-- Datetimepicker css -->
+    <link rel="stylesheet" href="Content/datetimepicker-master/build/jquery.datetimepicker.min.css">
 
     <!-- Custom styles for this template-->
     <link href="Content/css/sb-admin-2.min.css" rel="stylesheet">
@@ -140,8 +141,8 @@
     <!-- Page level custom scripts -->
     <script src="Content/js/demo/chart-area-demo.js"></script>
     <script src="Content/js/demo/chart-pie-demo.js"></script>
-    <script src="ajax/status.js"></script>
-
+    
 </body>
+
 
 </html>
