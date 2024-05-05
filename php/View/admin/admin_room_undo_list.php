@@ -4,8 +4,13 @@
         <?php
             $room = new room();
             $result = $room->getUndoRoom();
-            while($set = $result->fetch()):
+            $rowCount = $result->rowCount();
+            if( $rowCount == 0){
+                echo "<h5 class='text-decoration-underline pt-4'>Chưa có thông tin!</h5>";
+            }else{
+                while($set = $result->fetch()):
         ?>
+
         <div class="col">
             <div class="card h-100 shadow bg-body-tertiary rounded">
                 <div class="card-body">
@@ -13,10 +18,11 @@
                     <div class="card-text">
                         <div>Khách hàng: <?php echo $set['customer_name']; ?></div>
                         <div>Phòng: <?php echo $set['name']; ?></div>
-                        <div>Tổng: <?php echo $set['price']; ?></div>
+                        <div>Tổng: <?php echo $set['sum']; ?></div>
                         <div class="d-none booked_room_id" data-id="<?php echo $set['booked_room_id']; ?>"></div>
+                        <div class="d-none customer_booked_id" data-customer_id="<?php echo $set['customer_booked_id']; ?>"></div>
                         <div class="d-none email" data-email="<?php echo $set['email']; ?>"></div>
-                        <div class="d-none price" data-price="<?php echo $set['price']; ?>"></div>
+                        <div class="d-none customer_sum" data-customer_sum="<?php echo $set['sum']; ?>"></div>
                         <div class="d-none arrive" data-arrive="<?php echo $set['arrive']; ?>"></div>
                         <div class="d-none quit" data-quit="<?php echo $set['quit'] ?>"></div>
                         <div class="d-none left" data-left_at="<?php echo $set['left_at']; ?>"></div>
@@ -39,7 +45,7 @@
                 </div>
             </div>
         </div>  
-        <?php endwhile; ?>      
+        <?php endwhile; } ?>      
     </div>
 </div>
 

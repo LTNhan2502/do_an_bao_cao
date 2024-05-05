@@ -16,8 +16,9 @@
 <html lang="en">
 
 <head>
-    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.4.2/sweetalert2.all.min.js"></script>
+
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -34,13 +35,12 @@
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
     <script src="Content/vendor/jquery/jquery.min.js"></script>
-    
-    <!-- Datetimepicker css -->
-    <link rel="stylesheet" href="Content/datetimepicker-master/build/jquery.datetimepicker.min.css">
 
     <!-- Custom styles for this template-->
     <link href="Content/css/sb-admin-2.min.css" rel="stylesheet">
-    
+
+    <!-- Datetimepicker css -->
+    <link rel="stylesheet" href="Content/datetimepicker-master/build/jquery.datetimepicker.min.css">   
 
 </head>
 
@@ -141,6 +141,9 @@
     <!-- Page level custom scripts -->
     <script src="Content/js/demo/chart-area-demo.js"></script>
     <script src="Content/js/demo/chart-pie-demo.js"></script>
+
+    <!-- Datetimepicker JS -->
+    <script src="Content/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
     
 </body>
 

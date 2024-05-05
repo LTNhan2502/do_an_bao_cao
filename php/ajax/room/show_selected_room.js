@@ -12,6 +12,7 @@ $(document).ready(function(){
             data: {value_id},
             dataType: "JSON",
             success: function(res){
+                //Nếu đối tượng được chọn có thông tin đầy đủ
                 if(res.id > 0 && res.id != undefined){
                     isRequested = true; 
                     $("#selected_info").show(300);
@@ -20,13 +21,20 @@ $(document).ready(function(){
                     $("#selected_name").text(res.name);
                     $("#selected_img").attr("src", "Content/images/"+res.img);
                     $("#selected_price").text(+res.price); //Dấu + là để ép chuỗi thành số, như parseInt()
-                    $("#selected_sum").text(+res.price);
-                }else if(res.id == undefined && value_id != 0){
+                    $("#stay-time").text("");
+                    $("#selected_sum").text("");
+                    $("#from, #to").val('');
+                    
+                }
+                //Nếu đối tượng được chọn là các phòng nhưng chưa có thông tin chi tiết
+                else if(res.id == undefined && value_id != 0){
                     isRequested = true;
                     $("#selected_info").hide(300);
                     $("#selected_detail_price").hide(300);
                     $("#selected_message").show(300);
-                }else if(res.id == undefined && value_id == 0){
+                }
+                //Nếu đối tượng được chọn là ---Hãy chọn phòng---
+                else if(res.id == undefined && value_id == 0){
                     isRequested = false;
                     $("#selected_info").hide(300);
                     $("#selected_detail_price").hide(300);

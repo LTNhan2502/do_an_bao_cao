@@ -1,7 +1,8 @@
 $(document).ready(function(){
     //Xác nhận nhận phòng
     $(document).on("click", "#receive", function(){
-        let customer_email = $(this).closest("tr").find("#customer_email").data("email");
+        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
+        let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
         let undo_receive_id = "undo_receive"; 
@@ -10,7 +11,7 @@ $(document).ready(function(){
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=approve_arrive",
             method: "POST",
-            data: {customer_email},
+            data: {customer_booked_id},
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
@@ -57,7 +58,8 @@ $(document).ready(function(){
 
     //Huỷ nhận phòng
     $(document).on("click", "#undo_receive", function(){
-        let customer_email = $(this).closest("tr").find("#customer_email").data("email");
+        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
+        let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
         let receive_id = "receive";
@@ -66,7 +68,7 @@ $(document).ready(function(){
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=undo_approve_arrive",
             method: "POST",
-            data: {customer_email},
+            data: {customer_booked_id},
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
@@ -115,17 +117,19 @@ $(document).ready(function(){
 
     //Xác nhận trả phòng
     $(document).on("click", "#leave", function(){
-        let customer_email = $(this).closest("tr").find("#customer_email").data("email");
+        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
+        let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
         let button_leave = $(this).closest("tr").find(".button_leave");
+        let button_recover = $(this).closest("tr").find(".button_recover");
         let undo_leave_id = "undo_leave"; 
         let receive_id = "receive";
         console.log(button_leave);
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=approve_leave",
             method: "POST",
-            data: {customer_email},
+            data: {customer_booked_id},
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
@@ -149,6 +153,10 @@ $(document).ready(function(){
                     button_leave.removeClass('btn-outline-primary');
                     button_leave.addClass('btn-danger');
                     button_leave.attr("id", undo_leave_id);
+
+                    if(button_recover.attr("disabled")){
+                        button_recover.attr("disabled", false);
+                    }
 
                 }else{
                     Swal.fire({
@@ -174,17 +182,19 @@ $(document).ready(function(){
 
     //Huỷ trả phòng
     $(document).on("click", "#undo_leave", function(){
-        let customer_email = $(this).closest("tr").find("#customer_email").data("email");
+        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
+        let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
         let button_leave = $(this).closest("tr").find(".button_leave");
+        let button_recover = $(this).closest("tr").find(".button_recover");
         let leave_id = "leave";
         let undo_receive_id = "undo_receive";
         console.log(button_leave);
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=undo_approve_leave",
             method: "POST",
-            data: {customer_email},
+            data: {customer_booked_id},
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
@@ -210,6 +220,8 @@ $(document).ready(function(){
                     button_leave.removeClass('btn-danger');
                     button_leave.addClass('btn-outline-primary');
                     button_leave.attr("id", leave_id);
+
+                    button_recover.attr("disabled", true);
                 }else{
                     Swal.fire({
                         title: "Thất bại!",
@@ -233,59 +245,59 @@ $(document).ready(function(){
     });
 
     //Thu hồi phòng
-    // $(document).on("click", "#undo_book", function(){
-    //     let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-    //     // console.log(booked_room_id);
+    $('#undo_book').on('click', function() {
+        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
+        let $input = $(this);
+        // alert(booked_room_id);
 
-        $('#undo_book').on('click', function() {
-            let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-            // alert(booked_room_id);
-
-            Swal.fire({
-                title: "Thu hồi phòng không?",
-                text: "Phòng bị thu hồi sẽ nằm trong Hồ sơ đặt phòng!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes!"
-              }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "Controller/admin/admin_room_check.php?act=undo_book",
-                        method: "POST",
-                        data: {booked_room_id},
-                        dataType: "JSON",
-                        success: function(res){
-                            if(res.status == 'success'){
-                                Swal.fire({
-                                    title: "Thu hồi phòng thành công!",
-                                    text: res.message,
-                                    icon: "success",
-                                    timer: 2200,
-                                    timerProgressBar: true
-                                });
-                            }else{
-                                Swal.fire({
-                                    title: "Thu hồi phòng thất bại!",
-                                    text: res.message,
-                                    icon: "error",
-                                    timer: 3200,
-                                    timerProgressBar: true
-                                });
-                            }
-                        },
-                        error: function(){
+        Swal.fire({
+            title: "Thu hồi phòng không?",
+            text: "Phòng bị thu hồi sẽ nằm trong Hồ sơ đặt phòng!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "Controller/admin/admin_room_check.php?act=undo_book",
+                    method: "POST",
+                    data: {booked_room_id},
+                    dataType: "JSON",
+                    success: function(res){
+                        if(res.status == 'success'){
                             Swal.fire({
-                                title: "Lỗi!",
-                                text: "Có lỗi xảy ra!",
+                                title: "Thu hồi phòng thành công!",
+                                text: res.message,
+                                icon: "success",
+                                timer: 900,
+                                timerProgressBar: true
+                            });
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 930)
+                        }else{
+                            Swal.fire({
+                                title: "Thu hồi phòng thất bại!",
+                                text: res.message,
                                 icon: "error",
                                 timer: 3200,
                                 timerProgressBar: true
-                            });
+                            });                           
                         }
-                    })
-                }
-            });
-        })
+                    },
+                    error: function(){
+                        Swal.fire({
+                            title: "Lỗi!",
+                            text: "Có lỗi xảy ra!",
+                            icon: "error",
+                            timer: 3200,
+                            timerProgressBar: true
+                        });
+                    }
+                })
+            }
+        });
+    })
 })

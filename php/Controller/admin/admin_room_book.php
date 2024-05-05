@@ -43,14 +43,14 @@
             echo json_encode($count);
             break;
         case 'book_room':
-            if(isset($_POST['id']) && isset($_POST['name']) && isset( $_POST['email']) && 
-            isset($_POST['tel']) && isset($_POST['from_time']) && isset($_POST['to_time'])){
-                $id = $_POST['id'];
+            if(isset($_POST['select_room']) && isset($_POST['name']) && isset( $_POST['email']) && 
+            isset($_POST['tel']) && isset($_POST['from']) && isset($_POST['to'])){
+                $id = $_POST['select_room'];
                 $name = $_POST['name'];
                 $email = $_POST['email'];
                 $tel = $_POST['tel'];
-                $arrive = $_POST['from_time'];
-                $quit = $_POST['to_time'];
+                $arrive = $_POST['from'];
+                $quit = $_POST['to'];
                 $room = new room();
                 $customer = new customers(); 
                 $result_room = $room->updateTime($id, $arrive, $quit);
@@ -75,6 +75,26 @@
                 }
                 echo json_encode($res);
             }   
+            break;
+        case "update_sum":
+            $stay_sum =  $_POST['stay_sum'];
+            $customers = new customers();
+            $customer = $customers->getLastInsert();
+            $customer_id = $customer['customer_id'];
+            $customer_sum = $customers->updateSum($stay_sum, $customer_id);
+            // print_r($customer_sum);exit;
+            if($customer_sum){
+                $res = array(
+                    'status' => 'success',
+                    'message'=> 'Tổng tiền đã có!'
+                );
+            }else{
+                $res = array(
+                    'status'=> 'fail',
+                    'message'=> 'Tổng tiền chưa có!'
+                );
+            }
+            echo json_encode($res);
             break;
     }
 ?>

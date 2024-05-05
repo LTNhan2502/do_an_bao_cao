@@ -12,17 +12,25 @@
         }
 
         //Phương thức lưu thông tin vào checkout
-        function doCheckout($booked_room_id, $customer_email, $bill_price, $bill_arrive, $bill_leave, $bill_checkout_at, $room_name, $customer_name, $customer_tel){
+        function doCheckout($booked_room_id, $customer_booked_id, $customer_email, $bill_price, $bill_arrive, $bill_leave, $bill_checkout_at, $room_name, $customer_name, $customer_tel){
             $db = new connect();
-            $query = "INSERT INTO bill VALUES (NULL, '$booked_room_id', '$customer_email', $bill_price, '$bill_arrive','$bill_leave', '$bill_checkout_at', '$room_name', '$customer_name', '$customer_tel')";
+            $query = "INSERT INTO bill VALUES (NULL, '$booked_room_id', '$customer_booked_id', '$customer_email', $bill_price, '$bill_arrive','$bill_leave', '$bill_checkout_at', '$room_name', '$customer_name', '$customer_tel')";
             $result = $db->exec($query);
             return $result;
         }
 
-        //Phương thức hiển thị tất cả bill
+        //Phương thức hiển thị tất cả bill không dùng phân trang
         function getBill(){
             $db = new connect();
             $select = "SELECT * FROM bill";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức hiển thị tất cả bill dùng phân trang
+        function getBillPage($start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM bill ORDER BY bill.bill_id DESC LIMIT ".$start.",".$limit;
             $result = $db->getList($select);
             return $result;
         }

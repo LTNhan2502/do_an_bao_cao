@@ -116,10 +116,11 @@
                     <!-- Card Body -->
                     <div class="card-body">
                         <div id="chart">
-                            <h5>Hiển thị xu hướng kiểu phòng mà KH thường chọn</h5>
+                            <h5>Hiển thị xu tên phòng KH thường chọn</h5>
                             <h5>Hiển thị lượt đặt phòng do KH mới và cũ thực hiện</h5>
-                            <h5>Hiển thị khung giờ (ngày) thường được KH chọn</h5>
-                            <h5>Hiển thị số lượng dịch vụ được lựa chọn</h5>
+                            <h5>Hiển thị ngày (lễ/ngày thường) thường được KH chọn</h5>
+                            <h5>Hiển thị phòng đang đặt/phòng đang trống</h5>
+                            <h5>Hiển thị tổng doanh thu</h5>
                         </div>
                     </div>
                 </div>

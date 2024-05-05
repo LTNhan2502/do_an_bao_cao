@@ -14,45 +14,31 @@
         case "create_room":
             include_once "View/admin/admin_room_insert.php";
             break;
-        case "create_action":
-            $flag = false;
-            if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        case "create_action":            
+            if(isset($_POST['name']) || isset($_POST['kind']) || isset($_POST['price']) || isset($_POST['sale'])
+                || isset($_POST['status_id']) || isset($_POST['img'])){
                 $name = $_POST['name'];
                 $kind = $_POST['kind'];
                 $price = $_POST['price'];
                 $sale = $_POST['sale'];
                 $status_id = $_POST['status_id'];
                 $img = $_FILES['img']['name'];
-
-                if ($flag == false) {                 
-                    $room = new room();
-                    $result = $room->createRoom($name, $kind, $price, $sale, $status_id, $img);                    
-                    echo "
-                        <script>
-                            Swal.fire({
-                                title: 'Thành công!',
-                                text: 'Thêm mới thành công!',
-                                icon: 'success'
-                            });
-                            setTimeout(() => {
-                                window.location.href = './admin_index.php?action=admin_room_list&act=create_room';
-                            }, 1600);
-                      </script>";
+                $room = new room();
+                $result = $room->createRoom($name, $kind, $price, $sale, $status_id, $img); 
+                if ($result) {                 
+                    $res = array(
+                        'status' => 'success',
+                        'message' => 'Tạo mới thành công!'
+                    ); 
                     // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list&act=room_create"/>';
                 }else{ 
-                    echo "
-                        <script>
-                            Swal.fire({
-                                title: 'Thất bại!',
-                                text: 'Thêm mới thất bại!',
-                                icon: 'error'
-                            });
-                            setTimeout(() => {
-                                window.location.href = './admin_index.php?action=admin_room_list&act=room_create';
-                            }, 1600);
-                      </script>";                   
+                    $res = array(
+                        'status' => 'fail',
+                        'message'=> 'Tạo mới thất bại!'
+                    );        
                     // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list&act=room_create"/>';
                 }
+                echo json_encode($res);
             }
             break;
         case "update_room":
@@ -175,71 +161,115 @@
             if(isset($_POST['name_value']) && isset($_POST['id'])){
                 $id = $_POST['id'];
                 $name_value = $_POST['name_value'];
-                $room = new room();
-                $result = $room->changeName($id, $name_value);
-                if($result){
+                $regex_name = '/^[a-zA-Z\s]+$/';
+                if(!preg_match($regex_name, $name_value)){
                     $res = array(
-                        "status" => "success",
-                        "message" => "changed"
+                        'status' => 'name',
+                        'message' => 'Tên không được bao gồm kí tự đặc biệt và số!'
+                    );
+                }else if($name_value == ''){
+                    $res = array(
+                        'status'=> 'name',
+                        'message'=> 'Không được để trống!'
+                    );
+                }else if(strlen($name_value) < 2 || strlen($name_value) > 30){
+                    $res = array(
+                        'status'=> 'name',
+                        'message'=> 'Tên phải từ 2 đến 30 kí tự!'
                     );
                 }else{
-                    $res = array(
-                        "status" => "fail",
-                        "message" => "Lenh SQL, kieu du lieu (JOSN), json_encode, value view"
-                    );
+                    $room = new room();
+                    $result = $room->changeName($id, $name_value);
+                    if($result){
+                        $res = array(
+                            "status" => "success",
+                            "message" => "changed"
+                        );
+                    }else{
+                        $res = array(
+                            "status" => "fail",
+                            "message" => "Lenh SQL, kieu du lieu (JOSN), json_encode, value view"
+                        );
+                    }
                 }
+                
                 echo json_encode($res);
             }
             break;
         case "update_price":
-            if(isset($_POST['price_value']) && isset($_POST['id'])){
+            if(isset($_POST['price_value']) && isset($_POST['id']) && isset($_POST['sale_value'])){
                 $id = $_POST['id'];
                 $price_value = $_POST['price_value'];
-                $room = new room();
-                $result = $room->changePrice($id, $price_value);
-                if($result){
+                $sale_value = $_POST['sale_value'];
+                if(!is_numeric($price_value)){
                     $res = array(
-                        "status" => "success",
-                        "message" => "changed"
+                        'status'=> 'price',
+                        'message'=> 'Giá phải là một số!',
+                    );
+                }else if($price_value < $sale_value){
+                    $res = array(
+                        'status'=> 'price',
+                        'message'=> 'Giá phải lớn hơn giảm giá!'
+                    );
+                }else if($price_value == ''){
+                    $res = array(
+                        'status'=> 'price',
+                        'message'=> 'Không được để trống!'
                     );
                 }else{
-                    $res = array(
-                        "status" => "fail",
-                        "message" => "Lenh SQL, kieu du lieu (JSON), json_encode, value view"
-                    );
+                    $room = new room();
+                    $result = $room->changePrice($id, $price_value);
+                    if($result){
+                        $res = array(
+                            "status" => "success",
+                            "message" => "changed"
+                        );
+                    }else{
+                        $res = array(
+                            "status" => "fail",
+                            "message" => "Lenh SQL, kieu du lieu (JSON), json_encode, value view"
+                        );
+                    }
                 }
                 echo json_encode($res);
             }
             break;
         case "update_sale":
             if(isset($_POST['id']) && isset($_POST['sale_value']) && isset($_POST['price_value'])){
-                $flag = false;
                 $id = $_POST['id'];
                 $sale_value = $_POST['sale_value'];
                 $price_value = $_POST['price_value'];
                 $room = new room();
-                if($sale_value < $price_value){
-                    $result = $room->changeSale($id, $sale_value);
-                    $flag = false;
-                }else{
-                    $flag = true;
-                    $res = array(
-                        "status" => "fail",
-                        "message" => "Lệnh SQL, kiểu dữ liệu (JSON), json_encode, value view",
-                    );
-                }
-                if($flag == false){
-                    $res = array(
-                        "status" => "success",
-                        "message" => "changed"
-                    );
-                }else{
-                    $res = array(
-                        "status" => "fail",
-                        "message" => "Sale phải nhỏ hơn Price!"
-                    );
-                }
                 
+                if($sale_value > $price_value){
+                    $res = array(
+                        'status'=> 'sale',
+                        'message' => 'Giảm giá phải nhỏ hơn giá!',
+                    );
+                }else if($sale_value == ''){
+                    $res = array(
+                        'status'=> 'sale',
+                        'message' => 'Không được để trống!'
+                    );
+                }else if(!is_numeric($sale_value)){
+                    $res = array(
+                        'status' => 'sale',
+                        'message' => 'Giảm giá phải là một số!',
+                    );
+                }else if($sale_value < $price_value && $sale_value != ''){
+                    $result = $room->changeSale($id, $sale_value);
+                    if($result){
+                        $res = array(
+                            'status'=> 'success',
+                            'message'=> 'Thay đổi thành công!'
+                        );
+                    }else{
+                        $res = array(
+                            'status'=> 'fail',
+                            'message'=> 'Thay đổi thất bại!'
+                        );
+                    }
+                }               
                 echo json_encode($res);
             }
             break;
@@ -250,13 +280,25 @@
                 $detail =  $room->getDetailRooms($id);
                 $results = $detail->execute();
                 if($result){
-                    $result = $resadsasd;
+                    $result = $results;
                 }else{
                     $result = 0;
                 };
                 echo json_encode($result);
             }
             
+            break;
+        case "pages":
+            if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page'])){
+                //Phân trang
+                $room = new room();
+                $limit = 6; //Giới hạn số bill trong 1 trang
+                $page = new page();
+                $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+                $result = $room->getRoomsPage($start, $limit);
+                $res = $result->fetchAll(PDO::FETCH_ASSOC);
+                echo json_encode($res);
+            }  
             break;
     }
 ?>

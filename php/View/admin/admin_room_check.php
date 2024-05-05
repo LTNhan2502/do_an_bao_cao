@@ -6,7 +6,17 @@
             <span class="m-0 font-weight-bold text-primary">DANH SÁCH PHÒNG ĐÃ ĐẶT</span>
         </div>
         <div class="card-body">
+        <?php
+            $room = new room();
+            $booked_room = $room->getBookedRoom();
+            $rowCount = $booked_room->rowCount();
+        ?>
             <div class="table-responsive">
+                <?php
+                    if( $rowCount == 0){
+                        echo "<h4 class='text-decoration-underline'>Chưa có phòng nào được đặt!</h4>";
+                    }else{
+                ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
@@ -27,9 +37,7 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        <?php
-                            $room = new room();
-                            $booked_room = $room->getBookedRoom();
+                        <?php                            
                             $count = 1;
                             while ($result = $booked_room->fetch()):
                         ?>
@@ -39,6 +47,9 @@
                                 <div>ID đặt phòng: 
                                     <span class="badge badge-pill badge-primary booked_room_id" data-id="<?php echo $result['booked_room_id']; ?>"><?php echo $result['booked_room_id']; ?></span>
                                 </div>
+                                <div>ID khách hàng: 
+                                    <span class="badge badge-pill badge-primary customer_booked_id" data-customer_booked_id="<?php echo $result['customer_booked_id']; ?>"><?php echo $result['customer_booked_id']; ?></span>
+                                </div>
                                 <div><span class="text-decoration-underline" style="font-weight: 900">Tên KH:</span> <?php echo $result['customer_name']; ?></div>
                                 <div>Số điện thoại: <?php echo $result['tel']; ?></div>
                                 <div id="customer_email" data-email="<?php echo $result['email']; ?>">Email: <?php echo $result['email']; ?></div>
@@ -46,7 +57,7 @@
                             <td>
                                 <div>Phòng: <?php echo $result['name']; ?></div>
                                 <div>Giá: <?php echo $result['price']; ?></div>
-                                <div><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $result['price']; ?></div>
+                                <div><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $result['sum']; ?></div>
                             </td>
                             <td>
                                 <div>Ngày vào: <?php echo $result['arrive']; ?></div>
@@ -80,12 +91,13 @@
                             <?php } ?>
                                
                             <!-- HUỶ ĐẶT PHÒNG -->
-                                <button class="btn btn-outline-danger btn-same text-start" id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>
+                                <button class="btn btn-outline-danger btn-same text-start button_recover" disabled id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>
                             </td>
                         </tr>
                         <?php 
-                            $count++;
-                            endwhile; 
+                                $count++;
+                                endwhile;
+                            } 
                         ?>
                     </tbody>
                 </table>

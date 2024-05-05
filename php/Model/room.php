@@ -27,7 +27,15 @@
         //Phương thức lấy tất cả room
         function getRooms(){
             $db = new connect();
-            $select = "SELECT * FROM room ";
+            $select = "SELECT * FROM room ORDER BY room.id LIMIT 8";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy tất cả room có phân trang
+        function getRoomsPage($start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM room ORDER BY room.id LIMIT ".$start.", ".$limit;
             $result = $db->getList($select);
             return $result;
         }
@@ -215,7 +223,10 @@
         //Phương thức hiển thị thông tin tất cả phòng đã đặt
         function getBookedRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id WHERE r.id = c.room_id AND r.left_at IS NULL AND r.arrive IS NOT NULL AND r.quit IS NOT NULL AND r.booked_room_id IS NOT NULL AND c.room_id != 0";
+            $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id 
+                       WHERE r.id = c.room_id AND r.left_at IS NULL AND r.arrive IS NOT NULL 
+                            AND r.quit IS NOT NULL AND r.booked_room_id IS NOT NULL AND c.room_id != 0
+                            ORDER BY r.id DESC LIMIT 4";
             $result = $db->getList($select);
             return $result;
         }
@@ -231,7 +242,9 @@
         //Phương thức lấy ra tất cả các phòng đã thu hồi đặt
         function getUndoRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room, customers WHERE room.id = customers.room_id AND room.left_at IS NOT NULL AND customers.done_session = 1";
+            $select = "SELECT * FROM room, customers 
+                       WHERE room.id = customers.room_id AND room.left_at IS NOT NULL AND customers.done_session = 1
+                       ORDER BY room.id DESC LIMIT 8";
             $result = $db->getList($select);
             return $result;
         }

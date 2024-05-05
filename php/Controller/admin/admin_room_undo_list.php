@@ -24,8 +24,9 @@
             break;
         case "do_checkout":
             $booked_room_id = $_POST['booked_room_id'];
+            $customer_booked_id = $_POST['customer_booked_id'];
             $email = $_POST['email'];
-            $price = $_POST['price'];
+            $customer_sum = $_POST['customer_sum'];
             $arrive = $_POST['arrive'];
             $leave = $_POST['quit'];
             $left_at = $_POST['left_at'];
@@ -34,7 +35,7 @@
             $tel = $_POST['tel'];
             // print_r($booked_room_id);exit;
             $checkout = new checkout();
-            $result1 = $checkout->doCheckout($booked_room_id, $email, $price, $arrive, $leave, $left_at, $room_name, $customer_name, $tel);
+            $result1 = $checkout->doCheckout($booked_room_id, $customer_booked_id, $email, $customer_sum, $arrive, $leave, $left_at, $room_name, $customer_name, $tel);
             $result2 = $checkout->resetAfterCheckout($booked_room_id);
             // print_r($result1);exit;
             if($result1 && $result2){

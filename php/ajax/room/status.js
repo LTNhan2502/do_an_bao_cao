@@ -1,8 +1,11 @@
+const formatCurrency = require('../currency/number_format');
 $(document).ready(function(){
     //Chỉnh sửa name
     $(document).on('change', '#name', function(){
+        let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('id');
         let name_value  =$(this).val();
+        let prevName = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let action = "update_name";
         $.ajax({
             url: 'Controller/admin/admin_room_list.php?act=update_name',
@@ -19,14 +22,34 @@ $(document).ready(function(){
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
-                        timer: 900
+                        timer: 900,
+                        timerProgressBar: true
                     });
-                }else{
+                    $(".detail_name").html(name_value);
+                }else if(data.status == 'fail'){
                     Swal.fire({
                         title: "Thất bại!",
                         text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
-                        timer: 2700
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }else if(data.status == 'name'){
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: data.message,
+                        icon: "error",
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                    $input.val(prevName); //Quay lại giá trị cũ
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: "Thay đổi thất bại!",
+                        icon: "error",
+                        timer: 3000,
+                        timerProgressBar: true
                     });
                 }
             },
@@ -35,22 +58,37 @@ $(document).ready(function(){
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
                     icon: "error",
-                    timer: 3500
+                    timer: 3200,
+                    timerProgressBar: true
                 })
             }
         })
     });
 
-    //Chỉnh sửa price
+    //Chỉnh sửa price    
+    let priceValue = ""; // Lưu giá trị ban đầu của ô input
+    $(document).on('input',"#price", function() {
+        let price = $(this).val();
+        priceValue = $(this).val().replace(/[^0-9]/g, ""); // Lấy giá trị hiện tại của ô input và loại bỏ các ký tự không phải số
+        const formattedPrice = formatCurrency(price); // Định dạng giá trị
+
+        // Cập nhật giá trị ô input với giá trị đã định dạng
+        $(this).val(formattedPrice);
+    });
     $(document).on('change', '#price', function(){
-        let price_value = $(this).val();
+        let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
+        let price_value = $(this).val().replace(/[^0-9]/g, "");;
+        let sale_value = $(this).closest("tr").find("#sale").val();
+        let prevPrice = $input.data('value'); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let id = $(this).data('id');
+        
         $.ajax({
             url: 'Controller/admin/admin_room_list.php?act=update_price',
             method: "POST",
             data: {
                 price_value,
-                id
+                id,
+                sale_value
             },
             success: function(res){
                 let data = JSON.parse(res);
@@ -59,14 +97,27 @@ $(document).ready(function(){
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
-                        timer: 900
+                        timer: 900,
+                        timerProgressBar: true
                     });
+                }else if(data.status == 'price'){
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: data.message,
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                    $input.val(prevPrice); //Quay lại giá trị cũ
+                    // $(this).val(); //Sai vì this sẽ trỏ tới AJAX chứ không còn trỏ tới bên input html, log sẽ ra undefined
+                    console.log(prevPrice);
                 }else{
                     Swal.fire({
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
+                        text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
-                        timer: 2700
+                        timer: 3200,
+                        timerProgressBar: true
                     });
                 }
             },
@@ -75,7 +126,8 @@ $(document).ready(function(){
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    timerProgressBar: true
                 });
             }
         })
@@ -83,9 +135,11 @@ $(document).ready(function(){
 
     //Chỉnh sửa sale
     $(document).on('change', '#sale', function(){
+        let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let sale_value = $(this).val();
         let id = $(this).data('id');
         let price_value = $(this).closest('tr').find("#price").val(); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
+        let prevSale = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         $.ajax({
             url: 'Controller/admin/admin_room_list.php?act=update_sale',
             method: "POST",
@@ -103,12 +157,23 @@ $(document).ready(function(){
                         icon: "success",
                         timer: 900
                     });
-                }else{
+                }else if(data.status == 'sale'){
                     Swal.fire({
                         title: "Thất bại!",
                         text: data.message,
                         icon: "error",
-                        timer: 2500
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                    $input.val(prevSale); //Quay lại giá trị cũ
+                    console.log(prevSale);
+                }else{
+                    Swal.fire({
+                        title: "Thất bại!",
+                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
                     });
                 }
             },
@@ -117,7 +182,8 @@ $(document).ready(function(){
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    timerProgressBar: true
                 });
             }
         })

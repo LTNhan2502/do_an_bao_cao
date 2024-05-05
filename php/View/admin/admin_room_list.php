@@ -1,17 +1,13 @@
 <div class="container-fluid">
-    <!-- Page Heading -->
-    <div class="shadow-lg p-3 mb-5 bg-white rounded row">
-        <div class="col-lg-5">
-            <input type="date" class="form-control" name="arrive" id="arrive">
-        </div>
-        <div class="col-lg-5">
-            <input type="date" class="form-control" name="leave" id="leave">
-        </div>
-        <div class="col-lg-2">
-            <button class="btn btn-primary"><i class="fas fa-search"></i> Tìm khách sạn</button>
-        </div>
-    </div>    
-    <!-- DataTales Example -->
+    <?php
+        $room = new room();
+        $count = $room->getRooms()->rowCount(); //Tổng đối tượng
+        $limit = 6; //Giới hạn số đối tượng trong 1 trang
+        $page = new page();
+        $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
+        $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+        $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
+    ?>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Room</span>
@@ -23,38 +19,42 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Image</th>
-                            <th>Kind</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Sale</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>Ảnh</th>
+                            <th>Loại</th>
+                            <th>Tên phòng</th>
+                            <th>Đơn giá</th>
+                            <th>Giảm giá</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end">Hành động</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>ID</th>
-                            <th>Image</th>
-                            <th>Kind</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Sale</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>Ảnh</th>
+                            <th>Loại</th>
+                            <th>Tên phòng</th>
+                            <th>Đơn giá</th>
+                            <th>Giảm giá</th>
+                            <th>Trạng thái</th>
+                            <th class="text-end">Hành động</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php
                             $room = new room();
                             $results = $room->getRooms();
+                            $count = 1;
                             while($set = $results->fetch()):
                         ?>
-                        <tr>
-                            <td><div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $set['id']; ?></div></td>
+                        <tr id="currency">
+                            <!-- ID -->
+                            <td><div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $count; ?></div></td>
+                            <!-- Image -->
                             <td>
                                 <img src="Content/images/<?php echo $set['img']; ?>" width="60px" height="60px" alt="">
                             </td>
+                            <!-- Kind of room -->
                             <td>
                                 <select name="kind" class="form-control" id="kind">
                                     <?php 
@@ -70,21 +70,28 @@
                                     <?php endwhile; ?>
                                 </select>
                             </td>
-                            <td>                                
+                            <!-- Name of room -->
+                            <td>  
                                 <input type="text" class="form-control" name="name" id="name" 
                                         value="<?php echo $set['name']; ?>"
-                                        data-id="<?php echo $set['id']; ?>">
+                                        data-id="<?php echo $set['id']; ?>"
+                                        data-value="<?php echo $set['name']; ?>">
                             </td>
+                            <!-- Price -->
                             <td style="max-width: 120px;">
-                                <input type="number" class="form-control" name="price" id="price"
+                                <input type="text" class="form-control" name="price" id="price"
                                     value="<?php echo $set['price']; ?>"
-                                    data-id="<?php echo $set['id']; ?>">
+                                    data-id="<?php echo $set['id']; ?>"
+                                    data-value="<?php echo $set['price']; ?>">
                             </td>
+                            <!-- Sale -->
                             <td style="max-width: 120px;">
-                                <input type="number" class="form-control" name="sale" id="sale"
+                                <input type="text" class="form-control" name="sale" id="sale"
                                     value="<?php echo $set['sale']; ?>"
-                                    data-id="<?php echo $set['id']; ?>">
+                                    data-id="<?php echo $set['id']; ?>"
+                                    data-value="<?php echo $set['sale']; ?>">
                             </td>
+                            <!-- Status of room -->
                             <td>
                                 <select name="status" class="form-control" id="status">
                                     <?php 
@@ -100,7 +107,7 @@
                                     <?php endwhile; ?>
                                 </select>
                             </td>
-                            <td>
+                            <td class="text-end">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
                                 Xem chi tiết
                                 </button>
@@ -113,7 +120,7 @@
                             <div class="modal-dialog modal-xl">*
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <?php echo $set['name']; ?></h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <span class="detail_name"><?php echo $set['name']; ?></span></h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                         </button>
@@ -127,14 +134,16 @@
                                         <div class="row" ">
                                             <?php if(isset($detail['id'])){ ?>
                                             <div class="col-lg-8 bg-dark card image-container">
-                                                <img src="Content/images/<?php echo $detail['img']; ?>" class="img-fluid rounded-start mb-4" width="90%">
+                                                <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big m-4" width="90%">
                                                 <div class="image-row">
                                                     <?php 
                                                         $item_img = $detail['img_name'];
                                                         $img_arr = explode(' - ', $item_img);
                                                         $img_num = count($img_arr);
+                                                        echo "<img src='Content/images/".$detail['img']."' class='image-small mb-4 selected'"; 
                                                         for($i = 0; $i < $img_num; $i++){
-                                                            echo "<img src='Content/images/".$img_arr[$i]."' class='image-small'>";
+                                                            echo "<img src='Content/images/".$img_arr[$i]."' class='image-small mb-4' 
+                                                                  data-img-show='Content/images/".$img_arr[$i]."'>"; 
                                                         }
                                                     ?>
                                                 </div>                                        
@@ -174,7 +183,7 @@
                                                             }
                                                         ?> 
                                                         <br>
-                                                        <div class="shadow-lg p-3 mb-5 bg-body-tertiary rounded text-center fw-bolder fs-6">
+                                                        <div class="shadow-inset-md bg-body-tertiary p-3 text-center fw-bolder fs-6">
                                                             <?php
                                                                 echo "Khởi điểm từ <span style='color: rgb(255, 94, 31);'>".$detail['sale']."</span> VNĐ/phòng/đêm";
                                                             ?>
@@ -191,7 +200,10 @@
                                 </div>
                             </div>
                         </div>
-                        <?php endwhile; ?>
+                        <?php 
+                            $count++;
+                            endwhile;
+                        ?>
                     </tbody>
                 </table>
             </div>
@@ -209,8 +221,27 @@
 </script>
 
 <script src="ajax/room/status.js"></script>
+<script src="ajax/currency/number_format"></script>
+<script>
+    $(document).on("click", ".image-small", function(){
+        let image_container = $(this).closest(".image-container");
+        let image_big = image_container.find(".image-big");
 
-<!-- <script src="ajax/detail_modal.js"></script> -->
+        //Xoá tất cả selected class trong image-small (mỗi đối tượng mỗi khác)
+        image_container.find(".image-small").removeClass("selected");
+
+        //Thêm selected class vào image-small được click
+        $(this).addClass("selected");
+
+        //Lấy data từ data-img-show
+        let newSrc = $(this).data("img-show");
+
+        //Cập nhật lại đường link của image-big
+        image_big.attr("src", newSrc);
+    });
+
+
+</script>
 <style>
     .image-container {
         display: flex;
@@ -224,10 +255,27 @@
         width: 100%; /* Match width of the parent container */
     }
 
+    .image-big{
+        border-radius: 10px;
+        max-height: 650px;
+    }
+
     .image-small {
-        width: 200px; /* Adjust width of each small image */
-        height: auto;
-        border-radius: 10px
+        width: 150px; /* Adjust width of each small image */
+        height: 125px;
+        border-radius: 10px;
+        opacity: 0.4;
+    }
+
+    .shadow-inset-md{
+        border-radius: 9px;
+        background-color: #f2f2f2;
+        box-shadow: inset 1px 2px 4px rgba(255, 0, 0, 0.155) !important;
+    }
+
+    .selected{
+        border: 2px solid #0d6efd;
+        opacity: 1.2;
     }
 
 
