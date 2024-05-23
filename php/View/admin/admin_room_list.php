@@ -1,17 +1,13 @@
 <div class="container-fluid">
     <?php
         $room = new room();
-        $count = $room->getRooms()->rowCount(); //Tổng đối tượng
-        $limit = 6; //Giới hạn số đối tượng trong 1 trang
-        $page = new page();
-        $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
-        $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
-        $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
+        $fmt = new formatter();
+        
     ?>
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 mt-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Room</span>
-            <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list&act=create_room">Tạo mới</a>
+            <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list&act=create_room"><i class="fas fa-plus-circle"></i></a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -22,8 +18,8 @@
                             <th>Ảnh</th>
                             <th>Loại</th>
                             <th>Tên phòng</th>
-                            <th>Đơn giá</th>
-                            <th>Giảm giá</th>
+                            <th>Đơn giá (đ)</th>
+                            <th>Giảm giá (đ)</th>
                             <th>Trạng thái</th>
                             <th class="text-end">Hành động</th>
                         </tr>
@@ -34,15 +30,14 @@
                             <th>Ảnh</th>
                             <th>Loại</th>
                             <th>Tên phòng</th>
-                            <th>Đơn giá</th>
-                            <th>Giảm giá</th>
+                            <th>Đơn giá (đ)</th>
+                            <th>Giảm giá (đ)</th>
                             <th>Trạng thái</th>
                             <th class="text-end">Hành động</th>
                         </tr>
                     </tfoot>
                     <tbody>
                         <?php
-                            $room = new room();
                             $results = $room->getRooms();
                             $count = 1;
                             while($set = $results->fetch()):
@@ -80,16 +75,16 @@
                             <!-- Price -->
                             <td style="max-width: 120px;">
                                 <input type="text" class="form-control" name="price" id="price"
-                                    value="<?php echo $set['price']; ?>"
+                                    value="<?php echo $fmt->formatCurrency($set['price']); ?>"
                                     data-id="<?php echo $set['id']; ?>"
-                                    data-value="<?php echo $set['price']; ?>">
+                                    data-value="<?php echo $fmt->formatCurrency($set['price']); ?>">
                             </td>
                             <!-- Sale -->
                             <td style="max-width: 120px;">
                                 <input type="text" class="form-control" name="sale" id="sale"
-                                    value="<?php echo $set['sale']; ?>"
+                                    value="<?php echo $fmt->formatCurrency($set['sale']); ?>"
                                     data-id="<?php echo $set['id']; ?>"
-                                    data-value="<?php echo $set['sale']; ?>">
+                                    data-value="<?php echo $fmt->formatCurrency($set['sale']); ?>">
                             </td>
                             <!-- Status of room -->
                             <td>
@@ -109,7 +104,10 @@
                             </td>
                             <td class="text-end">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
-                                Xem chi tiết
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <button type="button" data-delete_room_id="<?php echo $set['id']; ?>" id="delete_room_id" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i>
                                 </button>
 
                             </td>
@@ -117,22 +115,30 @@
                         
                         <!-- Modal -->
                         <div class="modal fade" id="exampleModal<?php echo $set['id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl">*
+                        <?php 
+                            $id = $set['id'];
+                            $detail = $room->getDetailRooms($id);                                            
+                            $detail = $detail->fetch();
+                            if(isset($detail['id'])){
+                        ?> 
+                            <div class="modal-dialog modal-dialog-scrollable modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <span class="detail_name"><?php echo $set['name']; ?></span></h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <h5 class="modal-title" id="exampleModalLabel">
+                                            Xem chi tiết phòng <span class="detail_name"><?php echo $set['name']; ?></span>
+                                        </h5>
+                                        <div class="header-buttons ml-auto">
+                                            <a href="admin_index.php?action=admin_room_list&act=edit_detail&id=<?php echo $set['id']; ?>" class="btn btn-edit"><i class="far fa-edit"></i></a>
+                                            <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
+                                                <!-- <span aria-hidden="true">&times;</span> -->
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-                                        <?php 
-                                            $id = $set['id'];
-                                            $detail = $room->getDetailRooms($id);                                            
-                                            $detail = $detail->fetch()
-                                        ?> 
+
+
+                                    <div class="modal-body">                                        
                                         <div class="row" ">
-                                            <?php if(isset($detail['id'])){ ?>
+                                            <!-- Ảnh -->
                                             <div class="col-lg-8 bg-dark card image-container">
                                                 <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big m-4" width="90%">
                                                 <div class="image-row">
@@ -148,9 +154,10 @@
                                                     ?>
                                                 </div>                                        
                                             </div>
+                                            <!-- Mét vuông và số lượng người/phòng -->
                                             <div class="col-lg-4">
                                                 <div class="row d-flex justify-content-between">
-                                                    <h4>Thông tin chung</h4>
+                                                    <h4>Thông tin sơ bộ</h4>
                                                     <div>
                                                         <ul>
                                                             <li><?php echo " " . $detail['square_meter'] . "m²";?></li>
@@ -161,6 +168,7 @@
                                                 <div class="row">
                                                     <div>
                                                         <hr>
+                                                        <!-- Tiện ích -->
                                                         <h4>Tiện ích</h4>
                                                         <?php  
                                                             $item = $detail['service_name'];
@@ -173,6 +181,22 @@
                                                                 <?php endfor; ?>
                                                             </ul>
                                                         <hr>
+
+                                                        <!-- Yêu cầu -->
+                                                        <h4>Yêu cầu</h4>
+                                                        <?php  
+                                                            $reqs = $detail['requirement'];
+                                                            $req = explode(" - ", $reqs);
+                                                            $set_req = count($req);    
+                                                        ?>
+                                                            <ul>
+                                                                <?php for($i = 0; $i < $set_req; $i++): ?>
+                                                                    <li><?php echo $req[$i]; ?></li>
+                                                                <?php endfor; ?>
+                                                            </ul>
+                                                        <hr>
+
+                                                        <!-- Mô tả -->
                                                         <h4>Về phòng này</h4>
                                                         <?php
                                                             $item_des  = $detail['description'];
@@ -185,21 +209,41 @@
                                                         <br>
                                                         <div class="shadow-inset-md bg-body-tertiary p-3 text-center fw-bolder fs-6">
                                                             <?php
-                                                                echo "Khởi điểm từ <span style='color: rgb(255, 94, 31);'>".$detail['sale']."</span> VNĐ/phòng/đêm";
+                                                                echo "Khởi điểm từ <span style='color: rgb(255, 94, 31);'>".$fmt->formatCurrency($detail['sale'])."</span> đ/phòng/đêm";
                                                             ?>
                                                             <a class="btn btn-primary" width=""100% href="admin_index.php?action=admin_room_book">Chọn phòng này</a>
                                                         </div>                                               
                                                     </div>
                                                 </div>
                                             </div>
-                                            <?php }else{
-                                                echo "<h3 class='text-center'>Chưa có thông tin chi tiết của phòng này</h3>";
-                                            } ?>
+                                            
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <?php }else{ ?>
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Xem chi tiết phòng <span class="detail_name"><?php echo $set['name']; ?></span></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row parent text-center">
+                                            <h5 class="before-open-h5 text-center">Chưa có thông tin chi tiết của phòng này</h5>
+                                            <h5 class="after-open-h5 hide">Thêm mới thông tin chi tiết cho phòng <?php echo $set['name']; ?></h5>
+                                            <span class="open-btn">
+                                                <a href="admin_index.php?action=admin_room_list&act=create_detail&id=<?php echo $set['id']; ?>" class="btn btn-primary open-create-detail"><i class="fas fa-plus-circle"></i></a>
+                                            </span>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php } ?>
                         </div>
+                        <!-- End Modal -->
                         <?php 
                             $count++;
                             endwhile;
@@ -212,17 +256,64 @@
 </div>
 
 
-<!-- /.container-fluid -->
-
-<script>
-    function del(){
-        return confirm("Do you want to delete this room")
-    }
-</script>
-
 <script src="ajax/room/status.js"></script>
-<script src="ajax/currency/number_format"></script>
+<script src="ajax/room/detail_modal.js"></script>
+<script src="ajax/room/upload_img1.js"></script>
 <script>
+    $(document).ready(function(){        
+        $(document).on('click',"#delete_room_id", function(){
+            let delete_room_id = $(this).closest('tr').find('#id').data("id");
+            Swal.fire({
+                title: "Xoá phòng này?",
+                text: "Sau khi xoá phòng có thể vào Khôi phục để xem!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes!"
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "Controller/admin/admin_room_list.php?act=delete_room",
+                        method: "POST",
+                        data: {delete_room_id},
+                        dataType: "JSON",
+                        success: function(res){
+                            if(res.status == 'success'){
+                                Swal.fire({                                    
+                                    title: "Xoá phòng thành công!",
+                                    text: res.message,
+                                    icon: "success",
+                                    timer: 900,
+                                    timerProgressBar: true
+                                });
+                                setTimeout(function(){
+                                    window.location.reload();
+                                }, 930)
+                            }else{
+                                Swal.fire({                                    
+                                    title: "Xoá phòng thất bại!",
+                                    text: res.message,
+                                    icon: "error",
+                                    timer: 3200,
+                                    timerProgressBar: true
+                                });                           
+                            }
+                        },
+                        error: function(){
+                            Swal.fire({                                
+                                title: "Lỗi!",
+                                text: "Có lỗi xảy ra!",
+                                icon: "error",
+                                timer: 3200,
+                                timerProgressBar: true
+                            });
+                        }
+                    })
+                }
+            });
+        })
+    })
     $(document).on("click", ".image-small", function(){
         let image_container = $(this).closest(".image-container");
         let image_big = image_container.find(".image-big");
@@ -260,7 +351,7 @@
         max-height: 650px;
     }
 
-    .image-small {
+    .image-small{
         width: 150px; /* Adjust width of each small image */
         height: 125px;
         border-radius: 10px;
@@ -278,5 +369,41 @@
         opacity: 1.2;
     }
 
+    .hide{
+        display: none;
+    }
 
+    .show{
+        display: block;
+    }
+
+    .modal-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .header-buttons {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-edit i,
+    .btn-close span {
+        font-size: 1.5em; /* Tăng kích thước font */
+    }
+
+    .btn-edit,
+    .btn-close {
+        padding: 0.5em; /* Thêm padding để làm cho nút lớn hơn */
+    }
+
+    .btn-edit:hover{
+        color: rgb(64, 64, 64);
+    }
+
+
+
+    /* small{
+        margin: -15px 0 15px 0;
+    } */
 </style>

@@ -1,4 +1,3 @@
-const formatCurrency = require('../currency/number_format');
 $(document).ready(function(){
     //Chỉnh sửa name
     $(document).on('change', '#name', function(){
@@ -18,7 +17,7 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
@@ -27,7 +26,7 @@ $(document).ready(function(){
                     });
                     $(".detail_name").html(name_value);
                 }else if(data.status == 'fail'){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
@@ -35,7 +34,7 @@ $(document).ready(function(){
                         timerProgressBar: true
                     });
                 }else if(data.status == 'name'){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: data.message,
                         icon: "error",
@@ -44,7 +43,7 @@ $(document).ready(function(){
                     });
                     $input.val(prevName); //Quay lại giá trị cũ
                 }else{
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại!",
                         icon: "error",
@@ -54,7 +53,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
                     icon: "error",
@@ -65,20 +64,26 @@ $(document).ready(function(){
         })
     });
 
-    //Chỉnh sửa price    
-    let priceValue = ""; // Lưu giá trị ban đầu của ô input
-    $(document).on('input',"#price", function() {
-        let price = $(this).val();
-        priceValue = $(this).val().replace(/[^0-9]/g, ""); // Lấy giá trị hiện tại của ô input và loại bỏ các ký tự không phải số
-        const formattedPrice = formatCurrency(price); // Định dạng giá trị
-
-        // Cập nhật giá trị ô input với giá trị đã định dạng
-        $(this).val(formattedPrice);
-    });
+    //Vừa nhập vừa định dạng
+    let value = ['#price', '#sale'];
+    for(let i = 0; i < value.length; i++ ){
+        $(document).on('input',value[i], function() {
+            let number_input = $(this).val().replace(/[^0-9]/g, ""); // Lấy giá trị hiện tại của ô input và loại bỏ các ký tự không phải số
+            const formattedNumber = new Intl.NumberFormat('vi-VI', {
+                numberStyle: 'decimal',
+                maximumFractionDigits: 2,
+            }).format(parseFloat(number_input)); // Định dạng giá trị theo chuẩn VND
+    
+            // Cập nhật giá trị ô input với giá trị đã định dạng
+            $(this).val(formattedNumber);
+        });
+    }
+    
+    //Chỉnh sửa price
     $(document).on('change', '#price', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
-        let price_value = $(this).val().replace(/[^0-9]/g, "");;
-        let sale_value = $(this).closest("tr").find("#sale").val();
+        let price_value = $(this).val().replace(/[^0-9]/g, "");
+        let sale_value = $(this).closest("tr").find("#sale").val().replace(/[^0-9]/g, "");
         let prevPrice = $input.data('value'); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let id = $(this).data('id');
         
@@ -93,7 +98,7 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
@@ -101,7 +106,7 @@ $(document).ready(function(){
                         timerProgressBar: true
                     });
                 }else if(data.status == 'price'){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: data.message,
                         icon: "error",
@@ -112,7 +117,7 @@ $(document).ready(function(){
                     // $(this).val(); //Sai vì this sẽ trỏ tới AJAX chứ không còn trỏ tới bên input html, log sẽ ra undefined
                     console.log(prevPrice);
                 }else{
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
@@ -122,7 +127,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
                     icon: "error",
@@ -136,9 +141,9 @@ $(document).ready(function(){
     //Chỉnh sửa sale
     $(document).on('change', '#sale', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
-        let sale_value = $(this).val();
+        let sale_value = $(this).val().replace(/[^0-9]/g, "");
         let id = $(this).data('id');
-        let price_value = $(this).closest('tr').find("#price").val(); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
+        let price_value = $(this).closest('tr').find("#price").val().replace(/[^0-9]/g, ""); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
         let prevSale = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         $.ajax({
             url: 'Controller/admin/admin_room_list.php?act=update_sale',
@@ -152,6 +157,7 @@ $(document).ready(function(){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
                     Swal.fire({
+                         
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
@@ -159,6 +165,7 @@ $(document).ready(function(){
                     });
                 }else if(data.status == 'sale'){
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: data.message,
                         icon: "error",
@@ -169,6 +176,7 @@ $(document).ready(function(){
                     console.log(prevSale);
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
@@ -179,6 +187,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
                     icon: "error",
@@ -203,6 +212,7 @@ $(document).ready(function(){
                 console.log(data);
                 if(data.status == "success"){               
                     Swal.fire({
+                         
                         title: "Thành công",
                         text: "Thay đổi thành công!",
                         icon: "success",
@@ -210,6 +220,7 @@ $(document).ready(function(){
                     });                
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại",
                         text: "Thay đổi thất bại! Kiểm tra lại",
                         icon: "error",
@@ -219,6 +230,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL",
                     icon: "error",
@@ -246,6 +258,7 @@ $(document).ready(function(){
                 console.log(data);
                 if(data.status == "success"){
                     Swal.fire({
+                         
                         title: "Thành công!",
                         text: "Thay đổi thành công!",
                         icon: "success",
@@ -253,6 +266,7 @@ $(document).ready(function(){
                     });
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: "Thay đổi không thành công! Kiểm tra lại!",
                         icon: "error",
@@ -262,6 +276,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Lỗi",
                     text: "Lỗi khác ở hệ thống, connect, CSDL!",
                     icon: "error",
@@ -270,6 +285,66 @@ $(document).ready(function(){
             }
         })
    });
+
+   //Chỉnh sửa sale
+    $(document).on('change', '#sale', function(){
+        let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
+        let sale_value = $(this).val().replace(/[^0-9]/g, "");
+        let id = $(this).data('id');
+        let price_value = $(this).closest('tr').find("#price").val().replace(/[^0-9]/g, ""); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
+        let prevSale = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
+        $.ajax({
+            url: 'Controller/admin/admin_room_list.php?act=update_sale',
+            method: "POST",
+            data: {
+                sale_value,
+                id,
+                price_value
+            },
+            success: function(res){
+                let data = JSON.parse(res);
+                if(data.status == 'success'){
+                    Swal.fire({
+                         
+                        title: "Thành công!",
+                        text: "Thay đổi thành công!",
+                        icon: "success",
+                        timer: 900
+                    });
+                }else if(data.status == 'sale'){
+                    Swal.fire({
+                         
+                        title: "Thất bại!",
+                        text: data.message,
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                    $input.val(prevSale); //Quay lại giá trị cũ
+                    console.log(prevSale);
+                }else{
+                    Swal.fire({
+                         
+                        title: "Thất bại!",
+                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                     
+                    title: "Thất bại!",
+                    text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
+                    icon: "error",
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        })
+    });
 
    
 })

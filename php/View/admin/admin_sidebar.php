@@ -6,7 +6,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">Sogo Hotel</div>
     </a>
 
     <!-- Divider -->
@@ -14,7 +14,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="admin_index.php">
+        <a class="nav-link" href="admin_index.php?action=admin_home">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Trang chủ</span></a>
     </li>
@@ -38,8 +38,8 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_check">Xác nhận phòng</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ đặt phòng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_check">Hồ sơ đặt phòng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ thanh toán</a>
             </div>
         </div>
     </li>
@@ -63,12 +63,12 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKH"
             aria-expanded="true" aria-controls="collapseKH">
             <i class="fas fa-fw fa-user"></i>
-            <span>Quản lý khách hàng</span>
+            <span>Quản lý nhân viên</span>
         </a>
         <div id="collapseKH" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="utilities-color.html">Thông tin sơ bộ</a>
-                <a class="collapse-item" href="utilities-border.html">Đánh giá</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_rec_list">Thông tin sơ bộ</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_rec_salary">Lương</a>
             </div>
         </div>
     </li>
@@ -78,12 +78,11 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNV"
             aria-expanded="true" aria-controls="collapseNV">
             <i class="fas fa-fw fa-user-tie"></i>
-            <span>Quản lý nhân viên</span>
+            <span>Quản lý khách hàng</span>
         </a>
         <div id="collapseNV" class="collapse" aria-labelledby="headingNV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="utilities-color.html">Hiệu suất</a>
-                <a class="collapse-item" href="utilities-border.html">Lương</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_cus_list">Thông tin sơ bộ</a>
             </div>
         </div>
     </li>
@@ -115,14 +114,14 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
             aria-controls="collapsePages">
             <i class="fas fa-fw fa-folder"></i>
-            <span>Pages</span>
+            <span>Khôi phục</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <h6 class="collapse-header">Login Screens:</h6>
-                <a class="collapse-item" href="login.html">Login</a>
-                <a class="collapse-item" href="register.html">Register</a>
-                <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=admin_room_restore">Phòng</a>
+                <a class="collapse-item" href="register.html">Hoá đơn</a>
+                <a class="collapse-item" href="forgot-password.html">Nhân viên</a>
+                <a class="collapse-item" href="forgot-password.html">Khách hàng</a>
                 <div class="collapse-divider"></div>
                 <h6 class="collapse-header">Other Pages:</h6>
                 <a class="collapse-item" href="404.html">404 Page</a>

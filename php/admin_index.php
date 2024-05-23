@@ -1,16 +1,20 @@
 <?php
     session_start();
-
-    // unset($_SESSION['admin']);    
+    include_once "auth/auth.php";
+    include_once "router/router.php";    // unset($_SESSION['admin']);    
     spl_autoload_register("myModelClass");
     function myModelClass($classname){
         $path = "Model/";
         include $path.$classname.'.php';
     }
 
-    // if(!isset($_SESSION['admin'])){
-    //     header("Location:./View/admin/admin_login.php");
-    // }
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    if (!isAuthenticated()) {
+        if (!isset($_GET['action']) || $_GET['action'] !== 'admin_login') {
+            redirectToLogin();
+        }
+    }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,22 +29,22 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin VegeShop - Dashboard</title>    
+    <title>SB Admin Sogo Hotel - Dashboard</title>    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Custom fonts for this template-->
-    <link href="Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="Content/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-    <script src="Content/vendor/jquery/jquery.min.js"></script>
+    <script src="Content/admin/vendor/jquery/jquery.min.js"></script>
 
     <!-- Custom styles for this template-->
-    <link href="Content/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="Content/admin/css/sb-admin-2.min.css" rel="stylesheet">
 
     <!-- Datetimepicker css -->
-    <link rel="stylesheet" href="Content/datetimepicker-master/build/jquery.datetimepicker.min.css">   
+    <link rel="stylesheet" href="Content/admin/datetimepicker-master/build/jquery.datetimepicker.min.css">   
 
 </head>
 
@@ -51,7 +55,7 @@
 
         <!-- Sidebar -->
         <?php
-            if(isset($_SESSION['admin'])){
+            if(isAuthenticated()){
                 include_once "View/admin/admin_sidebar.php";
             }
         ?>
@@ -65,7 +69,7 @@
 
                 <!-- Topbar -->
                 <?php
-                    if(isset($_SESSION['admin'])){
+                    if(isAuthenticated()){
                         include_once "View/admin/admin_topbar.php";
                     }
                 ?>
@@ -74,11 +78,8 @@
                 <!-- Begin Page Content -->
                 <?php
                     //Load controller
-                    $ctrl = "admin_home";
-                    if(isset($_GET['action'])){
-                        $ctrl = $_GET['action'];    
-                    }
-                    include 'Controller/admin/'.$ctrl.'.php';
+                    $action = isset($_GET['action']) ? $_GET['action'] : 'admin_login';
+                    route($action);
                 ?>
                 <!-- /.container-fluid -->
 
@@ -87,7 +88,7 @@
 
             <!-- Footer -->
             <?php
-                if(isset($_SESSION['admin'])){
+                if(isAuthenticated()){
                     include_once "View/admin/admin_footer.php";
                 }
             ?>
@@ -126,24 +127,24 @@
 
     
     <!-- Bootstrap core JavaScript-->
-    <script src="Content/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="Content/admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="Content/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="Content/admin/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="Content/js/sb-admin-2.min.js"></script>
+    <script src="Content/admin/js/sb-admin-2.min.js"></script>
 
     <!-- Page level plugins -->
-    <script src="Content/vendor/chart.js/Chart.min.js"></script>
+    <script src="Content/admin/vendor/chart.js/Chart.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="Content/js/demo/chart-area-demo.js"></script>
-    <script src="Content/js/demo/chart-pie-demo.js"></script>
+    <script src="Content/admin/js/demo/chart-area-demo.js"></script>
+    <script src="Content/admin/js/demo/chart-pie-demo.js"></script>
 
     <!-- Datetimepicker JS -->
-    <script src="Content/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+    <script src="Content/admin/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
     
 </body>
 

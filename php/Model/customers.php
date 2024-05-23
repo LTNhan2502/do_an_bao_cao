@@ -3,12 +3,22 @@
         //Phương thức thêm thông tin người dùng
         //Nhớ làm thêm phần check nếu người dùng đã từng đặt phòng 1 lần thì từ lần sau nếu đặt nữa thì hỏi đăng nhập
          //người dùng hoặc đăng nhập để nhận thêm voucher hoặc không đăng nhập, bỏ validate email đã tồn tại đối người đối tượng này
-        function addCustomer($name, $email, $tel){
+
+         //Phương thức lấy ra tất cả customers
+         function getAllCus(){
+            $db = new connect();
+            $select = "SELECT * FROM customers";
+            $result = $db->getList($select);
+            return $result;
+         }
+
+         //Phương thức thêm KH khi đặt phòng mà không phải là thành viên
+        function addCustomer($name, $email_guest, $tel){
             $db = new connect();
             $str = "CTM_";
             $random = rand(0, 99999999);
             $str_rand = $str.$random;
-            $query = "INSERT INTO customers(customer_booked_id, customer_name, email, tel) VALUES('$str_rand', '$name', '$email', '$tel')";
+            $query = "INSERT INTO customers(customer_booked_id, customer_name, email_guest, tel) VALUES('$str_rand', '$name', '$email_guest', '$tel')";
             $result = $db->exec($query);
             if($result){
                 $customer_id = $db->db->lastInsertId();
@@ -65,5 +75,23 @@
             $result = $db->exec($query);
             return $result;
         }
+
+        //Phương thức thực hiện đăng kí nếu chưa có email_guest
+        function signUp($name, $email, $password){
+            $db = new connect();
+            $query = "INSERT INTO customers(customer_name, email, password) VALUES('$name', '$email', '$password')";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thực hiện đăng kí nếu đã có email_guest
+        function signUpWithGuest($email_guest, $password){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.email_guest == NULL AND c.email = '$email_guest' AND c.password = '$password' WHERE c.email_guest = '$email_guest'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức 
     }
 ?>

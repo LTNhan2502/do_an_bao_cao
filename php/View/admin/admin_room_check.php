@@ -3,11 +3,12 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
-            <span class="m-0 font-weight-bold text-primary">DANH SÁCH PHÒNG ĐÃ ĐẶT</span>
+            <span class="m-0 font-weight-bold text-primary">Danh sách phòng đã đặt</span>
         </div>
         <div class="card-body">
         <?php
             $room = new room();
+            $fmt = new formatter();
             $booked_room = $room->getBookedRoom();
             $rowCount = $booked_room->rowCount();
         ?>
@@ -52,12 +53,12 @@
                                 </div>
                                 <div><span class="text-decoration-underline" style="font-weight: 900">Tên KH:</span> <?php echo $result['customer_name']; ?></div>
                                 <div>Số điện thoại: <?php echo $result['tel']; ?></div>
-                                <div id="customer_email" data-email="<?php echo $result['email']; ?>">Email: <?php echo $result['email']; ?></div>
+                                <div id="customer_email" data-email="<?php echo $result['email'] == null ? $result['email_guest'] : $result['email']; ?>">Email: <?php echo $result['email'] == null ? $result['email_guest'] : $result['email']; ?></div>
                             </td>
                             <td>
                                 <div>Phòng: <?php echo $result['name']; ?></div>
-                                <div>Giá: <?php echo $result['price']; ?></div>
-                                <div><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $result['sum']; ?></div>
+                                <div>Giá: <?php echo $fmt->formatCurrency($result['price'])."đ"; ?></div>
+                                <div><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $fmt->formatCurrency($result['sum'])."đ"; ?></div>
                             </td>
                             <td>
                                 <div>Ngày vào: <?php echo $result['arrive']; ?></div>
@@ -118,7 +119,7 @@
 
 <style>
     .btn-same{
-        min: 200px;
+        min-width: 170px;
         font-size: 0.8rem;
     }
 

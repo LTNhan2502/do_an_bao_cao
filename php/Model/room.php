@@ -1,17 +1,56 @@
 <?php
     class room{
-        //Phương thức lấy tất cả thông tin của phòng
+        //Phương thức tìm kiếm
+        function searchRoom($value){
+            $db = new connect();
+            $select = "SELECT * FROM room WHERE room.name LIKE '%$value%'";
+            $result = $db->getList($select);
+            return $result;
+        }
+        //Phương thức lấy tất cả thông tin của tất cả các phòng
         function getRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room, room_detail, facility, function WHERE room.id = room_detail.id";
+            $select = "SELECT * FROM room, detail_room, kind WHERE room.id = detail_room.room_id AND room.kind_id = kind.kind_id";
             $result = $db->getList($select);
             return $result;
         }
 
-        //Phương thức lấy ra tất cả các phòng thuộc kind
+        //Phương thức lấy ra img_main để thêm vào thông tin chi tiết phòng
+        function getImgMain($id){
+            $db = new connect();
+            $select = "SELECT room.img FROM room WHERE room.id = $id";
+            $result = $db->getInstance($select);
+            return $result;
+        }
+
+        //Phương thức thêm thông tin chi tiết cho phòng
+        function insertDetailRoom($id, $img_main, $img_sub_1, $img_sub_2, $img_sub_3, $sm, $quantity, $sv, $req, $des){
+            $db = new connect();
+            $query = "INSERT INTO detail_room VALUES(NULL, $id, '$sv', '$req', '$img_main - $img_sub_1 - $img_sub_2 - $img_sub_3', '$quantity', '$sm', '$des')";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả các phòng thuộc kind single
         function getSingle(){
             $db = new connect();
-            $select = "SELECT * FROM room, kind WHERE kind.kind_id=room.kind_id AND kind.kind_id= 1";
+            $select = "SELECT * FROM room, kind, detail_room WHERE kind.kind_id=room.kind_id AND room.id = detail_room.room_id AND room.kind_id= 1";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả các phòng thuộc family
+        function getFamily(){
+            $db = new connect();
+            $select = "SELECT * FROM room, kind, detail_room WHERE kind.kind_id=room.kind_id AND room.id = detail_room.room_id AND room.kind_id= 2";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả các phòng thuộc kind presidential
+        function getPresidential(){
+            $db = new connect();
+            $select = "SELECT * FROM room, kind, detail_room WHERE kind.kind_id=room.kind_id AND room.id = detail_room.room_id AND room.kind_id= 3";
             $result = $db->getList($select);
             return $result;
         }
@@ -27,7 +66,15 @@
         //Phương thức lấy tất cả room
         function getRooms(){
             $db = new connect();
-            $select = "SELECT * FROM room ORDER BY room.id LIMIT 8";
+            $select = "SELECT * FROM room WHERE room.deleted_at IS NULL ORDER BY room.id ";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy tất cả các room đã xoá
+        function getDeleteRooms(){
+            $db = new connect();
+            $select = "SELECT * FROM room WHERE room.deleted_at IS NOT NULL";
             $result = $db->getList($select);
             return $result;
         }
@@ -40,10 +87,10 @@
             return $result;
         }
 
-        //Phương thức lấy ra cácc room chưa đặt
+        //Phương thức lấy ra các room chưa đặt
         function getEmptyRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room WHERE room.arrive IS NULL AND room.status_id = 1";
+            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.arrive IS NULL AND room.deleted_at IS NULL AND room.status_id = 1";
             $result = $db->getList($select);
             return $result;
         }
@@ -53,6 +100,55 @@
             $db = new connect();
             $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.id = $id";
             $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức thay đổi ảnh chỉnh
+        function changeImg($id, $img_main){
+            $db = new connect();
+            $query = "UPDATE room as r SET r.img = '$img_main' WHERE r.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi ảnh chính và ảnh phụ
+        function changeImgName($id, $img_main, $img_name){
+            $db = new connect();
+            $query = "UPDATE room as r JOIN detail_room as d ON r.id = d.room_id
+                      SET r.img = '$img_main', d.img_name = '$img_name' WHERE d.room_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi diện tích
+        function changeSM($id, $sm_value){
+            $db = new connect();
+            $query = "UPDATE detail_room as d SET d.square_meter = '$sm_value' WHERE d.room_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi số khách
+        function changeQuantity($id, $quantity_value){
+            $db = new connect();
+            $query = "UPDATE detail_room as d SET d.quantity = '$quantity_value' WHERE d.room_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thêm một tiện ích/yêu cầu/mô tả
+        function addDetail($id, $new_sv_name, $col){
+            $db = new connect();
+            $query = "UPDATE detail_room as d SET d.$col = '$new_sv_name' WHERE d.room_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thêm/xoá một tiện ích/yêu cầu/mô tả được chỉ định
+        function addOrDeleteDetail($id, $new_name, $col){
+            $db = new connect();
+            $query = "UPDATE detail_room as d SET d.$col = '$new_name' WHERE d.room_id = $id";
+            $result = $db->exec($query);
             return $result;
         }
 
@@ -168,22 +264,21 @@
             return $result;
         }
 
-        //Phương thức set room trống
-        function restoreRoom($id){
-            $db = new connect();
-            $query = "UPDATE room SET room.isEmpty = 0 WHERE room.id = $id";
-            $result = $db->exec($query);
-            return $result;
-        }
-
         //Phương thức đóng room ngừng cho thuê
         function deleteRoom($id){
             $db = new connect();
-            $query = "UPDATE room SET room.left_at = CURRENT_TIMESTAMP WHERE room.id = $id";
+            $query = "UPDATE room SET room.deleted_at = CURRENT_TIMESTAMP WHERE room.id = $id";
             $result = $db->exec($query);
             return $result;
         }
 
+        //Phương thức khôi phục room
+        function restoreRoom($id){
+            $db = new connect();
+            $query = "UPDATE room SET room.deleted_at = NULL WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
         
         //Phương thức đặt phòng
         function bookRoom($id){
@@ -220,7 +315,7 @@
             return $result;
         }      
 
-        //Phương thức hiển thị thông tin tất cả phòng đã đặt
+        //Phương thức hiển thị thông tin tất cả phòng đã đặt (trong trang hồ sơ đặt phòng)
         function getBookedRoom(){
             $db = new connect();
             $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id 

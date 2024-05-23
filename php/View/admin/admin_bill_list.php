@@ -1,6 +1,7 @@
 <div class="container-fluid">
     <?php
         $checkout = new checkout();
+        $fmt = new formatter();
         $count = $checkout->getBill()->rowCount(); //Tổng bill
         $limit = 8; //Giới hạn số bill trong 1 trang
         $page = new page();
@@ -26,7 +27,7 @@
                     <div class="card-text">
                         <div>Khách hàng: <span><?php echo $set['customer_name']; ?></span></div>
                         <div>Phòng: <span><?php echo $set['room_name']; ?></span></div>
-                        <div>Tổng: <span><?php echo $set['bill_price']; ?></span></div>
+                        <div>Tổng: <span><?php echo $fmt->formatCurrency($set['bill_price'])."đ"; ?></span></div>
                         <div>Ngày nhận: <span><?php echo $set['bill_arrive']; ?></span></div>
                         <div>Ngày trả: <span><?php echo $set['bill_leave']; ?></span></div>
                         <div>Thanh toán: <span><?php echo $set['bill_checkout_at']; ?></span></div>

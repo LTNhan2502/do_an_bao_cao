@@ -1,5 +1,5 @@
 <form enctype="multipart/form-data" method="POST" id="formBook">
-    <div class="row m-3 row-stay">    
+    <div class="row m-3 row-stay margin">    
         <div class="col-lg-8 mb-3 mb-sm-0">        
             <div class="card" id="customer">
                 <div class="card-body">
@@ -7,14 +7,18 @@
                         <h3 class="text-bolder">Thông tin khách hàng</h3>
                     </div>
                     <div class="card-text">
-                        <label for="name">Họ và tên (Nhập không dấu)</label>
-                        <input type="text" class="form-control" name="name" id="name_user">
-                        <small class="text-danger" name="name_error" id="name_user_error"></small>
-                        <div class="row mt-3">
-                            <div class="col-lg-6">
+                        <div class="row">
+                            <div class="col-lg-12">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" name="email" id="email_user">
-                                <small class="text-danger" name="email_error" id="email_user_error"></small>
+                                <small class="text-danger" name="email_error" id="email_user_error"></small>   
+                            </div>
+                        </div>                     
+                        <div class="row mt-3">
+                            <div class="col-lg-6">
+                                <label for="name">Họ và tên (Nhập không dấu)</label>
+                                <input type="text" class="form-control" name="name" id="name_user">
+                                <small class="text-danger" name="name_error" id="name_user_error"></small>
                             </div>
                             <div class="col-lg-6">
                                 <label for="tel">Số điện thoại</label>
@@ -67,24 +71,32 @@
                     </div>
                     <div class="card-text">
                         <div class="row">
-                            <div class="d-flex justify-content-between mb-3">
-                                <span>Giá phòng</span>
-                                <span class="fs-5" id="selected_price"></span>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Giá phòng</span>
+                                    <span class="fs-5" id="selected_price" data-price=""></span>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between mb-3">
-                                <span>Ngày ở</span>
-                                <span id="stay-time"></span>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <span>Ngày ở</span>
+                                    <span id="stay-time"></span>
+                                </div>
                             </div>
-                            <div class="d-flex justify-content-between mb-3" style="border-top: 1px solid #ced4da">
-                                <span class="mt-3">
-                                    <h3>Tổng giá</h3>
-                                </span>
-                                <span class="mt-3">
-                                    <h3 class="fw-bold fs-3" style="color: rgb(255, 94, 31);" id="selected_sum"></h3>
-                                </span>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="d-flex justify-content-between mb-3" style="border-top: 1px solid #ced4da">
+                                    <span class="mt-3">
+                                        <h5>Tổng giá</h5>
+                                    </span>
+                                    <span class="mt-3">
+                                        <h3 class="fw-bold fs-3" style="color: rgb(255, 94, 31);" id="selected_sum"></h3>
+                                    </span>
+                                </div>
                             </div>
-                            <button type="submit" class="btn btn-primary checkout">Tiếp tục thanh toán</button>
-                            <small class="text-danger mt-3 text-center checkout_error"></small>
+                            <div class="col-lg-12 col-md-12 d-flex justify-content-center flex-wrap">
+                                <button type="submit" class="btn btn-primary text-center checkout">Tiếp tục thanh toán</button> </br>                            
+                                <small class="text-danger mt-3 text-center checkout_error"></small>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,29 +104,44 @@
         </div>
         <div class="col-lg-4">
             <h4>Thông tin phòng</h4>
-            <select class="form-control" name="select_room" id="select_room">
-                <option value="0">---Hãy chọn phòng---</option>
-                <?php
-                    $room = new room();
-                    $detail_room = $room->getDetail_room();
-                    $rooms = $room->getEmptyRoom();
-                    // $dr = $detail_room->fetch();  
-                    // $r = $rooms->fetch(); 
-                    
-                    while ($set = $rooms->fetch()):
-                        
-                ?>
-                    <option value="<?php echo $set['id']; ?>"><?php echo $set['name']; ?></option>
-                <?php
-                    endwhile;
-                ?>
-            </select>
+            <div class="container mt-1" style="width: 100%;">
+                <div class="overlay" id="overlay"></div>
+                    <div id="show_cards_btn" class="btn btn-primary" style="width: 100%;">Xem các phòng</div>
+                    <div id="room_cards" class="card-container">
+                    <?php
+                        $room = new room();
+                        $fmt = new formatter();
+                        $detail_room = $room->getDetail_room();
+                        $rooms = $room->getEmptyRoom();
+                        while ($sets = $rooms->fetch()):
+                    ?>
+                        <div class="card mb-3 room_card_list" data-room_select_id="<?php echo $sets['id']; ?>">
+                            <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="Content/images/<?php echo $sets['img']; ?>" class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h6 class="card-title pt-2"><?php echo $sets['name']; ?></h6>
+                                    <p><?php echo $sets['square_meter']; ?>m²</p>
+                                    <p><?php echo $sets['quantity']; ?> khách</p>
+                                    <p><strong>Giá từ <?php echo $fmt->formatCurrency($sets['sale']); ?>VND</strong></p>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    <?php endwhile; ?>
+                    </div>
+
+                <input class="form-control" name="select_room" id="select_room" style="display:none;">
+            </div>
+            
 
             <div class="mt-3" id="selected_message">
                 <h5>Chưa đưa vào hoạt động.</h5>
                 <h5>Vui lòng chọn phòng khác!</h5>
             </div>
-            <div class="card mt-3" id="selected_info">            
+            <div class="card card_info mt-3" id="selected_info">            
                 <div class="card-body">
                     <div class="card-title">
                         <h3 class="text-bolder">
@@ -164,6 +191,100 @@
         </div>
     </div>
 </form>
+
+<style>
+    .margin{
+        margin: 65px !important;
+    }
+    .checkout{
+        min-width: 700px ;
+    }
+    
+    .card_info {
+        border-radius: 10px;
+        box-shadow: 3px 4px 8px rgba(255, 0, 0, 0.155);
+    }
+
+    #show_cards_btn {
+        width: 100%;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .card-container {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 17px;
+        z-index: 10;
+        height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        margin-top: 10px;
+        width: 88%;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9;
+    }
+
+    .room_card_list {
+        border: 1px solid #ccc;
+        border-radius: 17px;
+        margin: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        overflow: hidden;
+        width: 93%;
+        max-height: 110px;
+    }
+
+    .room_card_list:hover {
+        transform: scale(1.01);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .room_card_list.selected {
+        border-color: #007bff;
+        background-color: #f0f8ff;
+    }
+
+    .room_card_list img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        /* margin-right: 10px; */
+    }
+
+    .room_card_list .card-body {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.8em;
+        object-fit: contain;
+    }
+
+    .room_card_list .card-body p{
+        margin: 0px !important;
+    }
+
+    .show-cards-btn {
+        margin: 20px 0;
+        position: relative;
+    }
+</style>
 
 <script src="ajax/room/show_selected_room.js"></script>
 <!-- <script src="ajax/room/validate.js"></script> -->
@@ -219,18 +340,6 @@
                 stay_to_day = from_to_day;
             }
 
-            //Tính ngày ở lại
-            if(stay_from_day < stay_to_day && time_arrive >= now){
-                stay_time = (stay_to_day - stay_from_day);
-                stay_sum = stay_time*($("#selected_price").text());
-                console.log(stay_time);
-                $("#stay-time").html(stay_time);
-                $("#selected_sum").html(stay_sum);
-            }else{
-                stay_time = 0;
-                stay_sum = 0;
-            }
-
             // console.log(time_arrive, time_left);
             //Xác thực thời gian nhận phòng
             if(time_arrive > time_left){            
@@ -238,7 +347,7 @@
                 fromflag = true;
                 toflag = true; 
                 return false;         
-            }else if(time_left == time_arrive){
+            }else if(time_arrive == time_left){
                 $("#time_error").html("Ngày nhận phòng không được trùng với ngày trả phòng!");
                 fromflag = true;
                 toflag = true;
@@ -288,6 +397,21 @@
             if(!fromflag && !toflag) {
                 var fromData = $("#from").val();
                 var toData = $("#to").val();
+
+                //Tính ngày ở lại
+                console.log(time_arrive, time_left);
+                if(time_arrive < time_left && time_arrive >= now){
+                    stay_time = Math.floor((time_left - time_arrive)/(1000 * 60 * 60 * 24));
+                    console.log(stay_time);
+                    stay_sum = stay_time*($("#selected_price").data("price"));
+                    let formattedSum = stay_sum.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+                    console.log(stay_time);
+                    $("#stay-time").html(stay_time);
+                    $("#selected_sum").html(formattedSum);
+                }else{
+                    stay_time = 0;
+                    stay_sum = 0;
+                }
                 
                 // Kiểm tra xem giá trị `from` đã tồn tại trong FormData chưa
                 if (!formTimeData.has("from")) {
@@ -305,7 +429,8 @@
         //Kiểm tra name
         $(document).on("change", "#name_user", function(){
             let name = $(this).val();        
-            let regex_name = /^[a-zA-Z\s]+$/;
+            let regex_name_special = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
+            let regex_name_number = /\d/;
 
             //Kiểm tra rỗng
             if(!name || name.trim() == ''){
@@ -322,9 +447,15 @@
             }
 
             //Kiểm tra kí tự đặc biệt
+            else if(regex_name_special.test(name)){
+                $("#name_user_error").html("Họ và tên không được có kí tự đặc biệt!");
+                nameflag = true;
+                return false;
+            }
 
-            else if(!regex_name.test(name)){
-                $("#name_user_error").html("Họ và tên không được có kí tự đặc biệt và số!");
+            //Kiểm tra chứa số
+            else if(regex_name_number.test(name)){
+                $("#name_user_error").html("Họ và tên không được có số!");
                 nameflag = true;
                 return false;
             }
@@ -369,9 +500,29 @@
             //         method: "POST",
             //         data: { email },
             //         success: function(res) {
+                //          true là đã tồn tại, không cho thực hiện submit
             //             let isExist = (res == 0) ? false : true;
-        
+        //                    Đã tồn tại nhưng chưa đăng kí -> yêu cầu đăng kí
             //             if (isExist) {
+                            // Swal.fire({
+                            //     title: "Email này đã từng được sử dụng!",
+                            //     text: "Bạn có muốn đăng kí không? Đăng kí sẽ thêm ưu đãi!",
+                            //     icon: "info",
+                            //     showCancelButton: true,
+                            //     confirmButtonColor: "#3085d6",
+                            //     cancelButtonColor: "#d33",
+                            //     confirmButtonText: "Có!",
+                            //     cancelButtonText: "Không!"
+                            // }).then((result) => {
+                            //     if (result.isConfirmed) {
+                            //         Swal.fire({
+                                //         window.location.href("admmin_index.php?action=admin_signup");
+                            //         });
+                            //     }else{
+                            //         emailflag = false;
+
+                            //     }
+                            // });
             //                 $("#email_user_error").html("Email này đã tồn tại! Bạn có muốn đăng kí không? Đăng kí sẽ có thêm nhiều ưu đãi!");
             //                 //Không muốn đăng kí thì flag trả về false
             //                 //Muốn đăng nhập đăng kí thì chuyển sang đăng kí cho user
@@ -450,9 +601,12 @@
                 let email = $("#email_user").val();
                 let tel = $("#tel_user").val();
                 
-                
+                //Vì datetimepicker và input bình thường không trả về giá trị đúng cho formdata
+                //nên phải tách ra một bên formdata của datetimepick, một bên formdata của input thường
+                //rồi gộp chúng lại
                 let id = $("#select_room").val();
                 let formData = new FormData(form);
+                formData.append("select_room", id);
                 let lastTwoEntries = [];
 
                 //Gán tất cả trường vào lastTwoEntries
@@ -461,13 +615,16 @@
                 }
 
                 // Lấy ra 2 trường dữ liệu cuối trong lastTwoEntries và gán vào formData
-                for (let i = lastTwoEntries.length - 2; i < lastTwoEntries.length; i++) {
+                for (let i = lastTwoEntries.length -2; i < lastTwoEntries.length; i++) {
                     let entry = lastTwoEntries[i];
                     let key = entry[0];
                     let value = entry[1];
-
                     // Chuyển giá trị của trường dữ liệu thành kiểu date
-                    let dateValue = new Date(value);
+                    let valueSplit = value.split("/");
+                    let valueYear = valueSplit[2];
+                    let valueMonth = valueSplit[1] -1;
+                    let valueDay = valueSplit[0];
+                    // let dateValue = new Date(valueMonth, valueDay, valueYear);
 
                     const fromTime = '12:00:00';
                     const toTime = '14:00:00';
@@ -475,27 +632,27 @@
                     // Gán tên trường dữ liệu cùng với giá trị của nó sau định dạng
                     // Thêm from với giá trị định dạng
                     if (key === 'from') {
-                        let fromDate = new Date(value);
+                        let fromDate = new Date(valueYear, valueMonth, valueDay);
                         let formattedFromDate = fromDate.toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit'
                         }).split("/"); //Cắt nó ra thành mảng
                         let fromYear = formattedFromDate[2];
-                        let fromMonth = formattedFromDate[1];
-                        let fromDay = formattedFromDate[0];
+                        let fromMonth = formattedFromDate[0];
+                        let fromDay = formattedFromDate[1];
                         //Gộp lại để được năm-tháng-ngày
                         formData.append(key, `${fromYear}-${fromMonth}-${fromDay} ${fromTime}`);
                     } else if (key === 'to') {
-                        let toDate = new Date(value);
+                        let toDate = new Date(valueYear, valueMonth, valueDay);
                         let formattedToDate = toDate.toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: '2-digit',
                             day: '2-digit'
                     }).split("/"); //Cắt ra thành mảng
                         let toYear = formattedToDate[2];
-                        let toMonth = formattedToDate[1];
-                        let toDay = formattedToDate[0];
+                        let toMonth = formattedToDate[0];
+                        let toDay = formattedToDate[1];
                         //Gộp lại để được năm-tháng-ngày
                         formData.append(key, `${toYear}-${toMonth}-${toDay} ${toTime}`);
                     } else {
@@ -513,11 +670,12 @@
                     success: function(res){
                         console.log(res);
                         if(res.status == "success"){
-                            Swal.fire({
+                            Swal.fire({                                 
                                 title: "Thành công!",
                                 text: res.message,
                                 icon: "success",
-                                timer: 900
+                                timer: 900,
+                                timerProgressBar: true
                             });
                             $.ajax({
                                 url: "Controller/admin/admin_room_book.php?act=update_sum",
@@ -531,11 +689,11 @@
                                     console.log(res.status, res.message);
                                 }
                             });
-                            // setTimeout(function(){
-                            //     window.location.reload();
-                            // }, 950)
+                            setTimeout(function(){
+                                window.location.reload();
+                            }, 950)
                         }else{
-                            Swal.fire({
+                            Swal.fire({                                 
                                 title: "Thất bại!",
                                 text: res.message,
                                 icon: "error",
@@ -546,7 +704,7 @@
 
                     },
                     error: function(){
-                        Swal.fire({
+                        Swal.fire({                             
                             title: "Lỗi!",
                             text: "Không thể chỉnh sửa, thêm mới",
                             icon: "error",

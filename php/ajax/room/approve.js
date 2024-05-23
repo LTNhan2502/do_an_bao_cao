@@ -1,7 +1,6 @@
 $(document).ready(function(){
     //Xác nhận nhận phòng
     $(document).on("click", "#receive", function(){
-        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
         let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
@@ -16,6 +15,7 @@ $(document).ready(function(){
             success: function(res){
                 if(res.status == "success"){
                     Swal.fire({
+                         
                         title: "Thành công!",
                         text: res.message,
                         icon: "success",
@@ -36,6 +36,7 @@ $(document).ready(function(){
                     
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -46,6 +47,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -58,7 +60,6 @@ $(document).ready(function(){
 
     //Huỷ nhận phòng
     $(document).on("click", "#undo_receive", function(){
-        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
         let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
@@ -73,6 +74,7 @@ $(document).ready(function(){
             success: function(res){
                 if(res.status == "success"){
                     Swal.fire({
+                         
                         title: "Thành công!",
                         text: res.message,
                         icon: "success",
@@ -95,6 +97,7 @@ $(document).ready(function(){
                     
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -105,6 +108,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -117,7 +121,6 @@ $(document).ready(function(){
 
     //Xác nhận trả phòng
     $(document).on("click", "#leave", function(){
-        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
         let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
@@ -134,6 +137,7 @@ $(document).ready(function(){
             success: function(res){
                 if(res.status == "success"){
                     Swal.fire({
+                         
                         title: "Thành công!",
                         text: res.message,
                         icon: "success",
@@ -160,6 +164,7 @@ $(document).ready(function(){
 
                 }else{
                     Swal.fire({
+                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -170,6 +175,7 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({
+                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -182,7 +188,6 @@ $(document).ready(function(){
 
     //Huỷ trả phòng
     $(document).on("click", "#undo_leave", function(){
-        // let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("email");
         let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
         let status = $(this).closest("tr").find("#badge_receive");
         let button_receive = $(this).closest("tr").find(".button_receive");
@@ -198,7 +203,7 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thành công!",
                         text: res.message,
                         icon: "success",
@@ -223,7 +228,7 @@ $(document).ready(function(){
 
                     button_recover.attr("disabled", true);
                 }else{
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -233,7 +238,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
+                Swal.fire({                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -268,6 +273,7 @@ $(document).ready(function(){
                     success: function(res){
                         if(res.status == 'success'){
                             Swal.fire({
+                                 
                                 title: "Thu hồi phòng thành công!",
                                 text: res.message,
                                 icon: "success",
@@ -279,6 +285,7 @@ $(document).ready(function(){
                             }, 930)
                         }else{
                             Swal.fire({
+                                 
                                 title: "Thu hồi phòng thất bại!",
                                 text: res.message,
                                 icon: "error",
@@ -289,6 +296,7 @@ $(document).ready(function(){
                     },
                     error: function(){
                         Swal.fire({
+                             
                             title: "Lỗi!",
                             text: "Có lỗi xảy ra!",
                             icon: "error",

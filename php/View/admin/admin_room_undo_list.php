@@ -1,8 +1,9 @@
 <div class="container-fluid">
-    <h5>Hồ sơ đặt phòng</h5>
+    <h5>Hồ sơ thanh toán</h5>
     <div class="row row-cols-1 row-cols-md-4 g-4">
         <?php
             $room = new room();
+            $fmt = new formatter();
             $result = $room->getUndoRoom();
             $rowCount = $result->rowCount();
             if( $rowCount == 0){
@@ -18,10 +19,10 @@
                     <div class="card-text">
                         <div>Khách hàng: <?php echo $set['customer_name']; ?></div>
                         <div>Phòng: <?php echo $set['name']; ?></div>
-                        <div>Tổng: <?php echo $set['sum']; ?></div>
+                        <div>Tổng: <?php echo $fmt->formatCurrency($set['sum'])."đ"; ?></div>
                         <div class="d-none booked_room_id" data-id="<?php echo $set['booked_room_id']; ?>"></div>
                         <div class="d-none customer_booked_id" data-customer_id="<?php echo $set['customer_booked_id']; ?>"></div>
-                        <div class="d-none email" data-email="<?php echo $set['email']; ?>"></div>
+                        <div class="d-none email" data-email="<?php echo $set['email'] == null ? $set['email_guest'] : $set['email']; ?>"></div>
                         <div class="d-none customer_sum" data-customer_sum="<?php echo $set['sum']; ?>"></div>
                         <div class="d-none arrive" data-arrive="<?php echo $set['arrive']; ?>"></div>
                         <div class="d-none quit" data-quit="<?php echo $set['quit'] ?>"></div>

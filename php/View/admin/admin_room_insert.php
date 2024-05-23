@@ -1,4 +1,5 @@
 <?php
+    $fmt = new formatter();
     $ac = 0;
     if(isset($_GET['id'])){
         $ac = 1;
@@ -22,20 +23,12 @@
 
 <div class="container-fluid">
     <!-- Page Heading -->
-    <?php
-        if($ac == 2){
-            echo "<h1 class='h3 mb-2 text-gray-800'>Create Anew Room View</h1>";
-        }else{
-            echo "<h1 class='h3 mb-2 text-gray-800'>Room Updating View</h1>";
-        }
-    ?>
-
+    
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
-            <span class="m-0 font-weight-bold text-primary">Table Room</span>
-            <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list">Back to
-                List</a>
+            <span class="m-0 font-weight-bold text-primary">Table Room - Thêm mới</span>
+            <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list"><i class="fas fa-long-arrow-alt-left"></i></a>
         </div>
         <div class="card-body d-flex justify-content-center">
             <div class="card" style="width: 70%;">
@@ -47,6 +40,8 @@
                             <div class="col-lg-8 col-md-8">
                                 <label for="id">ID</label>
                                 <input type="number" class="form-control" name="id" id="id" readonly>
+
+                                <!-- Name -->
                                 <div class="row d-flex justify-content-between">
                                     <div>
                                         <label for="name">Name</label>
@@ -54,6 +49,8 @@
                                         <small id="name_error" class="text-danger"></small>
                                     </div>
                                 </div>
+
+                                <!-- Price/Sale -->
                                 <div class="row d-flex justify-content-between">
                                     <div>
                                         <label for="price">Price</label>
@@ -67,6 +64,8 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Status -->
                             <div class="col-lg-4 col-md-4">
                                 <div>
                                     <label for="kind">Status</label>
@@ -87,6 +86,8 @@
                                         <?php endwhile; ?>
                                     </select>
                                 </div>
+
+                                <!-- Kind -->
                                 <div>
                                     <label for="kind">Kind</label>
                                     <select class="form-select" name="kind" id="kind" <?php echo isset($kind_id) ? 'readonly' : ''; ?>>
@@ -106,13 +107,14 @@
                                         <?php endwhile; ?>
                                     </select>
                                 </div>
+
+                                <!-- Image -->
                                 <label for="img">Image</label>
                                 <input type="file" class="form-control" name="img" id="img">
                                 <?php if(isset($img)): ?>
                                     <img src="Content/images/<?php echo $img; ?>" alt="" width="130px" height="130px">
                                 <?php endif; ?>
-                                <small id="img_error"
-                                    class="text-danger"></small>
+                                <small id="img_error" class="text-danger"></small>
                             </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -135,12 +137,25 @@
     }
 
     $(document).ready(function(){
-        var submitBtn = $("#submitBtn");
         var imgValid = false;
         var nameValid = false;
         var priceValid = false;
         var saleValid = false;
 
+        //Định dạng
+        let value = ['#price', '#sale'];
+        for(let i = 0; i < value.length; i++ ){
+            $(document).on('input',value[i], function() {
+                let number_input = $(this).val().replace(/[^0-9]/g, ""); // Lấy giá trị hiện tại của ô input và loại bỏ các ký tự không phải số
+                const formattedNumber = new Intl.NumberFormat('vi-VI', {
+                    numberStyle: 'decimal',
+                    maximumFractionDigits: 2,
+                }).format(parseFloat(number_input)); // Định dạng giá trị theo chuẩn VND
+        
+                // Cập nhật giá trị ô input với giá trị đã định dạng
+                $(this).val(formattedNumber);
+            });
+        }
 
         //Kiểm tra file
         $("#img").on("change", function() {
@@ -195,7 +210,9 @@
         // Kiểm tra giá
         $(document).on('change', '#price', function(){
             var value = $(this).val();
-            var sale = parseFloat($("#sale").val());
+            var value_formatted = $(this).val().replace(/[^0-9]/g, "");
+            var regex = /^[0-9.]*$/;
+            var sale = parseFloat($("#sale").val().replace(/[^0-9]/g, ""));
 
             // Kiểm tra rỗng
             if(value == ''){
@@ -205,7 +222,7 @@
             }
 
             // Kiểm tra có phải là số
-            else if(isNaN(value)){
+            else if(!regex.test(value)){
                 $('#price_error').html('Giá phải là một số!');
                 priceValid = false; 
                 return false;
@@ -229,7 +246,9 @@
         // Kiểm tra giảm giá
         $(document).on('change', '#sale', function(){
             var value = $(this).val();
-            var price = parseFloat($('#price').val());
+            var value_formatted = $(this).val().replace(/[^0-9]/g, "");
+            var regex = /^[0-9.]*$/;
+            var price = parseFloat($('#price').val().replace(/[^0-9]/g, ""));
 
             // Kiểm tra rỗng
             if(value == ''){
@@ -239,7 +258,7 @@
             }
 
             // Kiểm tra có phải là số
-            else if(isNaN(value)){
+            else if(!regex.test(value)){
                 $('#sale_error').html('Giảm giá phải là một số!');
                 saleValid = false; 
                 return false;
@@ -258,13 +277,8 @@
                 saleValid = true;
             }
             console.log(saleValid);
-        });
-
-        // Update button state based on combined validation status
-        // var allValid = $("#name_error").val().trim() === '' &&
-        //                 $("#price_error").val().trim() === '' &&
-        //                 $("#sale_error").val().trim() === '';
-        var form = $("#roomForm")[0]; //Truy cập vào đối tượng DOM
+        });      
+        
         $("#roomForm").on("submit", function(e){
             e.preventDefault();
             if (!imgValid || !nameValid || !priceValid || !saleValid) { // kiểm tra trạng thái của input
@@ -273,30 +287,40 @@
             }else if($("#name").val() == '' || $("#price").val() == '' || $("#sale").val() == ''){
                 $("#all_error").html("Hãy nhập đầy đủ thông tin hợp lệ!");
             }else{
+                var form = $("#roomForm")[0]; //Truy cập vào đối tượng DOM
+                var formData = new FormData(form);
+
                 $("#all_error").html("");
                 console.log(imgValid, nameValid, saleValid, priceValid);
+
+                //Sửa lại giá trị của key price và sale trong FormData
+                let price_unFormatted = $("#price").val().replace(/[^0-9]/g, "");
+                let sale_unFormatted = $("#sale").val().replace(/[^0-9]/g, "");
+                formData.set("price", price_unFormatted);
+                formData.set("sale", sale_unFormatted);
+                
                 $.ajax({
                     type: "POST",
                     url: "Controller/admin/admin_room_list.php?act=create_action",
                     dataType: "JSON",
-                    data: new FormData(form),
+                    data: formData,
                     contentType: false, //Dùng FormData thì bắt buộc phải có cái này
                     processData: false, //Dùng FormData thì bắt buộc phải có cái này
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == 'success'){
-                            Swal.fire({
+                            Swal.fire({                                 
                                 title: 'Thành công!',
                                 text: res.message,
                                 icon: 'success',
                                 timer: 900,
                                 timerProgressBar: true
-                            });
-                            // setTimeout(() => {
-                            //     window.location.href = './admin_index.php?action=admin_room_list&act=room_create';
-                            // }, 1600);
+                            }).then(function() {
+                                window.location.reload();
+                            });                            
                         }else{
                             Swal.fire({
+                                 
                                 title: 'Thất bại!',
                                 text: res.message,
                                 icon: 'error',

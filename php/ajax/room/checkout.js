@@ -1,16 +1,16 @@
 $(document).on("click", "#do_checkout", function(){
-    let booked_room_id = $(this).closest(".col").find(".booked_room_id").data("id");
-    let customer_booked_id = $(this).closest(".col").find(".customer_booked_id").data("customer_id");
-    let email = $(this).closest(".col").find(".email").data("email");
-    let customer_sum = $(this).closest(".col").find(".customer_sum").data("customer_sum");
-    let arrive = $(this).closest(".col").find(".arrive").data("arrive");
-    let quit = $(this).closest(".col").find(".quit").data("quit");
-    let left_at = $(this).closest(".col").find(".left").data("left_at");
-    let room_name = $(this).closest(".col").find(".room_name").data("room_name");
-    let customer_name = $(this).closest(".col").find(".customer_name").data("customer_name");
-    let tel = $(this).closest(".col").find(".tel").data("tel");
-    console.log(booked_room_id);
-    // console.log(booked_room_id, email, sum, arrive, quit, left_at, room_name, customer_name, tel);
+    let $input = $(this).closest(".col");
+    let booked_room_id = $input.find(".booked_room_id").data("id");
+    let customer_booked_id = $input.find(".customer_booked_id").data("customer_id");
+    let email = $input.find(".email").data("email");
+    let customer_sum = $input.find(".customer_sum").data("customer_sum");
+    let arrive = $input.find(".arrive").data("arrive");
+    let quit = $input.find(".quit").data("quit");
+    let left_at = $input.find(".left").data("left_at");
+    let room_name = $input.find(".room_name").data("room_name");
+    let customer_name = $input.find(".customer_name").data("customer_name");
+    let tel = $input.find(".tel").data("tel");
+    
     Swal.fire({
         title: "Thực hiện thanh toán?",
         text: "Thông tin hoá đơn sẽ nằm trong Danh sách hoá đơn!",
@@ -36,12 +36,11 @@ $(document).on("click", "#do_checkout", function(){
                             icon: "success",
                             timer: 900,
                             timerProgressBar: true
-                        });
-                        setTimeout(function(){
+                        }).then(function(){
                             window.location.reload();
-                        }, 930)
+                        });
                     }else{
-                        Swal.fire({
+                        Swal.fire({                             
                             title: "Thất bại!",
                             text: "Thanh toán thất bại!",
                             icon: "error",
@@ -51,11 +50,10 @@ $(document).on("click", "#do_checkout", function(){
                         setTimeout(function(){
                             window.reload();
                         }, 3250)
-                    }
-                    
+                    }                    
                 },
                 error: function(){
-                    Swal.fire({
+                    Swal.fire({                         
                         title: "Lỗi!",
                         text: "Lỗi không xác định!",
                         icon: "error",

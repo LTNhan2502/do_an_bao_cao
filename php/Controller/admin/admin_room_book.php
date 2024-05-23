@@ -37,9 +37,20 @@
         case 'check_email':
             $email = $_POST['email'];
             $validate = new validate();
-            $smtp = $validate->checkEmail($email);//Bên model chỉ trả về câu lệnh SQL
-            $smtp->execute();//Thực thi câu lệnh SQL ở trên
-            $count = $smtp->fetchColumn();//Trả về số cột
+            //Kiểm tra tồn tại
+            $exist = $validate->checkEmail($email);//Bên model chỉ trả về câu lệnh SQL
+            $exist->execute();//Thực thi câu lệnh SQL ở trên
+            //Kiểm tra đăng kí
+            $signup = $validate->checkSignup($email);
+            $signup->execute();
+            //Trả về số cột
+            $countExist = $exist->fetchColumn();
+            $countSignup = $signup->fetchColumn();
+
+            //Đã tồn tại nhưng chưa đăng kí
+            // if($countExist != 0 && $countSignup == 0){
+                
+            // }
             echo json_encode($count);
             break;
         case 'book_room':

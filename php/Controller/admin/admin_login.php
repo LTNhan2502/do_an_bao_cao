@@ -21,7 +21,7 @@
                     echo "<script> alert('Đăng nhập thành công'); </script>";
                     echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_home"/>';
                 }else{
-                    echo '<script>alert("Đăng nhập không thành công");</script>';
+                    echo '<script>alert("Đăng nhập thất bại");</script>';
                     include_once "./View/admin/admin_login.php";
                 }
             }
@@ -29,8 +29,13 @@
         case "logout":
             unset($_SESSION["admin"]);
             unset($_SESSION["tenadmin"]);
-            echo "<script> alert('Đăng xuất thành công'); </script>";
-            include_once "./View/admin/admin_login.php";
+            echo "<script> 
+                    Swal.fire({
+                        title: 'Đăng xuất thành công!',
+                        icon: 'success'
+                    });
+                </script>";
+            include_once "View/admin/admin_login.php";
             break;
     }
 ?>
