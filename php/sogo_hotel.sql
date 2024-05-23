@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 20, 2024 at 10:34 AM
+-- Generation Time: May 23, 2024 at 12:20 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -129,19 +129,11 @@ INSERT INTO `bill` (`bill_id`, `booked_room_id`, `customer_booked_id`, `customer
 (61, 'ORD_19897416', 'CTM_49235718', 'letrongnhan@gmail.com', 998000, '2024-05-14 12:00:00', '2024-05-16 14:00:00', '2024-05-14 15:32:26', 'Family', 'chidsa', '0321456987'),
 (62, 'ORD_60877044', 'CTM_20239592', 'letrongnhan@gmail.com', 10000, '2024-05-14 12:00:00', '2024-05-17 14:00:00', '2024-05-14 15:32:32', 'Premier Deluxe', 'trong nhan', '0321456987'),
 (63, 'ORD_9243077', 'CTM_10059623', 'letrongnhan@gmail.com', 100000, '2024-05-14 12:00:00', '2024-05-16 14:00:00', '2024-05-14 15:32:58', 'Deluxe Window', 'trong nhan', '0321456987'),
-(64, 'ORD_61854737', 'CTM_6384458', 'letrongnhan@gmail.com', 10000000, '2024-05-14 12:00:00', '2024-05-16 14:00:00', '2024-05-14 15:32:51', 'Superior Double', 'Le Trong Nhan', '0394374868');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `booked_room`
---
-
-CREATE TABLE `booked_room` (
-  `booked_id` int(11) NOT NULL,
-  `room_id` int(11) NOT NULL,
-  `customer_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+(64, 'ORD_61854737', 'CTM_6384458', 'letrongnhan@gmail.com', 10000000, '2024-05-14 12:00:00', '2024-05-16 14:00:00', '2024-05-14 15:32:51', 'Superior Double', 'Le Trong Nhan', '0394374868'),
+(65, 'ORD_39538006', 'CTM_16770763', 'letrongnhan@gmail.com', 10400000, '2024-12-20 12:00:00', '2024-12-24 14:00:00', '2024-05-21 11:15:54', 'Deluxe Window', 'trong nhan', '0321456987'),
+(66, 'ORD_118130', 'CTM_26369186', 'trongnhan@gmail.com', 1144000, '2024-05-22 12:00:00', '2024-05-24 14:00:00', '2024-05-22 13:44:07', 'Superior Double', 'Trọng Nhân', '0321456987'),
+(67, 'ORD_49796957', 'CTM_29825641', '', 7800000, '2024-05-22 12:00:00', '2024-05-25 14:00:00', '2024-05-22 14:11:16', 'Deluxe Window', 'Trọng Nhân', '0394374868'),
+(68, 'ORD_42417309', 'CTM_60695705', 'trongnhan@gmail.com', 1144000, '2024-05-22 12:00:00', '2024-05-24 14:00:00', '2024-05-22 14:16:52', 'Superior Double', 'Trọng Nhân', '0321456987');
 
 -- --------------------------------------------------------
 
@@ -154,8 +146,8 @@ CREATE TABLE `customers` (
   `room_id` int(11) NOT NULL,
   `customer_booked_id` varchar(255) DEFAULT NULL,
   `customer_name` varchar(255) NOT NULL,
-  `username` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `email_guest` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
   `tel` varchar(255) NOT NULL,
   `session` tinyint(1) NOT NULL,
@@ -168,24 +160,11 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `room_id`, `customer_booked_id`, `customer_name`, `username`, `email`, `password`, `tel`, `session`, `done_session`, `sum`, `history`) VALUES
-(64, 0, 'CTM_3697281', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(65, 0, 'CTM_79898283', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 1144000, NULL),
-(66, 0, 'CTM_85585738', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 5488000, NULL),
-(67, 0, 'CTM_82720978', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(68, 0, 'CTM_29369167', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(69, 0, 'CTM_52214503', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(70, 0, 'CTM_94209837', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 1144000, NULL),
-(71, 0, 'CTM_8401926', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(72, 0, 'CTM_35610528', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(73, 0, 'CTM_35961238', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 1144000, NULL),
-(74, 0, 'CTM_1964490', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 5488000, NULL),
-(75, 0, 'CTM_9754713', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(76, 0, 'CTM_41879485', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 520000000, NULL),
-(77, 0, 'CTM_10059623', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 100000, NULL),
-(78, 0, 'CTM_6384458', 'Le Trong Nhan', NULL, 'letrongnhan@gmail.com', NULL, '0394374868', 0, 0, 10000000, NULL),
-(79, 0, 'CTM_20239592', 'trong nhan', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 10000, NULL),
-(80, 0, 'CTM_49235718', 'chidsa', NULL, 'letrongnhan@gmail.com', NULL, '0321456987', 0, 0, 998000, NULL);
+INSERT INTO `customers` (`customer_id`, `room_id`, `customer_booked_id`, `customer_name`, `email`, `email_guest`, `password`, `tel`, `session`, `done_session`, `sum`, `history`) VALUES
+(91, 0, 'CTM_29825641', 'Trọng Nhân', NULL, 'trongnhan@gmail.com', NULL, '0394374868', 0, 0, 7800000, NULL),
+(92, 0, 'CTM_60695705', 'Trọng Nhân', NULL, 'trongnhan@gmail.com', NULL, '0321456987', 0, 0, 1144000, NULL),
+(93, 0, NULL, 'trọng nhân', 'trongnha@gmail.com', NULL, '$2y$10$00SLsn.8ZMB3dXyiyT2Ir.ivGB1c4ZrXBZ1wO.8lgsC0lTa88NPf2', '', 0, 0, NULL, NULL),
+(94, 0, NULL, 'trọng nhân', 'trongnhan@gmail.com', NULL, '$2y$10$5Z8abpsgxSHvPTWyZIl2e.ZzaPqpxqzoUqKGHMEg4Q4OAf/3KYrrO', '', 0, 0, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -427,12 +406,6 @@ ALTER TABLE `bill`
   ADD PRIMARY KEY (`bill_id`);
 
 --
--- Indexes for table `booked_room`
---
-ALTER TABLE `booked_room`
-  ADD PRIMARY KEY (`booked_id`);
-
---
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
@@ -505,19 +478,13 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
-
---
--- AUTO_INCREMENT for table `booked_room`
---
-ALTER TABLE `booked_room`
-  MODIFY `booked_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `detail_room`
