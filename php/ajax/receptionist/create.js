@@ -4,7 +4,7 @@ $(document).ready(function(){
     // Kiểm tra name
     $(document).on('change','#new_rec',function(){
         var value = $(this).val();
-        var regex = /^[a-zA-Z\s]+$/;
+        var regex = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
 
         // Kiểm tra rỗng
         if(value == ''){

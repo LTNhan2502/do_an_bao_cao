@@ -1,3 +1,106 @@
+<style>
+    form{
+        font-size: medium;
+    }
+
+    .badge{
+        cursor: pointer;
+    }
+
+    .margin{
+        margin: 100px !important;
+    }
+    .checkout{
+        min-width: 700px ;
+    }
+    
+    .card_info {
+        border-radius: 10px;
+        box-shadow: 3px 4px 8px rgba(255, 0, 0, 0.155);
+    }
+
+    #show_cards_btn {
+        width: 100%;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .card-container {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        border-radius: 17px;
+        z-index: 10;
+        height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        margin-top: 10px;
+        width: 88%;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9;
+    }
+
+    .room_card_list {
+        border: 1px solid #ccc;
+        border-radius: 17px;
+        margin: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        overflow: hidden;
+        width: 93%;
+        max-height: 110px;
+    }
+
+    .room_card_list:hover {
+        transform: scale(1.01);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .room_card_list.selected {
+        border-color: #007bff;
+        background-color: #f0f8ff;
+    }
+
+    .room_card_list img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        /* margin-right: 10px; */
+    }
+
+    .room_card_list .card-body {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.8em;
+        object-fit: contain;
+    }
+
+    .room_card_list .card-body p{
+        margin: 0px !important;
+    }
+
+    .show-cards-btn {
+        margin: 20px 0;
+        position: relative;
+    }
+</style>
+
+
 <section class="site-hero overla" style="background-image: url(Content/images/hero_4.jpg)"
   data-stellar-background-ratio="0.5">
   <div class="container">
@@ -29,19 +132,26 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email_guest" id="email_user">
-                                <small class="text-danger" name="email_error" id="email_user_error"></small>   
+                                <input type="email" class="form-control" 
+                                    value="<?php echo isset($_SESSION['customer_id']) ? $_SESSION['customer_email'] : '' ?>"
+                                    name="email_guest" id="email_user">
+                                <small class="text-danger" name="email_error" id="email_user_error"></small>  
+                                <p class=" badge badge-primary" id="exist_email_btn" hidden>Đăng kí</p> 
                             </div>
                         </div>                     
                         <div class="row mt-3">
                             <div class="col-lg-6">
                                 <label for="name">Họ và tên (Nhập không dấu)</label>
-                                <input type="text" class="form-control" name="name" id="name_user">
+                                <input type="text" class="form-control" 
+                                    value="<?php echo isset($_SESSION['customer_id']) ? $_SESSION['customer_name'] : '' ?>"
+                                    name="name" id="name_user">
                                 <small class="text-danger" name="name_error" id="name_user_error"></small>
                             </div>
                             <div class="col-lg-6">
                                 <label for="tel">Số điện thoại</label>
-                                <input type="text" class="form-control" name="tel" id="tel_user">
+                                <input type="text" class="form-control" 
+                                    value="<?php echo isset($_SESSION['customer_id']) ? $_SESSION['customer_tel'] : '' ?>"
+                                    name="tel" id="tel_user">
                                 <small class="text-danger" name="tel_error" id="tel_user_error"></small>
                             </div>
                         </div>
@@ -210,110 +320,14 @@
     </div>
 </form>
 
-<style>
-    form{
-        font-size: medium;
-    }
-    .margin{
-        margin: 100px !important;
-    }
-    .checkout{
-        min-width: 700px ;
-    }
-    
-    .card_info {
-        border-radius: 10px;
-        box-shadow: 3px 4px 8px rgba(255, 0, 0, 0.155);
-    }
-
-    #show_cards_btn {
-        width: 100%;
-    }
-
-    .container {
-        width: 100%;
-    }
-
-    .card-container {
-        display: none;
-        position: absolute;
-        background-color: white;
-        border: 1px solid #ccc;
-        border-radius: 17px;
-        z-index: 10;
-        height: 400px;
-        overflow-y: auto;
-        padding: 10px;
-        margin-top: 10px;
-        width: 88%;
-    }
-
-    .overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9;
-    }
-
-    .room_card_list {
-        border: 1px solid #ccc;
-        border-radius: 17px;
-        margin: 10px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        overflow: hidden;
-        width: 93%;
-        max-height: 110px;
-    }
-
-    .room_card_list:hover {
-        transform: scale(1.01);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .room_card_list.selected {
-        border-color: #007bff;
-        background-color: #f0f8ff;
-    }
-
-    .room_card_list img {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-        /* margin-right: 10px; */
-    }
-
-    .room_card_list .card-body {
-        display: flex;
-        flex-direction: column;
-        font-size: 0.8em;
-        object-fit: contain;
-    }
-
-    .room_card_list .card-body p{
-        margin: 0px !important;
-    }
-
-    .show-cards-btn {
-        margin: 20px 0;
-        position: relative;
-    }
-</style>
 <script src="ajax/room/show_selected_room.js"></script>
 <!-- <script src="ajax/room/validate.js"></script> -->
 <!-- <script src="Content/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script> -->
 <script>
     $(document).ready(function(){
-        var nameflag = true;
-        var emailflag = true;
-        var telflag = true;
+        var nameflag = <?php echo isset($_SESSION['customer_id']) ? 'false' : 'true' ?>;        
+        var emailflag = <?php echo isset($_SESSION['customer_id']) ? 'false' : 'true' ?>;
+        var telflag = <?php echo isset($_SESSION['customer_id']) ? 'false' : 'true' ?>;
         var fromflag = true;
         var toflag = true;
         var time_arrive = 0;
@@ -322,6 +336,8 @@
         var stay_to_day = 0;
         var stay_time = 0;
         var stay_sum = 0;
+        var guestFlag = 0;
+        var act = '';
 
         var form = $("#formBook")[0];
         var formTimeData = new FormData(form);
@@ -489,7 +505,8 @@
 
         //Kiểm tra email
         $(document).on("change", "#email_user", function() {
-            let email = $(this).val();
+            let $input = $(this);
+            let email = $input.val();
             let regex_email = /^[a-zA-Z0-9._%+-]+@gmail+\.com$/;
             // let regex_email = /^[^\s@]+@gmail\.com$/;
             
@@ -509,54 +526,47 @@
             }
 
             //Đều ổn
-            else{
-                $("#email_user_error").html('');
-                emailflag = false;
-            }
+            // else{
+            //     $("#email_user_error").html('');
+            //     emailflag = false;
+            // }
         
             //Kiểm tra tồn tại
-            // else {
-            //     $.ajax({
-            //         url: "Controller/admin/admin_room_book.php?act=check_email",
-            //         method: "POST",
-            //         data: { email },
-            //         success: function(res) {
-                //          true là đã tồn tại, không cho thực hiện submit
-            //             let isExist = (res == 0) ? false : true;
-        //                    Đã tồn tại nhưng chưa đăng kí -> yêu cầu đăng kí
-            //             if (isExist) {
-                            // Swal.fire({
-                            //     title: "Email này đã từng được sử dụng!",
-                            //     text: "Bạn có muốn đăng kí không? Đăng kí sẽ thêm ưu đãi!",
-                            //     icon: "info",
-                            //     showCancelButton: true,
-                            //     confirmButtonColor: "#3085d6",
-                            //     cancelButtonColor: "#d33",
-                            //     confirmButtonText: "Có!",
-                            //     cancelButtonText: "Không!"
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         Swal.fire({
-                                //         window.location.href("admmin_index.php?action=admin_signup");
-                            //         });
-                            //     }else{
-                            //         emailflag = false;
-
-                            //     }
-                            // });
-            //                 $("#email_user_error").html("Email này đã tồn tại! Bạn có muốn đăng kí không? Đăng kí sẽ có thêm nhiều ưu đãi!");
-            //                 //Không muốn đăng kí thì flag trả về false
-            //                 //Muốn đăng nhập đăng kí thì chuyển sang đăng kí cho user
-            //                 flag = false;
-            //             }
-            //             //Đều ổn
-            //             else {
-            //                 $("#email_user_error").html('');
-            //                 flag = false;
-            //             }
-            //         }
-            //     });
-            // }
+            else {
+                $.ajax({
+                    url: "Controller/user/booking.php?act=check_email",
+                    method: "POST",
+                    data: { email },
+                    dataType: "JSON",
+                    success: function(res) {
+                        // let isGuest =  ? true : false;
+                        // Đã tồn tại (email_guest) nhưng chưa đăng kí -> gợi ý đăng kí
+                        if ((res.countExist != 0 && res.countSignup == 0)) {
+                            $("#email_user_error").html("Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không?");
+                            if($("#exist_email_btn").attr("hidden")){
+                                $("#exist_email_btn").attr("hidden", false);
+                            }
+                            $(document).on("click", "#exist_email_btn", function(){
+                                window.location.href = "index.php?action=signup"
+                            })
+                            guestFlag = 1;
+                            emailflag = false;
+                        }
+                        //Đã tồn tại (email)
+                        else if((res.countExist == 0 && res.countSignup != 0)){
+                            $("#email_user_error").html('');
+                            guestFlag = 2;
+                            emailflag = false;
+                        }
+                        //Email chưa tồn tại
+                        else if(res.countExist == 0 && res.countSignup == 0){
+                            $("#email_user_error").html('');
+                            guestFlag = 0;
+                            emailflag = false;
+                        }
+                    }
+                });
+            }
         });
         
 
@@ -611,12 +621,24 @@
                 $(".checkout_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
                 console.log(nameflag, emailflag, telflag, fromflag, toflag, now);
             
-            }else if($("#name_user").val() == '' || $("#email_user").val() == '' || 
-                    $("#tel_user").val() == '' || $("#from").val() == '' || $("#to").val() == ''){
+            <?php if(isset($_SESSION['customer_id'])){ 
+                    echo "}";
+                  }else{
+                    echo '}else if($("#name_user").val() == "" || $("#email_user").val() == "" || 
+                    $("#tel_user").val() == "" || $("#from").val() == "" || $("#to").val() == ""){
                 $(".checkout_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
-                console.log($("#name_user").val());
-            }else{
+                console.log(nameflag, emailflag, telflag, fromflag, toflag);
+                }';
+                  }?>
+            
+            
+            else{
                 $(".checkout_error").html("");
+                <?php 
+                    if(isset($_SESSION['customer_id'])):
+                ?>
+                    guestFlag = 2;
+                <?php endif; ?>
                 console.log(nameflag, emailflag, telflag, fromflag, toflag);
                 let name = $("#name_user").val();
                 let email = $("#email_user").val();
@@ -682,6 +704,8 @@
 
                     formData.append("stay_sum", stay_sum);
                 }
+                formData.append("act", guestFlag);
+
                 $.ajax({
                     url: "Controller/user/booking.php?act=book_room",
                     method: "POST",

@@ -185,7 +185,7 @@
             if(isset($_POST['email_value']) && isset($_POST['id'])){
                 $id = $_POST['id'];
                 $email_value = $_POST['email_value'];
-                $regex_email = '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/';
+                $regex_email = '/^[a-zA-Z0-9._%+-]+@gmail+\.com$/';
                 
                 if(!preg_match($regex_email, $email_value)){
                     $res = array(

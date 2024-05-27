@@ -243,7 +243,7 @@
         //Phương thức đưa room vào diện trống, có thể đặt room
         function setEmpty($id){
             $db = new connect();
-            $query = "UPDATE room SET room.status_id = 1 WHERE room.id = '$id'";
+            $query = "UPDATE room as r SET r.status_id = 1 AND r.booked_room_id = null AND r.arrive = null AND r.quit = null WHERE room.id = '$id'";
             $result = $db->execp($query);   //Hiển thị ra câu lệnh và đưa nó qua cho controller
             return $result;
         }
@@ -308,9 +308,9 @@
         }
 
         //Phương thức thêm id của phòng đã đặt vào customers (đặt phòng)
-        function addRoomID($id, $customer_id){
+        function addRoomID($id, $customer_id, $col){
             $db = new connect();
-            $select = "UPDATE customers SET customers.room_id = $id WHERE customers.customer_id = $customer_id";
+            $select = "UPDATE customers SET customers.$col = '$id' WHERE customers.customer_id = $customer_id";
             $result = $db->exec($select);
             return $result;
         }      

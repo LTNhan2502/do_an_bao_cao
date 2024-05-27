@@ -46,12 +46,12 @@
             //Trả về số cột
             $countExist = $exist->fetchColumn();
             $countSignup = $signup->fetchColumn();
-
-            //Đã tồn tại nhưng chưa đăng kí
-            // if($countExist != 0 && $countSignup == 0){
-                
-            // }
-            echo json_encode($count);
+            
+            $res = array(
+                'countExist' => $countExist,
+                'countSignup' => $countSignup
+            );
+            echo json_encode($res);
             break;
         case 'book_room':
             if(isset($_POST['select_room']) && isset($_POST['name']) && isset( $_POST['email']) && 
@@ -64,6 +64,7 @@
                 $quit = $_POST['to'];
                 $room = new room();
                 $customer = new customers(); 
+                $col = 'room_id';
                 $result_room = $room->updateTime($id, $arrive, $quit);
                 $customer_id = $customer->addCustomer($name, $email, $tel);
                 // print_r($customer_id);exit;
@@ -71,7 +72,7 @@
                 //Nhớ chỉnh lại addRoomID check phòng đã đưa vào hoạt động
 
                 if($result_room && $customer_id){
-                    $booked_room = $room->addRoomID($id, $customer_id);
+                    $booked_room = $room->addRoomID($id, $customer_id, $col);
                     $res = array(
                         "status" => "success",
                         "message" => "Đặt phòng thành công!",

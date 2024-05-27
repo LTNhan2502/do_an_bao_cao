@@ -94,6 +94,14 @@ $(document).ready(function () {
                             timer: 3200,
                             timerProgressBar: true
                         })
+                    }else if(res.status == 424){
+                        Swal.fire({                         
+                            title: "Từ chối đăng nhập!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3200,
+                            timerProgressBar: true
+                        })
                     }
                 },
                 error: function(error){

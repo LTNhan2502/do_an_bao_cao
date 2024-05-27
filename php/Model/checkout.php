@@ -5,7 +5,7 @@
             $db = new connect();
             $query = "UPDATE room AS r 
                         JOIN customers AS c ON r.id = c.room_id 
-                      SET r.booked_room_id = NULL, r.arrive = NULL, r.quit = NULL, r.left_at = NULL, c.done_session = 0, c.room_id = 0
+                      SET r.booked_room_id = NULL, r.arrive = NULL, r.quit = NULL, r.left_at = NULL, c.done_session = 0, c.sum =  NULL, c.room_id = 0
                       WHERE r.id = c.room_id AND r.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;

@@ -12,6 +12,14 @@
             return $result;
          }
 
+         //Phương thức lấy ra customer chỉ định bằng email (email_guest)
+         function getCustomer($email, $col){
+            $db = new connect();
+            $select = "SELECT * FROM customers WHERE customers.$col = '$email'";
+            $result = $db->getInstance($select);
+            return $result;
+         }
+
          //Phương thức thêm KH khi đặt phòng mà không phải là thành viên
         function addCustomer($name, $email_guest, $tel){
             $db = new connect();
@@ -28,6 +36,34 @@
             }
         }
 
+        //Phương thức cập nhật lại thông tin khách hàng guest khi guest đặt phòng
+        function updateGuest($name, $email_guest, $tel){
+            $db = new connect();
+            $str = "CTM_";
+            $random = rand(0, 99999999);
+            $str_rand = $str.$random;
+            $query = "UPDATE customers as c SET c.customer_booked_id = '$str_rand', c.customer_name = '$name', c.tel = '$tel' WHERE c.email_guest = '$email_guest'";
+            $result = $db->exec($query);
+            if($result){
+                return $result;
+            }else{
+                return false;
+            }
+        }
+        //Phương thức cập nhật lại thông tin khách hàng member
+        function updateMember($email){
+            $db = new connect();
+            $str = "CTM_";
+            $random = rand(0, 99999999);
+            $str_rand = $str.$random;
+            $query = "UPDATE customers as c SET c.customer_booked_id = '$str_rand' WHERE c.email = '$email'";
+            $result = $db->exec($query);
+            if($result){
+                return $result;
+            }else{
+                return false;
+            }
+        }
         //Phương thức lấy ra dòng dữ liệu mới nhất của customers
         function getLastInsert(){
             $db = new connect();
@@ -92,6 +128,36 @@
             return $result;
         }
 
-        //Phương thức 
+        //Phương thức thay đổi customer_name
+        function changeCusName($id, $name_value){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.customer_name = '$name_value' WHERE c.customer_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi email thành viên
+        function changeEmailMember($id, $email_value){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.email = '$email_value' WHERE c.customer_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi email khách
+        function changeEmailGuest($id, $email_value){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.email_guest = '$email_value' WHERE c.customer_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi số điện thoại
+        function changeCusTel($id, $tel_value){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.tel = '$tel_value' WHERE c.customer_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
     }
 ?>

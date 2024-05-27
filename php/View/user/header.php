@@ -1,6 +1,6 @@
 <header class="site-header js-site-header">
   <div class="container-fluid">
-    <div class="row align-items-center">
+    <div class="row align-items-center row-content-header mx-auto">
       <div class="col-6 col-lg-4 site-logo">
         <a class="text-black" href="index.php">Sogo Hotel</a>
       </div>
@@ -9,9 +9,12 @@
           <?php
             if(isset($_SESSION['customer_id'])){
           ?>
-              <a href="index.php?action=login" class="btn btn-outline-primary me-2 mr-1">
-                <?php echo $_SESSION['customer_name']; ?>
+              <a href="index.php?action=user_info" class="btn-user-info mr-2">
+                <i class="fas fa-user"></i> <?php echo $_SESSION['customer_name']; ?>
               </a>
+              <!-- <a href="index.php?action=logout" class="btn btn-outline-primary me-2 mr-1">
+                Đăng xuất
+              </a> -->
           <?php  }else{ ?>
             <a href="index.php?action=login" class="btn btn-outline-primary me-2 mr-1">Đăng nhập</a>
             <a href="index.php?action=signup" class="btn btn-primary">Đăng kí</a>
@@ -56,6 +59,15 @@
     z-index: 1000 !important;
   }
 
+  .site-header{
+    padding: 0 !important;
+  }
+
+  .row-content-header{
+    min-height: 100px !important;
+    /* padding-top: 20px; */
+  }
+
   .container-fluid{
     margin-bottom: 50%;
   }
@@ -75,11 +87,24 @@
 
   .site-menu-toggle {
     margin-left: 1rem;
+    height: 20px !important;
   }
 
   @media (max-width: 767.98px) {
     .col-6.col-lg-8 {
       justify-content: flex-end;
     }
+  }
+
+  .btn-user-info{
+    color: black;
+    padding: 3px 15px;
+  }
+
+  .btn-user-info:hover{
+    background-color: rgb(255, 170, 52);
+    padding: 3px 15px;
+    border-radius: 30px;
+    color: white;
   }
 </style>

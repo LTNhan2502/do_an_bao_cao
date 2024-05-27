@@ -1,7 +1,8 @@
 <?php
   session_start();
 
-    // unset($_SESSION['admin']);    
+    // unset($_SESSION['customer_name']); 
+    // unset($_SESSION['customer_id']);
     spl_autoload_register("myModelClass");
     function myModelClass($classname){
         $path = "Model/";
@@ -53,6 +54,7 @@
     ?>
 
     <!-- Tạo trang home -->
+    <div class="mt-4">
     <?php
         $ctrl = 'home';
         if(isset($_GET['action'])){
@@ -60,6 +62,7 @@
         }
         include_once "Controller/user/$ctrl.php";
     ?>
+    </div>
     
     <!-- Tạo footer -->
     <?php

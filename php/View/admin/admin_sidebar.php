@@ -77,7 +77,7 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNV"
             aria-expanded="true" aria-controls="collapseNV">
-            <i class="fas fa-fw fa-user-tie"></i>
+            <i class="fas fa-fw fa-users"></i>
             <span>Quản lý khách hàng</span>
         </a>
         <div id="collapseNV" class="collapse" aria-labelledby="headingNV" data-parent="#accordionSidebar">

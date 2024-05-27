@@ -176,7 +176,7 @@
         // Kiểm tra name
         $(document).on('change','#name',function(){
             var value = $(this).val();
-            var regex = /^[a-zA-Z\s]+$/;
+            var regex = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
 
             // Kiểm tra rỗng
             if(value == ''){

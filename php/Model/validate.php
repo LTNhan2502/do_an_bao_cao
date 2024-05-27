@@ -1,9 +1,9 @@
 <?php
     class validate{
-        //Phương thức check email đã tồn tại hay chưa
+        //Phương thức check email_guest đã tồn tại hay chưa
         function checkEmail($email){
             $db = new connect();
-            $select = "SELECT COUNT(*) FROM customers WHERE customers.email = '$email'";
+            $select = "SELECT COUNT(*) FROM customers WHERE customers.email_guest = '$email'";
             $result = $db->execp($select);
             return $result;
         }
@@ -18,10 +18,10 @@
         }
 
         //Phương thức kiểm tra password có đúng không
-        function checkPassword($email, $password){
+        function checkExist($email){
             $db = new connect();
-            $select = "SELECT * FROM customers as c WHERE c.email = '$email' AND c.password = '$password'";
-            $result = $db->getList($select);
+            $select = "SELECT * FROM customers as c WHERE c.email = '$email'";
+            $result = $db->getInstance($select);
             return $result;
         }
     }

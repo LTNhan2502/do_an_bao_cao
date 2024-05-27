@@ -210,7 +210,7 @@
 
     .btnn:hover {
         border: 1px solid #2d79f3;
-        ;
+        
     }
 </style>
 
