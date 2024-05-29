@@ -33,12 +33,11 @@
             $room_name = $_POST['room_name'];
             $customer_name = $_POST['customer_name'];
             $tel = $_POST['tel'];
-            // print_r($booked_room_id);exit;
             $checkout = new checkout();
+ 
             $result1 = $checkout->doCheckout($booked_room_id, $customer_booked_id, $email, $customer_sum, $arrive, $leave, $left_at, $room_name, $customer_name, $tel);
-            $result2 = $checkout->resetAfterCheckout($booked_room_id);
-            // print_r($result1);exit;
-            if($result1 && $result2){
+            // $result2 = $checkout->resetAfterCheckout($booked_room_id);
+            if($result1){
                 $res = array(
                     'status'=> 'success',
                     'message'=> 'Hãy xem hoá đơn tại Danh sách hoá đơn!'

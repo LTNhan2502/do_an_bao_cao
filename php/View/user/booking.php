@@ -251,7 +251,7 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h6 class="card-title pt-2"><?php echo $sets['name']; ?></h6>
+                                    <h6 class="card-title pt-2 room_name" data-room_name="<?php echo $sets['name']; ?>"><?php echo $sets['name']; ?></h6>
                                     <p><?php echo $sets['square_meter']; ?>m²</p>
                                     <p><?php echo $sets['quantity']; ?> khách</p>
                                     <p><strong>Bắt đầu từ <?php echo $fmt->formatCurrency($sets['sale']); ?>VND</strong></p>
@@ -643,6 +643,7 @@
                 let name = $("#name_user").val();
                 let email = $("#email_user").val();
                 let tel = $("#tel_user").val();
+                let room_name = $(".room_name").data("room_name");
                 
                 //Vì datetimepicker và input bình thường không trả về giá trị đúng cho formdata
                 //nên phải tách ra một bên formdata của datetimepick, một bên formdata của input thường
@@ -704,6 +705,7 @@
 
                     formData.append("stay_sum", stay_sum);
                 }
+                formData.append("room_name", room_name);
                 formData.append("act", guestFlag);
 
                 $.ajax({
@@ -725,8 +727,7 @@
                             }).then(function(){
                                 window.location.reload();
                             });
-                            console.log(res.sum);                            
-                        }else if(res.status == 'booked sum'){
+                        }else if(res.status == 'booked'){
                             Swal.fire({                                 
                                 title: "Thất bại!",
                                 text: res.message,

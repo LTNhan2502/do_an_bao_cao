@@ -29,8 +29,10 @@
                 //Kiểm tra có bất kì record nào đã có email/email_guest giống với $email
                 foreach($cus as $cust){
                     if($cust['email_guest'] == $email && $cust['email'] == null){
+                        //Đã có email tại email_guest
                         $alreadyGuest = 1;
-                    }else{
+                    }else if($cust['email_guest'] == null && $cust['email'] == null){
+                        //Chưa có email
                         $alreadyGuest = 2;
                     }
                 }

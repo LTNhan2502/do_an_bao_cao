@@ -677,21 +677,21 @@
                                 timer: 900,
                                 timerProgressBar: true
                             });
-                            $.ajax({
-                                url: "Controller/admin/admin_room_book.php?act=update_sum",
-                                method: "POST",
-                                data: {stay_sum},
-                                dataType: "JSON",
-                                success: function(res){
-                                    console.log(res.status, res.message);
-                                },
-                                error: function(){
-                                    console.log(res.status, res.message);
-                                }
-                            });
-                            setTimeout(function(){
-                                window.location.reload();
-                            }, 950)
+                            // $.ajax({
+                            //     url: "Controller/admin/admin_room_book.php?act=update_sum",
+                            //     method: "POST",
+                            //     data: {stay_sum},
+                            //     dataType: "JSON",
+                            //     success: function(res){
+                            //         console.log(res.status, res.message);
+                            //     },
+                            //     error: function(){
+                            //         console.log(res.status, res.message);
+                            //     }
+                            // });
+                            // setTimeout(function(){
+                            //     window.location.reload();
+                            // }, 950)
                         }else{
                             Swal.fire({                                 
                                 title: "Thất bại!",

@@ -161,38 +161,20 @@
             if(isset($_POST['name_value']) && isset($_POST['id'])){
                 $id = $_POST['id'];
                 $name_value = $_POST['name_value'];
-                $regex_name = '/^[a-zA-Z\s]+$/';
-                if(!preg_match($regex_name, $name_value)){
+                $room = new room();
+                $result = $room->changeName($id, $name_value);
+                
+                if($result){
                     $res = array(
-                        'status' => 'name',
-                        'message' => 'Tên không được bao gồm kí tự đặc biệt và số!'
-                    );
-                }else if($name_value == ''){
-                    $res = array(
-                        'status'=> 'name',
-                        'message'=> 'Không được để trống!'
-                    );
-                }else if(strlen($name_value) < 2 || strlen($name_value) > 30){
-                    $res = array(
-                        'status'=> 'name',
-                        'message'=> 'Tên phải từ 2 đến 30 kí tự!'
+                        "status" => "success",
+                        "message" => "changed"
                     );
                 }else{
-                    $room = new room();
-                    $result = $room->changeName($id, $name_value);
-                    if($result){
-                        $res = array(
-                            "status" => "success",
-                            "message" => "changed"
-                        );
-                    }else{
-                        $res = array(
-                            "status" => "fail",
-                            "message" => "Lenh SQL, kieu du lieu (JOSN), json_encode, value view"
-                        );
-                    }
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Lenh SQL, kieu du lieu (JOSN), json_encode, value view"
+                    );
                 }
-                
                 echo json_encode($res);
             }
             break;

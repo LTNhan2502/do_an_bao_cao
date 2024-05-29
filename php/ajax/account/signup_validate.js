@@ -71,8 +71,9 @@ $(document).ready(function () {
                 url: "Controller/user/booking.php?act=check_email",
                 method: "POST",
                 data: { email },
+                dataType: "JSON",
                 success: function(res) {
-                    let isExist = (res == 0) ? false : true;
+                    let isExist = (res.countSignup == 0) ? false : true;
                     if (isExist) {
                         $("#email_user_error").html("Email này đã tồn tại!");                        
                         emailflag = true;
@@ -183,7 +184,7 @@ $(document).ready(function () {
                             timer: 900,
                             timerProgressBar: true
                         }).then(function(){
-                            window.location.reload();
+                            window.location.href = 'index.php?action=login';
                         });
                     }else if(res.status == 403){
                         Swal.fire({                                 

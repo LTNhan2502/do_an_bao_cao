@@ -23,7 +23,7 @@ $(document).ready(function(){
         });
     }
 
-    //Chỉnh sửa rec_name
+    //Chỉnh sửa cus_name
     $(document).on('change', '#customer_name', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');

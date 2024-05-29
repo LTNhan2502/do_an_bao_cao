@@ -12,13 +12,11 @@
             include_once "View/admin/admin_room_check.php";
             break;
         case "approve_arrive":
-            if(isset($_POST['customer_booked_id'])){
-                $customer_booked_id = $_POST['customer_booked_id'];
-                // print_r($customer_booked_id);exit;
+            if(isset($_POST['booked_room_id'])){
+                $booked_room_id = $_POST['booked_room_id'];
 
                 $customer = new customers(); 
-                $receive = $customer->confirmReceive($customer_booked_id);
-                // print($receive);exit;
+                $receive = $customer->confirmReceive($booked_room_id);
                 if($receive){
                     $res = array(
                         "status" => "success",
@@ -34,12 +32,12 @@
             }
             break;
         case "undo_approve_arrive":
-            if(isset($_POST['customer_booked_id'])){
-                $customer_booked_id = $_POST['customer_booked_id'];
+            if(isset($_POST['booked_room_id'])){
+                $booked_room_id = $_POST['booked_room_id'];
                 // print_r($customer_booked_id);exit;
 
                 $customer = new customers(); 
-                $receive = $customer->undoReceive($customer_booked_id);
+                $receive = $customer->undoReceive($booked_room_id);
                 // print($receive);exit;
                 if($receive){
                     $res = array(
@@ -56,12 +54,12 @@
             }
             break;
         case "approve_leave":
-            if(isset($_POST['customer_booked_id'])){
-                $customer_booked_id = $_POST['customer_booked_id'];
+            if(isset($_POST['booked_room_id'])){
+                $booked_room_id = $_POST['booked_room_id'];
                 // print_r($customer_booked_id);exit;
 
                 $customer = new customers(); 
-                $receive = $customer->confirmLeave($customer_booked_id);
+                $receive = $customer->confirmLeave($booked_room_id);
                 // print($receive);exit;
                 if($receive){
                     $res = array(
@@ -78,12 +76,12 @@
             }
             break;
         case "undo_approve_leave":
-            if(isset($_POST['customer_booked_id'])){
-                $customer_booked_id = $_POST['customer_booked_id'];
+            if(isset($_POST['booked_room_id'])){
+                $booked_room_id = $_POST['booked_room_id'];
                 // print_r($customer_booked_id);exit;
 
                 $customer = new customers(); 
-                $receive = $customer->undoLeave($customer_booked_id);
+                $receive = $customer->undoLeave($booked_room_id);
                 // print($receive);exit;
                 if($receive){
                     $res = array(
@@ -108,7 +106,7 @@
                 if ($undo) {
                     $res = [
                         'status' => 'success',
-                        'message' => "Hãy vào hồ sơ đặt phòng để xem!"
+                        'message' => "Hãy vào quản lí hoá đơn để xem hoá đơn thanh toán!"
                     ];
                 } else {
                     $res = array(

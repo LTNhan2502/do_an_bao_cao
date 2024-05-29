@@ -77,9 +77,18 @@
                                     <small id="des_error" class="text-danger"></small>
                                     <br>                                    
                                     <div class="text-end"> 
-                                        <button type="submit" class="btn btn-primary" width="100%">Thêm</button>
+                                        
                                     </div>
-                                    <small id="create_error" class="text-danger"></small>                                    
+                                    <!-- <div class="d-flex justify-content-end align-items-center">
+                                        <small id="create_error" class="text-danger me-2"></small>  
+                                        <button type="submit" class="btn btn-primary">Thêm</button>
+                                    </div>    -->
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <small id="create_error" class="text-danger mt-4 me-md-2"></small>
+                                        <button class="mt-3 btn btn-primary me-md-2" type="submit"  name="submit" id="submitBtn">
+                                            Thêm
+                                        </button>
+                                    </div>                                                                   
                                 </div>
                             </div>
                         </div>

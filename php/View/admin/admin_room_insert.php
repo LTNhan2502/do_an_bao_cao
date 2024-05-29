@@ -120,7 +120,7 @@
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <small id="all_error" class="text-danger mt-4 me-md-2"></small>
                             <button class="mt-3 btn btn-primary me-md-2" type="submit"  name="submit" id="submitBtn">
-                                Add
+                                Thêm
                             </button>
                         </div>
                     </form>
@@ -177,6 +177,7 @@
         $(document).on('change','#name',function(){
             var value = $(this).val();
             var regex = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
+            var regex_number = /\d/;
 
             // Kiểm tra rỗng
             if(value == ''){
@@ -193,8 +194,15 @@
             }
 
             // Kiểm tra kí tự đặc biệt
-            else if(!regex.test(value)){
-                $('#name_error').html('Tên không được bao gồm số và kí tự đặc biệt!');
+            else if(regex.test(value)){
+                $('#name_error').html('Tên không được bao gồm kí tự đặc biệt!');
+                nameValid = false; 
+                return false;
+            }
+
+            //Kiểm tra chứa số
+            else if(regex_number.test(value)){
+                $('#name_error').html('Tên không được bao gồm số!');
                 nameValid = false; 
                 return false;
             }

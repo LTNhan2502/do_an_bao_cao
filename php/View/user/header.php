@@ -34,7 +34,7 @@
           <div class="row full-height align-items-center">
             <div class="col-md-6 mx-auto">
               <ul class="list-unstyled menu">
-                <li class="active"><a href="index.php">Home</a></li>
+                <li class="active"><a href="index.php">Trang chủ</a></li>
                 <li><a href="index.php?action=home&actall_room">Tất cả phòng</a></li>
                 <li><a href="index.php?action=booking">Đặt phòng</a></li>
                 <li><a href="events.html">Tài khoản</a></li>

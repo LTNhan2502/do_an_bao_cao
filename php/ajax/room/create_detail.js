@@ -101,7 +101,6 @@ $(document).ready(function(){
    //Validate số khách
    $(document).on("change", "#quantity_create", function(){
       var quantity_value = $(this).val();
-      var regex_quantity = /\d+/;
 
       if(quantity_value == ''){
          $("#quantity_error").html("Không được để trống!");

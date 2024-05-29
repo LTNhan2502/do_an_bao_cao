@@ -115,7 +115,7 @@
                                     <form enctype='multipart/form-data' id="createRecForm" method="post">
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="new_rec">Tên (Không dấu)</label>
+                                                <label for="new_rec">Họ và tên</label>
                                                 <input type="text" class="form-control" name="new_rec" id="new_rec">
                                                 <small class="text-danger" id="new_rec_error"></small>
                                             </div>
@@ -471,10 +471,6 @@
                 });
             });
         });
-
-
-
-        
         $.datetimepicker.setLocale('vi');
     });
 </script>

@@ -59,7 +59,7 @@
 
                                 <!-- Email thành viên -->
                                 <td>
-                                    <input type="text" class="form-control" name="email" id="email" disabled
+                                    <input type="text" class="form-control" name="email" id="email"
                                         value="<?php echo $set['email']; ?>"
                                         data-customer_id="<?php echo $set['customer_id']; ?>"
                                         data-email_value="<?php echo $set['email']; ?>">
@@ -67,7 +67,7 @@
 
                                 <!-- Email khách -->
                                 <td>
-                                    <input type="text" class="form-control" name="email_guest" id="email_guest" disabled
+                                    <input type="text" class="form-control" name="email_guest" id="email_guest"
                                         value="<?php echo $set['email_guest']; ?>"
                                         data-customer_id="<?php echo $set['customer_id']; ?>"
                                         data-email_value="<?php echo $set['email_guest']; ?>">
@@ -89,7 +89,7 @@
                                     </button>
                                     <button type="button" class="btn btn-danger" data-toggle="modal"
                                         data-target="#exampleModal">
-                                        <i class="fas fa-trash"></i>
+                                        <i class="fas fa-ban"></i>
                                     </button>
 
                                 </td>
@@ -109,9 +109,9 @@
                                         <form enctype='multipart/form-data' id="createRecForm" method="post">
                                             <div class="modal-body">
                                                 <div class="form-group">
-                                                    <label for="new_rec">Tên (Không dấu)</label>
-                                                    <input type="text" class="form-control" name="new_rec" id="new_rec">
-                                                    <small class="text-danger" id="new_rec_error"></small>
+                                                    <label for="new_cus">Họ và tên</label>
+                                                    <input type="text" class="form-control" name="new_cus" id="new_cus">
+                                                    <small class="text-danger" id="new_cus_error"></small>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -130,9 +130,9 @@
                             <div class="modal fade" id="exampleModal<?php echo $set['customer_id']; ?>" tabindex="-1"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-scrollable modal-fullscreen-lg-down">
-                                    <div class="modal-content">
+                                    <div class="modal-content" style="min-width: 520px;">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Xem thông tin cá nhân của <span
+                                            <h5 class="modal-title" id="exampleModalLabel">Xem thông tin đặt phòng của <span
                                                     class="detail_customer_name"><?php echo $set['customer_name']; ?></span>
                                             </h5>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -153,10 +153,9 @@
                                                         $history_arr = explode(' - ', $set['history']);
                                                         $history_count = count($history_arr);
                                                         for($i = 0; $i < $history_count; $i++){
-                                                            $result = $room->getDetailRooms($history_arr[$i]);
-                                                            if($result){
-                                                                $history_room = $result->fetch();
-                                                            
+                                                            $result = $room->getHistoryRooms($history_arr[$i]);
+                                                            if($result){  
+                                                                $history_room = $result->fetch();                                                          
                                                     ?>
                                                             <div class="card mb-3 room_card_list">
                                                                 <div class="row g-0">
@@ -166,13 +165,19 @@
                                                                     </div>
                                                                     <div class="col-md-8">
                                                                         <div class="card-body">
-                                                                            <h6 class="card-title pt-2"><?php echo $history_room['name']; ?>
-                                                                            </h6>
-                                                                            <p><?php echo $history_room['square_meter']; ?>m²</p>
-                                                                            <p><?php echo $history_room['quantity']; ?> khách</p>
-                                                                            <p><strong>Giá:
-                                                                                    <?php echo $fmt->formatCurrency($history_room['sale']); ?>VND</strong>
-                                                                            </p>
+                                                                            <h6 class="card-title pt-2"><?php echo $history_room['name']; ?></h6>
+                                                                            <div class="row">                                                                                
+                                                                                <div class="col">
+                                                                                    <p><?php echo $history_room['square_meter']; ?>m²</p>
+                                                                                </div>
+                                                                                <div class="col">
+                                                                                    <p><?php echo $history_room['quantity']; ?> khách</p>                                                                                    
+                                                                                </div>
+                                                                            </div>
+                                                                            <p><strong>Tổng: <?php echo $fmt->formatCurrency($history_room['sale']); ?>VND</strong></p>
+                                                                            <p>Lúc vào: <?php echo $history_room['booked_arrive']; ?></p>
+                                                                            <p>Lúc ra: <?php echo $history_room['booked_quit']; ?></p>
+                                                                            <p>Thanh toán: <?php echo $history_room['booked_left_at']; ?></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>

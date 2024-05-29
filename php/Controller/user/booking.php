@@ -46,7 +46,6 @@
             //Trả về số cột
             $countExist = $exist->fetchColumn();
             $countSignup = $signup->fetchColumn();
-
            
             $res = array(
                 'countExist' => $countExist,
@@ -55,10 +54,11 @@
             echo json_encode($res);
             break;
         case 'book_room':
-            if(isset($_POST['select_room']) && isset($_POST['name']) && isset( $_POST['email_guest']) && isset($_POST['tel']) &&
+            if(isset($_POST['select_room']) && isset($_POST['name']) && isset($_POST['room_name']) && isset( $_POST['email_guest']) && isset($_POST['tel']) &&
              isset($_POST['from']) && isset($_POST['to']) && isset($_POST['stay_sum']) && isset($_POST['act'])){
                 $id = $_POST['select_room'];
                 $name = $_POST['name'];
+                $room_name = $_POST['room_name'];
                 $email_guest = $_POST['email_guest'];
                 $tel = $_POST['tel'];
                 $arrive = $_POST['from'];
@@ -71,114 +71,118 @@
                 $col_guest = 'email_guest';
                 $room = new room();
                 $customers = new customers(); 
-                $result_room = $room->updateTime($id, $arrive, $quit);
+                $room = new room();
+
+                //Lấy ra price của phòng
+                $getRoom = $room->getDetailRoom($id);
+                $price = $getRoom['price'];
 
                 //Nếu là khách và là lần đầu tiên đặt phòng
                 if($act == 0){
-                    $customer_id = $customers->addCustomer($name, $email_guest, $tel);    
-                    //Nhớ chỉnh lại addRoomID check phòng đã đưa vào hoạt động
-                    if($result_room && $customer_id){
-                        $booked_room = $room->addRoomID($id, $customer_id, $col);
+                    $getCustomer = $customers->addCustomer($name, $email_guest, $tel);    
+                    if($getCustomer){
+                        //Thêm room_id vào customers
+                        // $booked_room = $room->addRoomID($id, $customer_id, $col);
                         $customer = $customers->getLastInsert();
                         $customer_id = $customer['customer_id'];
-                        $customer_sum = $customers->updateSum($stay_sum, $customer_id);
-    
-                        if($booked_room && $customer_sum){
+                        $customer_name = $customer['customer_name'];
+                        $customer_booked_id = $customer['customer_booked_id'];
+                        //Thêm thông tin vào table booked_room
+                        $addBookedRoom = $room->bookRoom($id, $customer_id, $customer_booked_id, $customer_name, $tel, $email_guest, $room_name, $price, $stay_sum, $arrive, $quit);
+                        //Cập nhật thêm lịch sử đặt phòng
+                        $booked_history = $room->addRoomID($id, $customer_id, $col_history);
+                        //Thêm sum vào sau khi đặt phòng
+                        // $customer_sum = $customers->updateSum($stay_sum, $customer_id);
+                        if($addBookedRoom && $booked_history){
                             $res = array(
                                 "status" => "success",
                                 "message" => "Đặt phòng thành công!",
                                 "customer_id" => $customer_id,
-                                "sum"=> $customer_sum
                             );
                         }else{
                             $res = array(
-                                "status" => "booked sum",
-                                "message" => "Booked_room hoặc customer_sum gặp lỗi!",
+                                "status" => "booked",
+                                "message" => "Đặt phòng hoặc thêm lịch sử đặt phòng gặp lỗi!",
                             );
                         }                    
                     }else{
                         $res = array(
                             "status" => "fail",
-                            "message" => "Chưa thêm KH hoặc chưa chỉnh sửa lại thời gian trong room!",
-                            "customer_id" => $customer_id
+                            "message" => "Không thể thêm khách hàng mới!",
+                            "customer_id" => $getCustomer
                         );
                     }
                 }
                 //Nếu là khách và là guest (đã từng đặt phòng)                
                 else if($act == 1){
-                    $customer = $customers->updateGuest($name, $email_guest, $tel); 
+                    // $result_room = $room->updateTime($id, $arrive, $quit);
+                    // $customer = $customers->updateGuest($name, $email_guest, $tel); 
                     $cust = $customers->getCustomer($email_guest, $col_guest); 
                     $customer_id = $cust['customer_id'];
-                    if($result_room && $customer){
-                        //Thêm id của phòng vào room_id của customer
-                        if($cust['history'] == null){
-                            $id_history = $id;
-                        }else{
-                            $id_history = $cust['history'].' - '.$id;
-                        }
-                        $booked_room = $room->addRoomID($id, $customer_id, $col);
-                        $booked_history = $room->addRoomID($id_history, $customer_id, $col_history);
-                        $customer_sum = $customers->updateSum($stay_sum, $customer_id);
+                    $customer_name = $cust['customer_name'];
+                    $customer_booked_id = $cust['customer_booked_id'];
 
-                        //Đặt phòng 1 lần xong rồi đặt tiếp bằng email_guest sẽ phải thay đổi lại thông tin của phòng cũ đã đặt (set null)
-    
-                        if($booked_room && $customer_sum){
-                            $res = array(
-                                "status" => "success",
-                                "message" => "Đặt phòng thành công!",
-                                "customer_id" => $customer_id,
-                                "sum"=> $customer_sum
-                            );
-                        }else{
-                            $res = array(
-                                "status" => "booked sum",
-                                "message" => "Booked_room hoặc customer_sum gặp lỗi!",
-                            );
-                        }                    
+                    //Thêm id của phòng vào room_id của customer
+                    if($cust['history'] == null){
+                        $id_history = $id;
+                    }else{
+                        $id_history = $cust['history'].' - '.$id;
+                    }
+                    //Thực hiện đặt phòng
+                    $addBookedRoom = $room->bookRoom($id, $customer_id, $customer_booked_id, $customer_name, $tel, $email_guest, $room_name, $price, $stay_sum, $arrive, $quit);
+
+                    //Cập nhật thêm lịch sử đặt phòng
+                    $booked_history = $room->addRoomID($id_history, $customer_id, $col_history);
+                    // $customer_sum = $customers->updateSum($stay_sum, $customer_id);
+
+                    if($addBookedRoom && $booked_history){
+                        $res = array(
+                            "status" => "success",
+                            "message" => "Đặt phòng thành công!",
+                            "customer_id" => $customer_id,
+                        );
                     }else{
                         $res = array(
-                            "status" => "fail",
-                            "message" => "Chưa thêm KH hoặc chưa chỉnh sửa lại thời gian trong room!",
-                            "customer_id" => $customer_id
+                            "status" => "booked",
+                            "message" => "Đặt phòng hoặc thêm lịch sử đặt phòng gặp lỗi!",
                         );
-                    }
+                    }                    
+                    
                 }
                 //Nếu khách là member                
                 else if($act == 2){
-                    $customer = $customers->updateMember($email_guest); 
+                    // $result_room = $room->updateTime($id, $arrive, $quit);
+                    // $customer = $customers->updateMember($email_guest); 
                     $cust = $customers->getCustomer($email_guest, $col_member); 
-                    $customer_id = $cust['customer_id'];  
-                    if($result_room && $customer){
-                        //Thêm id của phòng vào room_id, history của customer và tính sum
-                        if($cust['history'] == null){
-                            $id_history = $id;
-                        }else{
-                            $id_history = $cust['history'].' - '.$id;
-                        }
-                        $booked_room = $room->addRoomID($id, $customer_id, $col);
-                        $booked_history = $room->addRoomID($id_history, $customer_id, $col_history);
-                        $customer_sum = $customers->updateSum($stay_sum, $customer_id);
-    
-                        if($booked_room && $customer_sum && $booked_history){
-                            $res = array(
-                                "status" => "success",
-                                "message" => "Đặt phòng thành công!",
-                                "customer_id" => $customer_id,
-                                "sum"=> $customer_sum
-                            );
-                        }else{
-                            $res = array(
-                                "status" => "booked sum",
-                                "message" => "Booked_room hoặc customer_sum hoặc history gặp lỗi!",
-                            );
-                        }                    
+                    $customer_name = $cust['customer_name'];
+                    $customer_booked_id = $cust['customer_booked_id'];
+                    $customer_id = $cust['customer_id'];                      
+                    //Thêm id của phòng vào room_id, history của customer và tính sum
+                    if($cust['history'] == null){
+                        $id_history = $id;
+                    }else{
+                        $id_history = $cust['history'].' - '.$id;
+                    }
+                    //Thực hiện đặt phòng
+                    $addBookedRoom = $room->bookRoom($id, $customer_id, $customer_booked_id, $customer_name, $tel, $email_guest, $room_name, $price, $stay_sum, $arrive, $quit);
+                    //Thêm lịch sử đặt phòng
+                    $booked_history = $room->addRoomID($id_history, $customer_id, $col_history);
+                    //Tính tổng
+                    // $customer_sum = $customers->updateSum($stay_sum, $customer_id);
+
+                    if($addBookedRoom && $booked_history){
+                        $res = array(
+                            "status" => "success",
+                            "message" => "Đặt phòng thành công!",
+                            "customer_id" => $customer_id,
+                        );
                     }else{
                         $res = array(
-                            "status" => "fail",
-                            "message" => "Chưa thêm KH hoặc chưa chỉnh sửa lại thời gian trong room!",
-                            "customer_id" => $customer_id
+                            "status" => "booked",
+                            "message" => "Đặt phòng hoặc thêm lịch sử đặt phòng gặp lỗi!",
                         );
-                    }
+                    }                   
+                   
                 }
                 echo json_encode($res);
             }   

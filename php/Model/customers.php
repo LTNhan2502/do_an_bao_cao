@@ -7,10 +7,29 @@
          //Phương thức lấy ra tất cả customers
          function getAllCus(){
             $db = new connect();
-            $select = "SELECT * FROM customers";
+            $select = "SELECT * FROM customers ORDER BY customers.customer_id DESC";
             $result = $db->getList($select);
             return $result;
          }
+
+        //Phương thức tạo mới khách hàng
+        function createCus($name){
+            $db = new connect();
+            $rand = rand(0, 99999999);
+            $str = "CTM_";
+            $str_rand = $str.$rand;
+            $query = "INSERT INTO customers VALUES(NULL, 0, '$str_rand', '$name', NULL, NULL, NULL, NULL, 0, 0, NULL, NULL)";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức xoá account khách hàng
+        function deleteCus($email){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.email = $email";
+            $result = $db->exec($query);
+            return $result;
+        }
 
          //Phương thức lấy ra customer chỉ định bằng email (email_guest)
          function getCustomer($email, $col){
@@ -72,42 +91,42 @@
             return $result;
         }
 
-        //Phương thức cập nhật lại sum của customer
+        //Phương thức cập nhật lại sum trong table booked_room
         function updateSum($stay_sum, $customer_id){
             $db = new connect();
-            $query = "UPDATE customers SET customers.sum = $stay_sum WHERE customers.customer_id = $customer_id";
+            $query = "UPDATE booked_room as b SET b.booked_sum = $stay_sum WHERE b.customer_id = $customer_id";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức xác nhận nhận phòng
-        function confirmReceive($customer_booked_id){
+        function confirmReceive($booked_room_id){
             $db = new connect();
-            $query = "UPDATE customers SET customers.session = 1 WHERE customers.customer_booked_id = '$customer_booked_id'";
+            $query = "UPDATE booked_room as b SET b.booked_session = 1 WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức huỷ nhận phòng
-        function undoReceive($customer_booked_id){
+        function undoReceive($booked_room_id){
             $db = new connect();
-            $query = "UPDATE customers SET customers.session = 0 WHERE customers.customer_booked_id = '$customer_booked_id'";
+            $query = "UPDATE booked_room as b SET b.booked_session = 0 WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức trả phòng
-        function confirmLeave($customer_booked_id){
+        function confirmLeave($booked_room_id){
             $db = new connect();
-            $query = "UPDATE customers SET customers.done_session = 1, customers.session = 0 WHERE customers.customer_booked_id = '$customer_booked_id'";
+            $query = "UPDATE booked_room as b SET b.booked_done_session = 1, b.booked_session = 0 WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức huỷ trả phòng
-        function undoLeave($customer_booked_id){
+        function undoLeave($booked_room_id){
             $db = new connect();
-            $query = "UPDATE customers SET customers.done_session = 0, customers.session = 1 WHERE customers.customer_booked_id = '$customer_booked_id'";
+            $query = "UPDATE booked_room as b SET b.booked_done_session = 0, b.booked_session = 1 WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -123,7 +142,7 @@
         //Phương thức thực hiện đăng kí nếu đã có email_guest
         function signUpWithGuest($email_guest, $password){
             $db = new connect();
-            $query = "UPDATE customers as c SET c.email_guest == NULL AND c.email = '$email_guest' AND c.password = '$password' WHERE c.email_guest = '$email_guest'";
+            $query = "UPDATE customers as c SET c.email_guest = NULL, c.email = '$email_guest', c.password = '$password' WHERE c.email_guest = '$email_guest'";
             $result = $db->exec($query);
             return $result;
         }

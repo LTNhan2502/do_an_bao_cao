@@ -1,4 +1,20 @@
 $(document).ready(function(){
+    let error_empty = 'Không được để trống!';
+    let error_special = 'Không được có kí tự đặc biệt!';
+    let error_number = 'Không được có kí tự số!';
+    let error_length = 'Độ dài kí tự từ 2-45!';
+    //Lấy thời gian yyyy-mm-dd hh:ii:ss
+    function getLocalTimeString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng từ 0-11 nên cần +1
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
     //Vừa nhập vừa định dạng
     function formatCurrency(number) {
         const formatter = new Intl.NumberFormat('vi-VI', {
@@ -6,6 +22,16 @@ $(document).ready(function(){
             maximumFractionDigits: 2,
         });      
         return formatter.format(parseFloat(number));
+    }
+    //Function chứa sweetalert để hiện thông báo khi thay đổi giá trị của input
+    function SweetAlrt(name_error){
+        return Swal.fire({                         
+            title: "Thất bại!",
+            text: name_error,
+            icon: "error",
+            timer: 3200,
+            timerProgressBar: true
+        });
     }
       
     let value = ['#rec_bonus', '#rec_fine', '#rec_salary'];
@@ -28,67 +54,97 @@ $(document).ready(function(){
         let name_value  =$(this).val();
         let prevName = $input.data("rec_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let action = "update_name";
-        $.ajax({
-            url: 'Controller/admin/admin_rec_list.php?act=update_name',
-            method: "POST",
-            data: {
-                id,
-                name_value,
-                action
-            },
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    $(".detail_rec_name").html(name_value);
-                }else if(res.status == 'fail'){
+        let regex_name_special = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
+        let regex_name_number = /\d/;
+
+        //Kiểm tra trống
+        if(name_value == '' && name_value.trim() == ''){
+            SweetAlrt(error_empty);
+            $input.val(prevName); //Quay lại giá trị cũ
+            return;
+        }
+        //Kiểm tra kí tự đặc biệt
+        else if(regex_name_special.test(name_value)){
+            SweetAlrt(error_special);
+            $input.val(prevName);
+            return;
+        }
+        //Kiểm tra số
+        else if(regex_name_number.test(name_value)){
+            SweetAlrt(error_number);
+            $input.val(prevName);
+            return;
+        }
+        //Kiểm tra độ dài phải từ 2-45
+        else if(name_value.length < 2 || name_value.length > 45){
+            SweetAlrt(error_length);
+            $input.val(prevName);
+            return;
+        }
+        //Đều ổn
+        else{
+            $.ajax({
+                url: 'Controller/admin/admin_rec_list.php?act=update_name',
+                method: "POST",
+                data: {
+                    id,
+                    name_value,
+                    action
+                },
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 'success'){
+                        Swal.fire({
+                             
+                            title: "Thành công!",
+                            text: "Thay đổi thành công!",
+                            icon: "success",
+                            timer: 900,
+                            timerProgressBar: true
+                        });
+                        $(".detail_rec_name").html(name_value);
+                    }else if(res.status == 'fail'){
+                        Swal.fire({
+                             
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }else if(res.status == 'name'){
+                        Swal.fire({
+                             
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prevName); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({
+                             
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
                     Swal.fire({
                          
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                }else if(res.status == 'name'){
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: res.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prevName); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({
-                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     });
     //Chỉnh sửa chức vụ
     $(document).on('change', '#part', function() {
@@ -601,7 +657,7 @@ $(document).ready(function(){
         let unClaim = $input.find("#unClaimSalary");
         let badge = $input.find("#badge");
         //Lấy thời gian hiện tại theo định dạng yyyy/mm/dd hh:ii:ss
-        let currentTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        let currentTime = getLocalTimeString();
         let input_timeSalary = $input.find("#rec_timeSalary");
         $.ajax({
             url: "Controller/admin/admin_rec_list.php?act=claim_salary",
@@ -625,8 +681,7 @@ $(document).ready(function(){
                     input_timeSalary.val(currentTime);
                     
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -675,7 +730,6 @@ $(document).ready(function(){
                     success: function(res){
                         if(res.status == "success"){
                             Swal.fire({
-                                 
                                 title: "Thành công!",
                                 text: res.message,
                                 icon: "success",
@@ -688,8 +742,7 @@ $(document).ready(function(){
 
                             input_timeSalary.val("");                            
                         }else{
-                            Swal.fire({
-                                 
+                            Swal.fire({                                 
                                 title: "Thất bại!",
                                 text: res.message,
                                 icon: "error",
@@ -699,8 +752,7 @@ $(document).ready(function(){
                         }
                     },
                     error: function(){
-                        Swal.fire({
-                             
+                        Swal.fire({                             
                             title: "Lỗi!",
                             text: "Có lỗi xảy ra!",
                             icon: "error",

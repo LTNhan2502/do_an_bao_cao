@@ -1,4 +1,19 @@
 $(document).ready(function(){
+    let error_empty = 'Không được để trống!';
+    let error_special = 'Không được có kí tự đặc biệt!';
+    let error_number = 'Không được có kí tự số!';
+    let error_length = 'Độ dài kí tự từ 2-45!';
+    //Function chứa sweetalert để hiện thông báo khi thay đổi giá trị của input
+    function SweetAlrt(name_error){
+        return Swal.fire({                         
+            title: "Thất bại!",
+            text: name_error,
+            icon: "error",
+            timer: 3200,
+            timerProgressBar: true
+        });
+    }
+    
     //Chỉnh sửa name
     $(document).on('change', '#name', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
@@ -6,62 +21,92 @@ $(document).ready(function(){
         let name_value  =$(this).val();
         let prevName = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let action = "update_name";
-        $.ajax({
-            url: 'Controller/admin/admin_room_list.php?act=update_name',
-            method: "POST",
-            data: {
-                id,
-                name_value,
-                action
-            },
-            success: function(res){
-                let data = JSON.parse(res);
-                if(data.status == 'success'){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    $(".detail_name").html(name_value);
-                }else if(data.status == 'fail'){
-                    Swal.fire({                         
+        let regex_name_special = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
+        let regex_name_number = /\d/;
+
+        //Kiểm tra trống
+        if(name_value == '' && name_value.trim() == ''){
+            SweetAlrt(error_empty);
+            $input.val(prevName); //Quay lại giá trị cũ
+            return;
+        }
+        //Kiểm tra kí tự đặc biệt
+        else if(regex_name_special.test(name_value)){
+            SweetAlrt(error_special);
+            $input.val(prevName);
+            return;
+        }
+        //Kiểm tra số
+        else if(regex_name_number.test(name_value)){
+            SweetAlrt(error_number);
+            $input.val(prevName);
+            return;
+        }
+        //Kiểm tra độ dài phải từ 2-45
+        else if(name_value.length < 2 || name_value.length > 45){
+            SweetAlrt(error_length);
+            $input.val(prevName);
+            return;
+        }
+        //Đều ổn
+        else{
+            $.ajax({
+                url: 'Controller/admin/admin_room_list.php?act=update_name',
+                method: "POST",
+                data: {
+                    id,
+                    name_value,
+                    action
+                },
+                success: function(res){
+                    let data = JSON.parse(res);
+                    if(data.status == 'success'){
+                        Swal.fire({                         
+                            title: "Thành công!",
+                            text: "Thay đổi thành công!",
+                            icon: "success",
+                            timer: 900,
+                            timerProgressBar: true
+                        });
+                        $(".detail_name").html(name_value);
+                    }else if(data.status == 'fail'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }else if(data.status == 'name'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: data.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prevName); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire({                     
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                }else if(data.status == 'name'){
-                    Swal.fire({                         
-                        title: "Thất bại!",
-                        text: data.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prevName); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     });
 
     //Vừa nhập vừa định dạng

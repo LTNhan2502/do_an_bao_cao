@@ -8,7 +8,7 @@
             return $result;
         }
 
-        //Phương thức tạo mới
+        //Phương thức tạo mới tiếp tân
         function createRec($name){
             $db = new connect();
             $rand = rand(0, 99999999);

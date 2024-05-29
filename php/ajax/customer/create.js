@@ -2,40 +2,40 @@ $(document).ready(function(){
     let nameValid = false;
     
     // Kiểm tra name
-    $(document).on('change','#new_rec',function(){
+    $(document).on('change','#new_cus',function(){
         var value = $(this).val();
         var regex = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
 
         // Kiểm tra rỗng
         if(value == ''){
-            $('#new_rec_error').html('Không được để trống!');
+            $('#new_cus_error').html('Không được để trống!');
             nameValid = false; 
             return false;            
         }
 
         // Kiểm tra độ dài 2 < name < 30
         else if(value.length < 2 || value.length > 30){
-            $('#new_rec_error').html('Tên phải từ 2 tới 30 kí tự!');
+            $('#new_cus_error').html('Tên phải từ 2 tới 30 kí tự!');
             nameValid = false; 
             return false;
         }
 
         // Kiểm tra kí tự đặc biệt
         else if(regex.test(value)){
-            $('#new_rec_error').html('Tên không được bao gồm số và kí tự đặc biệt!');
+            $('#new_cus_error').html('Tên không được bao gồm số và kí tự đặc biệt!');
             nameValid = false; 
             return false;
         }
 
         // Đều đúng
         else{
-            $('#new_rec_error').html('');
+            $('#new_cus_error').html('');
             nameValid = true; 
         }
         console.log(nameValid);
     });
 
-    $("#createRecForm").on("submit", function(e){
+    $("#createCusForm").on("submit", function(e){
         e.preventDefault();
         if (!nameValid) { // kiểm tra trạng thái của input
             $("#new_all_error").html("Hãy nhập đầy đủ thông tin hợp lệ!");
@@ -51,7 +51,7 @@ $(document).ready(function(){
             
             $.ajax({
                 type: "POST",
-                url: "Controller/admin/admin_rec_list.php?act=create_action",
+                url: "Controller/admin/admin_cus_list.php?act=create_action",
                 dataType: "JSON",
                 data: formData,
                 contentType: false, //Dùng FormData thì bắt buộc phải có cái này

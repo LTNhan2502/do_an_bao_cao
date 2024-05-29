@@ -103,6 +103,16 @@
             return $result;
         }
 
+        //Phương thức lấy ra chi tiết phòng có trong history table booked_room
+        function getHistoryRooms($id){
+            $db = new connect();
+            $select = "SELECT r.img, r.name, r.sale, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_left_at
+                       FROM room as r, detail_room as d, booked_room as b
+                       WHERE r.id = d.room_id AND r.id = b.room_id AND r.id = $id";
+            $result = $db->getList($select);
+            return $result;
+        }
+
         //Phương thức thay đổi ảnh chỉnh
         function changeImg($id, $img_main){
             $db = new connect();
@@ -243,7 +253,7 @@
         //Phương thức đưa room vào diện trống, có thể đặt room
         function setEmpty($id){
             $db = new connect();
-            $query = "UPDATE room as r SET r.status_id = 1 AND r.booked_room_id = null AND r.arrive = null AND r.quit = null WHERE room.id = '$id'";
+            $query = "UPDATE room as r SET r.status_id = 1, r.booked_room_id = null, r.arrive = null, r.quit = null WHERE r.id = '$id'";
             $result = $db->execp($query);   //Hiển thị ra câu lệnh và đưa nó qua cho controller
             return $result;
         }
@@ -281,9 +291,12 @@
         }
         
         //Phương thức đặt phòng
-        function bookRoom($id){
+        function bookRoom($room_id, $customer_id, $customer_booked_id, $booked_customer_name, $booked_tel, $booked_email, $booked_room_name, $booked_price, $booked_sum, $booked_arrive, $booked_quit){
             $db = new connect();
-            $query = "";
+            $str = "ORD_";
+            $random = rand(0, 99999999);
+            $str_rand_room = $str . $random;
+            $query = "INSERT INTO booked_room VALUES(NULL,$room_id, $customer_id, '$str_rand_room', '$customer_booked_id', '$booked_customer_name', '$booked_tel', '$booked_email','$booked_room_name', '$booked_price', '$booked_sum', '$booked_arrive', '$booked_quit', 0, 0)";
             $result = $db->exec($query);
             return $result;
         }
@@ -316,12 +329,18 @@
         }      
 
         //Phương thức hiển thị thông tin tất cả phòng đã đặt (trong trang hồ sơ đặt phòng)
+        function getBookedRooms(){
+            $db = new connect();
+            $select = "SELECT * FROM booked_room as b WHERE b.booked_left_at IS NULL";
+            $result = $db->getList($select);
+            return $result;
+        }
         function getBookedRoom(){
             $db = new connect();
             $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id 
                        WHERE r.id = c.room_id AND r.left_at IS NULL AND r.arrive IS NOT NULL 
                             AND r.quit IS NOT NULL AND r.booked_room_id IS NOT NULL AND c.room_id != 0
-                            ORDER BY r.id DESC LIMIT 4";
+                            ORDER BY r.id DESC LIMIT 6";
             $result = $db->getList($select);
             return $result;
         }
@@ -329,7 +348,8 @@
         //Phương thức thu hồi phòng đã đặt
         function undoBookedRoom($booked_room_id){
             $db = new connect();
-            $query = "UPDATE room SET room.left_at = CURRENT_TIMESTAMP, room.status_id = 1 WHERE room.booked_room_id = '$booked_room_id'";
+            $query = "UPDATE booked_room as b JOIN room as r ON b.room_id = r.id
+                      SET b.booked_left_at = CURRENT_TIMESTAMP, r.status_id = 1 WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -337,8 +357,8 @@
         //Phương thức lấy ra tất cả các phòng đã thu hồi đặt
         function getUndoRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room, customers 
-                       WHERE room.id = customers.room_id AND room.left_at IS NOT NULL AND customers.done_session = 1
+            $select = "SELECT * FROM booked_room as b 
+                       WHERE b.booked_left_at IS NOT NULL AND b.booked_done_session = 1
                        ORDER BY room.id DESC LIMIT 8";
             $result = $db->getList($select);
             return $result;

@@ -12,6 +12,27 @@
         case "admin_cus_list":
             include_once "View/admin/admin_cus_list.php";
             break;
+        case "create_action":
+            if(isset($_POST['new_cus'])){
+                $name = $_POST['new_cus'];
+                $rec = new customers();
+                $result = $rec->createCus($name); 
+                if ($result) {                 
+                    $res = array(
+                        'status' => 'success',
+                        'message' => 'Tạo mới thành công!'
+                    ); 
+                    // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list&act=room_create"/>';
+                }else{ 
+                    $res = array(
+                        'status' => 'fail',
+                        'message'=> 'Tạo mới thất bại!'
+                    );        
+                    // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_room_list&act=room_create"/>';
+                }
+                echo json_encode($res);
+            }
+            break;
         case "update_name":
             if(isset($_POST['name_value']) && isset($_POST['id'])){
                 $id = $_POST['id'];

@@ -8,7 +8,7 @@
             </div>
             <div class="profile-info">
                 <h3><?php echo $_SESSION['customer_name']; ?></h3>
-                <p><?php echo $_SESSION['customer_email']; ?></p>
+                <p id="customer_email" data-customer_email="<?php echo $_SESSION['customer_email']; ?>"><?php echo $_SESSION['customer_email']; ?></p>
             </div>
         </div>
         <nav class="sidebar-menu">
@@ -31,8 +31,7 @@
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="home-tab" data-toggle="tab" data-target="#home"
-                            type="button" role="tab" aria-controls="home" aria-selected="true">Thông tin tài
-                            khoản</button>
+                            type="button" role="tab" aria-controls="home" aria-selected="true">Thông tin tài khoản</button>
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="profile-tab" data-toggle="tab" data-target="#profile" type="button"
@@ -146,8 +145,8 @@
                         <div class="delete-group">
                             <p class="delete-account">Sau khi tài khoản của bạn bị xóa, bạn sẽ không thể lấy lại dữ liệu
                                 của
-                                mình. Không thể được hoàn tác thao tác này.</p>
-                            <button type="button" class="btn btn-danger">Xoá</button>
+                                mình. Hành động này không thể hoàn tác.</p>
+                            <button type="button" class="btn btn-danger" id="delete_account">Xoá</button>
                         </div>
 
                     </div>
@@ -175,53 +174,6 @@
                 }
             });
         }
-
-        $(document).on("click", "#logout_button", function () {
-            Swal.fire({
-                title: "Đăng xuất?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "Controller/user/login.php?act=logout_action",
-                        dataType: "JSON",
-                        success: function (res) {
-                            if (res.status == 200) {
-                                Swal.fire({
-                                    title: "Đăng xuất thành công!",
-                                    icon: "success",
-                                    timer: 900,
-                                    timerProgressBar: true
-                                }).then(function () {
-                                    window.location.href = "index.php";
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: "Đăng xuất thất bại!",
-                                    text: res.message,
-                                    icon: "error",
-                                    timer: 3200,
-                                    timerProgressBar: true
-                                });
-                            }
-                        },
-                        error: function () {
-                            Swal.fire({
-                                title: "Lỗi!",
-                                text: "Lỗi không xác định!",
-                                icon: "error",
-                                timer: 3200,
-                                timerProgressBar: true
-                            });
-                        }
-                    })
-                }
-            });
-        })
 
         //Hiển thị pass cũ
         showPass("#showPass_old", "#password_user_old");

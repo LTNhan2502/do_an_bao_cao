@@ -9,7 +9,7 @@
         <?php
             $room = new room();
             $fmt = new formatter();
-            $booked_room = $room->getBookedRoom();
+            $booked_room = $room->getBookedRooms();
             $rowCount = $booked_room->rowCount();
         ?>
             <div class="table-responsive">
@@ -49,28 +49,28 @@
                                     <span class="badge badge-pill badge-primary booked_room_id" data-id="<?php echo $result['booked_room_id']; ?>"><?php echo $result['booked_room_id']; ?></span>
                                 </div>
                                 <div>ID khách hàng: 
-                                    <span class="badge badge-pill badge-primary customer_booked_id" data-customer_booked_id="<?php echo $result['customer_booked_id']; ?>"><?php echo $result['customer_booked_id']; ?></span>
+                                    <span class="badge badge-pill badge-primary customer_booked_id" data-customer_booked_id="<?php echo $result['booked_customer_id']; ?>"><?php echo $result['booked_customer_id']; ?></span>
                                 </div>
-                                <div><span class="text-decoration-underline" style="font-weight: 900">Tên KH:</span> <?php echo $result['customer_name']; ?></div>
-                                <div>Số điện thoại: <?php echo $result['tel']; ?></div>
-                                <div id="customer_email" data-email="<?php echo $result['email'] == null ? $result['email_guest'] : $result['email']; ?>">Email: <?php echo $result['email'] == null ? $result['email_guest'] : $result['email']; ?></div>
+                                <div class="customer_name" data-customer_name="<?php echo $result['booked_customer_name']; ?>"><span class="text-decoration-underline" style="font-weight: 900">Tên KH:</span> <?php echo $result['booked_customer_name']; ?></div>
+                                <div class="tel" data-tel="<?php echo $result['booked_tel']; ?>">Số điện thoại: <?php echo $result['booked_tel']; ?></div>
+                                <div id="customer_email" data-email="<?php echo $result['booked_email']; ?>">Email: <?php echo $result['booked_email']; ?></div>
                             </td>
                             <td>
-                                <div>Phòng: <?php echo $result['name']; ?></div>
-                                <div>Giá: <?php echo $fmt->formatCurrency($result['price'])."đ"; ?></div>
-                                <div><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $fmt->formatCurrency($result['sum'])."đ"; ?></div>
+                                <div class="room_name" data-room_name="<?php echo $result['booked_room_name']; ?>"><span class="text-decoration-underline" style="font-weight: 900">Phòng:</span> <?php echo $result['booked_room_name']; ?></div>
+                                <div>Giá: <?php echo $fmt->formatCurrency($result['booked_price'])."đ"; ?></div>
+                                <div class="customer_sum" data-customer_sum="<?php echo $result['booked_sum']; ?>"><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> <?php echo $fmt->formatCurrency($result['booked_sum'])."đ"; ?></div>
                             </td>
                             <td>
-                                <div>Ngày vào: <?php echo $result['arrive']; ?></div>
-                                <div>Ngày trả: <?php echo $result['quit']; ?></div>
+                                <div class="arrive" data-arrive="<?php echo $result['booked_arrive']; ?>">Ngày vào: <?php echo $result['booked_arrive']; ?></div>
+                                <div class="quit" data-quit="<?php echo $result['booked_quit']; ?>">Ngày trả: <?php echo $result['booked_quit']; ?></div>
                                 <div><span class="text-decoration-underline" style="font-weight: 900">Tình trạng:</span>
                                     <?php
-                                        if($result['session'] == 1 && $result['done_session'] == 0){
+                                        if($result['booked_session'] == 1 && $result['booked_done_session'] == 0){
                                     ?>
                                             <span class="badge badge-pill badge-info" id="badge_receive">Đã nhận</span>
-                                    <?php }else if($result['session'] == 0 && $result['done_session'] == 1){ ?>
+                                    <?php }else if($result['booked_session'] == 0 && $result['booked_done_session'] == 1){ ?>
                                             <span class="badge badge-pill badge-success" id="badge_receive">Đã trả</span>
-                                    <?php }else if($result['session'] == 0 && $result['done_session'] == 0){ ?>
+                                    <?php }else if($result['booked_session'] == 0 && $result['booked_done_session'] == 0){ ?>
                                             <span class="badge badge-pill badge-warning" id="badge_receive">Chưa nhận</span>
                                     <?php } ?>
                                 </div>
@@ -79,14 +79,14 @@
                             <td>
                             <!-- NHẬN/TRẢ PHÒNG -->
                             <?php
-                                if($result['session'] == 0 && $result['done_session'] == 0){ //Chưa nhận phòng, cũng không có trả phòng
+                                if($result['booked_session'] == 0 && $result['booked_done_session'] == 0){ //Chưa nhận phòng, cũng không có trả phòng
                             ?>
                                     <button class="btn btn-outline-primary btn-same text-start mb-2 button_receive" id="receive"><i class="far fa-check-circle"></i> Xác nhận nhận phòng</button> </br>
                                     <button class="btn btn-outline-primary btn-same text-start mb-2 button_leave" id="leave" disabled><i class="far fa-check-circle"></i> Xác nhận trả phòng</button> </br>
-                            <?php }else if($result['session'] == 1 && $result['done_session'] == 0){ //Đã nhận phòng, đang trong quá trình dùng?> 
+                            <?php }else if($result['booked_session'] == 1 && $result['booked_done_session'] == 0){ //Đã nhận phòng, đang trong quá trình dùng?> 
                                     <button class="btn btn-danger btn-same text-start mb-2 button_receive" id="undo_receive"><i class="far fa-times-circle"></i> Huỷ nhận phòng</button> </br>
                                     <button class="btn btn-outline-primary btn-same text-start mb-2 button_leave" id="leave"><i class="far fa-check-circle"></i> Xác nhận trả phòng</button> </br>
-                            <?php }else if($result['session'] == 0 && $result['done_session'] == 1){ //Dùng xong, đã trả phòng và muốn huỷ trả phòng?>
+                            <?php }else if($result['booked_session'] == 0 && $result['booked_done_session'] == 1){ //Dùng xong, đã trả phòng và muốn huỷ trả phòng?>
                                     <button class="btn btn-outline-primary btn-same text-start mb-2 button_receive" id="receive" disabled><i class="far fa-check-circle"></i> Xác nhận nhận phòng</button> </br>
                                     <button class="btn btn-danger btn-same text-start mb-2 button_leave" id="undo_leave"><i class="far fa-check-circle"></i> Huỷ trả phòng</button> </br>
                             <?php } ?>
@@ -107,14 +107,6 @@
     </div>
 </div>
 
-
-<!-- /.container-fluid -->
-
-<script>
-    function del(){
-        return confirm("Do you want to delete this room?")
-    }
-</script>
 <script src="ajax/room/approve.js"></script>
 
 <style>

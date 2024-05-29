@@ -146,7 +146,6 @@ $(document).ready(function(){
         var $input = $(this);
         var sm_value = $input.val();
         var id = $input.data("detail_id");
-        var regex_sm = /\d+/;
 
         if(sm_value == ''){
             $("#sm_error").html("Không được để trống!");

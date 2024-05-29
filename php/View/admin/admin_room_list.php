@@ -258,7 +258,6 @@
 
 <script src="ajax/room/status.js"></script>
 <script src="ajax/room/detail_modal.js"></script>
-<script src="ajax/room/upload_img1.js"></script>
 <script>
     $(document).ready(function(){        
         $(document).on('click',"#delete_room_id", function(){
