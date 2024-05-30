@@ -19,11 +19,6 @@ $(document).ready(function(){
    fileImg.forEach((arr, index) => {
       console.log(isValid);
       $(document).on('change', fileImg, function() {
-      //    var $upload_row = $(this).closest(".upload-row");
-      //    if ($upload_row.length === 0) {
-      //       console.error("Không tìm thấy");
-      //       return;
-      //   }
          // Lấy ra files
          var file_data = $(fileImg[index]).prop('files')[0];
          if (!file_data || file_data.length === 0) {
@@ -175,10 +170,12 @@ $(document).ready(function(){
          $("#create_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
          return false;
       }else if($("#square_meter_create").val() == '' || $("#quantity_create").val() == '' || 
-               $("#service_create").val() == '' || $("#requirement_create").val() == '' || $("#description_create").val() == ''){
+               $("#service_create").val() == '' || $("#requirement_create").val() == '' || $("#description_create").val() == '' ||
+               $("#img1").val() == '' || $("#img2").val() == '' || $("#img3").val() == ''){
          $("#create_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
          return false;
       }else{
+         $("#create_error").html("");
          var form = $("#createForm")[0];
          var formData = new FormData(form);
          //Lấy ra phần tử cuối là tên của ảnh. Vì val() trả về C:\fakepath\tên_ảnh.jpg nên phải làm như bên dưới

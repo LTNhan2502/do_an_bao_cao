@@ -66,6 +66,7 @@
             unset($_SESSION['customer_id']);
             unset($_SESSION['customer_email']);
             unset($_SESSION['customer_name']);
+            unset($_SESSION['customer_tel']);
             $res = array(
                 'status' => 200,
                 'message' => 'Đăng xuất thành công!'

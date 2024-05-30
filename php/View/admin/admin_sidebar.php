@@ -92,11 +92,13 @@
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSV"
             aria-expanded="true" aria-controls="collapseSV">
             <i class="fas fa-fw fa-spa"></i>
-            <span>Quản lý dịch vụ</span>
+            <span>Quản lí quyền hạn</span>
         </a>
         <div id="collapseSV" class="collapse" aria-labelledby="headingSV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="utilities-color.html">Thông tin sơ bộ</a>
+                <a class="collapse-item" href="utilities-color.html">Phân quyền</a>
+
             </div>
         </div>
     </li>
@@ -121,7 +123,7 @@
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=admin_room_restore">Phòng</a>
                 <a class="collapse-item" href="register.html">Hoá đơn</a>
                 <a class="collapse-item" href="forgot-password.html">Nhân viên</a>
-                <a class="collapse-item" href="forgot-password.html">Khách hàng</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_cus_list&act=admin_cus_restore">Khách hàng</a>
                 <div class="collapse-divider"></div>
                 <h6 class="collapse-header">Other Pages:</h6>
                 <a class="collapse-item" href="404.html">404 Page</a>

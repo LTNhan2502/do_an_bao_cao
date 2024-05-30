@@ -49,7 +49,7 @@
                     }else{
                         $res = array(
                             'status' => 403,
-                            'message' => 'Đăng kí không thành công!'
+                            'message' => 'Đăng kí thất bại!'
                         );
                         echo json_encode($res);
                     }
@@ -66,7 +66,7 @@
                     }else{
                         $res = array(
                             'status' => 403,
-                            'message' => "Đăng kí không thàn công!"
+                            'message' => "Đăng kí thất bại!"
                         );
                         echo json_encode($res);
                     }

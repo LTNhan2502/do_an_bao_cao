@@ -1,5 +1,10 @@
 <link rel="stylesheet" href="content/user/css/user-info.css">
 
+<?php
+    $customers = new customers();
+    $col_email = 'email';
+    if(isset($_SESSION['customer_id'])){
+?>
 <div class="body">
     <aside class="sidebar">
         <div class="profile">
@@ -51,56 +56,54 @@
                                     khác của tài khoản? <a href="#">Cho phép gửi thông báo trên máy tính</a>
                                 </p>
                             </div>
-                            <form class="personal-info">
+                            <form id="changeInfoForm">
                                 <h2>Dữ liệu cá nhân</h2>
+                                <!-- Tên -->
                                 <div class="form-group">
                                     <label for="full-name">Tên đầy đủ</label>
-                                    <input type="text" id="full-name" value="<?php echo $_SESSION['customer_name']; ?>">
+                                    <input type="text" name="customer_name" id="customer_name" value="<?php echo $_SESSION['customer_name']; ?>">
                                 </div>
-                                <div class="form-group">
-                                    <label for="nickname">Tên trong hồ sơ</label>
-                                    <input type="text" id="nickname">
-                                </div>
+
+                                <!-- Giới tính -->
                                 <div class="form-group">
                                     <label for="gender">Giới tính</label>
-                                    <select id="gender">
-                                        <option value="">Chọn giới tính</option>
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
+                                    <select name="customer_gender" id="customer_gender">
+                                        <option value="0">Chọn giới tính</option>
+                                        <?php 
+                                            $gender = $customers->getGender();
+                                            $customer = $customers->getCustomer($_SESSION['customer_email'], $col_email);
+                                            while($set = $gender->fetch()):
+                                        ?>
+                                        <option value="<?php echo $set['gender_id'] ?>"
+                                            <?php echo $customer['customer_gender'] == $set['gender_id'] ? 'selected' : ''; ?>><?php echo $set['gender_name']; ?></option>
+                                        <?php endwhile; ?>
                                     </select>
                                 </div>
+
+                                <!-- Ngày sinh -->
                                 <div class="form-group">
                                     <label for="birthday">Ngày sinh</label>
-                                    <div class="birthday-select">
-                                        <select id="day">
-                                            <option value="">Ngày</option>
-                                            <!-- Ngày từ 1 đến 31 -->
-                                        </select>
-                                        <select id="month">
-                                            <option value="">Tháng</option>
-                                            <!-- Tháng từ 1 đến 12 -->
-                                        </select>
-                                        <select id="year">
-                                            <option value="">Năm</option>
-                                            <!-- Năm từ 1900 đến 2024 -->
-                                        </select>
-                                    </div>
+                                    <input type="text" name="customer_birthday" id="customer_birthday" value="<?php echo $customer['customer_birthday']; ?>">
                                 </div>
-                                <div class="form-buttons">
-                                    <button type="button" class="btn btn-cancel">Hủy</button>
-                                    <button type="submit" class="btn btn-save">Lưu</button>
+                                
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <small id="info_all_error" class="text-danger mt-4 mr-2 me-md-2"></small>
+                                    <button class="mt-3 btn btn-save me-md-2" type="submit"  name="submit" id="submitInfo">
+                                        Lưu
+                                    </button>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <h2>Đổi mật khẩu</h2>
-                        <form class="form" id="loginForm1">
+                        <form class="form" id="changePassForm">
+                            <!-- Mật khẩu cũ -->
                             <div class="flex-column">
                                 <label>Mật khẩu cũ</label>
                             </div>
                             <div class="inputForm">
-                                <input type="password" class="input" name="password" id="password_user_old">
+                                <input type="password" class="input" id="password_user_old">
                                 <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg" id="showPass_old"
                                     style="cursor:pointer;">
                                     <path
@@ -108,12 +111,14 @@
                                     </path>
                                 </svg>
                             </div>
+                            <small class="text-danger" id="password_old_error"></small>
 
+                            <!-- Mật khẩu mới -->
                             <div class="flex-column">
                                 <label>Mật khẩu mới</label>
                             </div>
                             <div class="inputForm">
-                                <input type="password" class="input" name="password" id="password_user_new">
+                                <input type="password" class="input" name="password_user_new" id="password_user_new">
                                 <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg" id="showPass_new"
                                     style="cursor:pointer;">
                                     <path
@@ -121,12 +126,14 @@
                                     </path>
                                 </svg>
                             </div>
+                            <small class="text-danger" id="password_new_error"></small>
 
+                            <!-- Xác nhận mật khẩu mới -->
                             <div class="flex-column">
                                 <label>Xác nhận mật khẩu mới</label>
                             </div>
                             <div class="inputForm">
-                                <input type="password" class="input" name="password" id="password_user_confirm">
+                                <input type="password" class="input" id="password_user_confirm">
                                 <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg" id="showPass_confirm"
                                     style="cursor:pointer;">
                                     <path
@@ -134,18 +141,20 @@
                                     </path>
                                 </svg>
                             </div>
-                            <small class="text-danger" id="password_user_error"></small>
-                            <div class="form-buttons">
-                                <button type="button" class="btn btn-cancel">Hủy</button>
-                                <button type="submit" class="btn btn-save">Lưu</button>
+                            <small class="text-danger" id="password_confirm_error"></small>
+                            
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <small id="password_all_error" class="text-danger mt-4 mr-2 me-md-2"></small>
+                                <button class="mt-3 btn btn-save me-md-2" type="submit"  name="submit" id="submitPass">
+                                    Lưu
+                                </button>
                             </div>
                         </form>
                         <hr>
                         <h2>Xóa tài khoản</h2>
                         <div class="delete-group">
                             <p class="delete-account">Sau khi tài khoản của bạn bị xóa, bạn sẽ không thể lấy lại dữ liệu
-                                của
-                                mình. Hành động này không thể hoàn tác.</p>
+                                của mình. Hành động này không thể hoàn tác.</p>
                             <button type="button" class="btn btn-danger" id="delete_account">Xoá</button>
                         </div>
 
@@ -156,7 +165,21 @@
         </main>
     </div>
 </div>
+<?php }else{ ?>
+<div class="card text-center mt-2">
+    <div class="card-header">
+        Yêu cầu đăng nhập
+    </div>
+    <div class="card-body">
+        <p class="card-text">Để vào được trang này bạn cần phải đăng nhập!</p>
+        <a href="index.php?action=login" class="btn btn-primary">Đăng nhập</a>
+        <p>Không có tài khoản?</p>
+        <a href="index.php?action=signup" class="btn btn-primary">Đăng kí</a>
+    </div>
+</div>
+<?php } ?>
 
+<script src="ajax/account/user_info.js"></script>
 <script>
     $(document).ready(function () {
         let isShow = false;
@@ -178,6 +201,7 @@
         //Hiển thị pass cũ
         showPass("#showPass_old", "#password_user_old");
         showPass("#showPass_new", "#password_user_new");
-        showPass("#showPass_confirm", "#password_user_confirm");        
+        showPass("#showPass_confirm", "#password_user_confirm"); 
+        
     })
 </script>

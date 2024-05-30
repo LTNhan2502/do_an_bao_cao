@@ -14,6 +14,7 @@
             redirectToLogin();
         }
     }
+    //https://www.traveloka.com/vi-vn/hotel/vietnam/the-malibu-hotel-1000000592992?spec=12-06-2024.13-06-2024..1.HOTEL.1000000592992..1&currency=VND&contexts=%7B%22sourceHotelDetail%22%3A%22VNMCHHYGIENE2%20Desktop%22%2C%22accessCode%22%3A%22%22%7D
     
 ?>
 <!DOCTYPE html>

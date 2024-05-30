@@ -12,13 +12,37 @@
             return $result;
          }
 
+         //Phương thấy ra tất cả các customers nhưng k lấy những customers đã bị xoá
+         function getAllCusNotDeleted(){
+            $db = new connect();
+            $select = "SELECT * FROM customers WHERE customers.deleted_at IS NULL ORDER BY customers.customer_id DESC";
+            $result = $db->getList($select);
+            return $result;
+         }
+
+         //Phương thức lấy ra tất cả các customer đã bị xoá
+         function getAllCusDeleted(){
+            $db = new connect();
+            $select = "SELECT * FROM customers WHERE customers.deleted_at IS NOT NULL ORDER BY customers.customer_id DESC";
+            $result = $db->getList($select);
+            return $result;
+         }
+
         //Phương thức tạo mới khách hàng
         function createCus($name){
             $db = new connect();
             $rand = rand(0, 99999999);
             $str = "CTM_";
             $str_rand = $str.$rand;
-            $query = "INSERT INTO customers VALUES(NULL, 0, '$str_rand', '$name', NULL, NULL, NULL, NULL, 0, 0, NULL, NULL)";
+            $query = "INSERT INTO customers VALUES(NULL, 0, '$str_rand', '$name', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL)";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi thông tin khách hàng (trang user-info)
+        function changeUserInfo($email, $customer_name, $customer_gender, $customer_birthday){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.customer_name = '$customer_name', c.customer_gender = '$customer_gender', c.customer_birthday = '$customer_birthday' WHERE c.email = '$email'";
             $result = $db->exec($query);
             return $result;
         }
@@ -26,18 +50,34 @@
         //Phương thức xoá account khách hàng
         function deleteCus($email){
             $db = new connect();
-            $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.email = $email";
+            $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.email = '$email'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thay đổi password khách hàng
+        function changePassword($email, $password){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.password = '$password' WHERE c.email = '$email'";
             $result = $db->exec($query);
             return $result;
         }
 
          //Phương thức lấy ra customer chỉ định bằng email (email_guest)
-         function getCustomer($email, $col){
+        function getCustomer($email, $col){
             $db = new connect();
             $select = "SELECT * FROM customers WHERE customers.$col = '$email'";
             $result = $db->getInstance($select);
             return $result;
-         }
+        }
+
+        //Phương thức lấy ra giới tính
+        function getGender(){
+            $db = new connect();
+            $select = "SELECT * FROM gender";
+            $result = $db->getList($select);
+            return $result;
+        }
 
          //Phương thức thêm KH khi đặt phòng mà không phải là thành viên
         function addCustomer($name, $email_guest, $tel){

@@ -104,5 +104,8 @@
                 echo json_encode($res);
             }
             break;
+        case 'admin_cus_restore':
+            include_once 'View/admin/admin_cus_restore.php';
+            break;
     }
 ?>

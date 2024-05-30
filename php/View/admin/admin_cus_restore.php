@@ -8,7 +8,7 @@
     ?>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
-            <span class="m-0 font-weight-bold text-primary">Table Customers - Danh sách</span>
+            <span class="m-0 font-weight-bold text-primary">Table Customers - Danh sách khách hàng đã bị xoá</span>
             <button class="btn m-0 font-weight-bold btn-primary" data-toggle="modal" data-target="#modalCreate">
                 <i class="fas fa-plus-circle"></i>
             </button>
@@ -38,7 +38,7 @@
                     </tfoot>
                     <tbody>
                         <?php
-                        $c = $cus->getAllCusNotDeleted();
+                        $c = $cus->getAllCusDeleted();
                         $count = 1;
                         while ($set = $c->fetch()):
                             ?>

@@ -37,7 +37,7 @@
                 <li class="active"><a href="index.php">Trang chủ</a></li>
                 <li><a href="index.php?action=home&actall_room">Tất cả phòng</a></li>
                 <li><a href="index.php?action=booking">Đặt phòng</a></li>
-                <li><a href="events.html">Tài khoản</a></li>
+                <li><a href="index.php?action=user_info">Tài khoản</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><a href="reservation.html">Reservation</a></li>
               </ul>

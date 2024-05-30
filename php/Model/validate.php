@@ -20,7 +20,7 @@
         //Phương thức kiểm tra password có đúng không
         function checkExist($email){
             $db = new connect();
-            $select = "SELECT * FROM customers as c WHERE c.email = '$email'";
+            $select = "SELECT * FROM customers as c WHERE c.email = '$email' AND c.deleted_at IS NULL";
             $result = $db->getInstance($select);
             return $result;
         }
