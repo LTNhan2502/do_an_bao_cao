@@ -116,7 +116,71 @@
                 }
                 echo json_encode($res);
             }
-            break;   
+            break;  
+        case "pages":
+            if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page'])) {
+                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+                $items_per_page = 5;
+                $start = ($page - 1) * $items_per_page;
+    
+                $room = new room();
+                $fmt = new formatter();
+                $result = $room->getBookedRoomsPage($start, $items_per_page);
+    
+                $count = $start + 1; // Bắt đầu đếm từ trang hiện tại
+                while ($set = $result->fetch()) {
+                    echo '<tr style="max-height: 100px">';
+                    echo '<td>' . $count . '</td>';
+                    echo '<td>';
+                    echo '<div>ID đặt phòng: <span class="badge badge-pill badge-primary booked_room_id" data-id="' . $set['booked_room_id'] . '">' . $set['booked_room_id'] . '</span></div>';
+                    echo '<div>ID khách hàng: <span class="badge badge-pill badge-primary customer_booked_id" data-customer_booked_id="' . $set['booked_customer_id'] . '">' . $set['booked_customer_id'] . '</span></div>';
+                    echo '<div class="customer_name" data-customer_name="' . $set['booked_customer_name'] . '"><span class="text-decoration-underline" style="font-weight: 900">Tên KH:</span> ' . $set['booked_customer_name'] . '</div>';
+                    echo '<div class="tel" data-tel="' . $set['booked_tel'] . '">Số điện thoại: ' . $set['booked_tel'] . '</div>';
+                    echo '<div id="customer_email" data-email="' . $set['booked_email'] . '">Email: ' . $set['booked_email'] . '</div>';
+                    echo '</td>';
+                    echo '<td>';
+                    echo '<div class="room_name" data-room_name="' . $set['booked_room_name'] . '"><span class="text-decoration-underline" style="font-weight: 900">Phòng:</span> ' . $set['booked_room_name'] . '</div>';
+                    echo '<div>Giá: ' . $fmt->formatCurrency($set['booked_price']) . 'đ</div>';
+                    echo '<div class="customer_sum" data-customer_sum="' . $set['booked_sum'] . '"><span class="text-decoration-underline" style="font-weight: 900">Tổng:</span> ' . $fmt->formatCurrency($set['booked_sum']) . 'đ</div>';
+                    echo '</td>';
+                    echo '<td>';
+                    echo '<div class="arrive" data-arrive="' . $set['booked_arrive'] . '">Ngày vào: ' . $set['booked_arrive'] . '</div>';
+                    echo '<div class="quit" data-quit="' . $set['booked_quit'] . '">Ngày trả: ' . $set['booked_quit'] . '</div>';
+                    echo '<div><span class="text-decoration-underline" style="font-weight: 900">Tình trạng:</span>';
+                    if ($set['booked_session'] == 1 && $set['booked_done_session'] == 0) {
+                        echo '<span class="badge badge-pill badge-info" id="badge_receive">Đã nhận</span>';
+                    } else if ($set['booked_session'] == 0 && $set['booked_done_session'] == 1) {
+                        echo '<span class="badge badge-pill badge-success" id="badge_receive">Đã trả</span>';
+                    } else if ($set['booked_session'] == 0 && $set['booked_done_session'] == 0) {
+                        echo '<span class="badge badge-pill badge-warning" id="badge_receive">Chưa nhận</span>';
+                    }
+                    echo '</div>';
+                    echo '</td>';
+                    echo '<td>';
+                    if ($set['booked_session'] == 0 && $set['booked_done_session'] == 0) {
+                        echo '<button class="btn btn-outline-primary btn-same text-start mb-2 button_receive" id="receive"><i class="far fa-check-circle"></i> Xác nhận nhận phòng</button><br>';
+                        echo '<button class="btn btn-outline-primary btn-same text-start mb-2 button_leave" id="leave" disabled><i class="far fa-check-circle"></i> Xác nhận trả phòng</button><br>';
+                    } else if ($set['booked_session'] == 1 && $set['booked_done_session'] == 0) {
+                        echo '<button class="btn btn-danger btn-same text-start mb-2 button_receive" id="undo_receive"><i class="far fa-times-circle"></i> Huỷ nhận phòng</button><br>';
+                        echo '<button class="btn btn-outline-primary btn-same text-start mb-2 button_leave" id="leave"><i class="far fa-check-circle"></i> Xác nhận trả phòng</button><br>';
+                    } else if ($set['booked_session'] == 0 && $set['booked_done_session'] == 1) {
+                        echo '<button class="btn btn-outline-primary btn-same text-start mb-2 button_receive" id="receive" disabled><i class="far fa-check-circle"></i> Xác nhận nhận phòng</button><br>';
+                        echo '<button class="btn btn-danger btn-same text-start mb-2 button_leave" id="undo_leave"><i class="far fa-check-circle"></i> Huỷ trả phòng</button><br>';
+                    }
+    
+                    if ($set['booked_session'] == 0 && $set['booked_done_session'] == 1) {
+                        echo '<button class="btn btn-outline-danger btn-same text-start button_recover" id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>';
+                    } else {
+                        echo '<button class="btn btn-outline-danger btn-same text-start button_recover" disabled id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>';
+                    }
+                    echo '</td>';
+                    echo '</tr>';
+                    $count++;
+                }
+    
+    
+            }
+            break; 
     }
             
         

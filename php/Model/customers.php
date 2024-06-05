@@ -12,10 +12,10 @@
             return $result;
          }
 
-         //Phương thấy ra tất cả các customers nhưng k lấy những customers đã bị xoá
-         function getAllCusNotDeleted(){
+         //Phương thấy ra tất cả các customers nhưng k lấy những customers đã bị xoá có phân trang
+         function getAllCusNotDeletedPage($start, $limit){
             $db = new connect();
-            $select = "SELECT * FROM customers WHERE customers.deleted_at IS NULL ORDER BY customers.customer_id DESC";
+            $select = "SELECT * FROM customers WHERE customers.deleted_at IS NULL ORDER BY customers.customer_id DESC LIMIT ".$start.", ".$limit;
             $result = $db->getList($select);
             return $result;
          }
@@ -40,17 +40,33 @@
         }
 
         //Phương thức thay đổi thông tin khách hàng (trang user-info)
-        function changeUserInfo($email, $customer_name, $customer_gender, $customer_birthday){
+        function changeUserInfo($email, $customer_name, $customer_tel, $customer_gender, $customer_birthday){
             $db = new connect();
-            $query = "UPDATE customers as c SET c.customer_name = '$customer_name', c.customer_gender = '$customer_gender', c.customer_birthday = '$customer_birthday' WHERE c.email = '$email'";
+            $query = "UPDATE customers as c SET c.customer_name = '$customer_name', c.tel = '$customer_tel', c.customer_gender = '$customer_gender', c.customer_birthday = '$customer_birthday' WHERE c.email = '$email'";
             $result = $db->exec($query);
             return $result;
         }
 
-        //Phương thức xoá account khách hàng
+        //Phương thức xoá account khách hàng (soft delete)
         function deleteCus($email){
             $db = new connect();
             $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.email = '$email'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức xoá account khách hàng (delete)
+        function cplDeleteCus($email){
+            $db = new connect();
+            $query = "DELETE FROM customers as c WHERE c.email = '$email'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức khôi phục account khách hàng
+        function restoreCus($email){
+            $db = new connect();
+            $query = "UPDATE customers as c SET c.deleted_at = NULL WHERE c.email = '$email'";
             $result = $db->exec($query);
             return $result;
         }

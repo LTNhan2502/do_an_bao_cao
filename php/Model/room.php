@@ -82,7 +82,23 @@
         //Phương thức lấy tất cả room có phân trang
         function getRoomsPage($start, $limit){
             $db = new connect();
-            $select = "SELECT * FROM room ORDER BY room.id LIMIT ".$start.", ".$limit;
+            $select = "SELECT * FROM room WHERE room.deleted_at IS NULL ORDER BY room.id DESC LIMIT ".$start.", ".$limit;
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy room tìm kiếm
+        function getRoomsSearch($search_value){
+            $db = new connect();
+            $select = "SELECT * FROM room WHERE room.deleted_at IS NULL AND room.name LIKE '%$search_value%' ORDER BY room.id DESC";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy room vừa phân trang vừa tìm kiếm
+        function getRoomsSearchPage($search_value, $start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM room WHERE room.deleted_at IS NULL AND room.name LIKE '%$search_value%' ORDER BY room.id DESC LIMIT $start, $limit";
             $result = $db->getList($select);
             return $result;
         }
@@ -296,7 +312,7 @@
             $str = "ORD_";
             $random = rand(0, 99999999);
             $str_rand_room = $str . $random;
-            $query = "INSERT INTO booked_room VALUES(NULL,$room_id, $customer_id, '$str_rand_room', '$customer_booked_id', '$booked_customer_name', '$booked_tel', '$booked_email','$booked_room_name', '$booked_price', '$booked_sum', '$booked_arrive', '$booked_quit', 0, 0)";
+            $query = "INSERT INTO booked_room VALUES(NULL,$room_id, $customer_id, '$str_rand_room', '$customer_booked_id', '$booked_customer_name', '$booked_tel', '$booked_email','$booked_room_name', '$booked_price', '$booked_sum', '$booked_arrive', '$booked_quit', NULL, 0, 0)";
             $result = $db->exec($query);
             return $result;
         }
@@ -335,12 +351,11 @@
             $result = $db->getList($select);
             return $result;
         }
-        function getBookedRoom(){
+        
+        //Phương thức hiển thị tất cả các phòng đã đặt có phân trang
+        function getBookedRoomsPage($start, $limit){
             $db = new connect();
-            $select = "SELECT * FROM room AS r JOIN customers AS c ON r.id = c.room_id 
-                       WHERE r.id = c.room_id AND r.left_at IS NULL AND r.arrive IS NOT NULL 
-                            AND r.quit IS NOT NULL AND r.booked_room_id IS NOT NULL AND c.room_id != 0
-                            ORDER BY r.id DESC LIMIT 6";
+            $select = "SELECT * FROM booked_room as b WHERE b.booked_left_at IS NULL LIMIT ".$start.", ".$limit;
             $result = $db->getList($select);
             return $result;
         }

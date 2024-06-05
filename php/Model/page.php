@@ -22,6 +22,9 @@
         //Phân trang mới
         public static function pagination($totalPage, $currentPage, $link)
         {
+            // str_replace("[i]", $totalPage, $link);
+            //Thay thế [i] bằng $totalPage trong $link
+
             //Trang đầu/cuối
             $linkPagiFirst = str_replace("[i]", 1, $link);
             $linkPagiLast = str_replace("[i]", $totalPage, $link);

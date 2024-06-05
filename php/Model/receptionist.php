@@ -8,6 +8,14 @@
             return $result;
         }
 
+        //Phương thức lấy ra tất cả các tiếp tân có phân trang
+        function getAllRecPage($start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id ORDER BY r.rec_id DESC LIMIT ".$start.", ".$limit;
+            $result = $db->getList($select);
+            return $result;
+        }
+
         //Phương thức tạo mới tiếp tân
         function createRec($name){
             $db = new connect();

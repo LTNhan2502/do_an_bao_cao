@@ -5,20 +5,57 @@
     $fmt = new formatter();
     $rec = new receptionist();
     $cus = new customers();
+    $fmt = new formatter();
+    $count = $cus->getAllCus()->rowCount(); //Tổng đối tượng
+    $limit = 3; //Giới hạn số đối tượng trong 1 trang
+    $page = new page();
+    $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
+    $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+    $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
     ?>
     <div class="card shadow mb-4">
+        <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Customers - Danh sách</span>
             <button class="btn m-0 font-weight-bold btn-primary" data-toggle="modal" data-target="#modalCreate">
                 <i class="fas fa-plus-circle"></i>
             </button>
+            <!-- Modal tạo mới-->
+            <div class="modal fade create_rec" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Table Customers - Tạo mới</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form enctype='multipart/form-data' id="createRecForm" method="post">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new_cus">Họ và tên</label>
+                                    <input type="text" class="form-control" name="new_cus" id="new_cus">
+                                    <small class="text-danger" id="new_cus_error"></small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <small class="text-danger" id="new_all_error"></small>
+                                <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">Đóng</button>
+                                <button type="submit" name="submitRec" id="submitRec"
+                                    class="btn btn-primary">Tạo</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>STT</th>
+                            <th>ID</th>
                             <th>Tên khách hàng</th>
                             <th>Email (thành viên)</th>
                             <th>Email (khách)</th>
@@ -28,7 +65,7 @@
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>STT</th>
+                            <th>ID</th>
                             <th>Tên khách hàng</th>
                             <th>Email (thành viên)</th>
                             <th>Email (khách)</th>
@@ -38,10 +75,10 @@
                     </tfoot>
                     <tbody>
                         <?php
-                        $c = $cus->getAllCusNotDeleted();
-                        $count = 1;
-                        while ($set = $c->fetch()):
-                            ?>
+                            $c = $cus->getAllCusNotDeletedPage($start, $limit);
+                            $count = 1;
+                            while ($set = $c->fetch()):
+                        ?>
                             <tr id="currency">
                                 <!-- STT/ID -->
                                 <td>
@@ -87,44 +124,12 @@
                                         data-target="#exampleModal<?php echo $set['customer_id']; ?>">
                                         <i class="far fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                        data-target="#exampleModal">
-                                        <i class="fas fa-ban"></i>
+                                    <button type="button" class="btn btn-danger" id="soft_delete_btn">
+                                        <i class="fas fa-trash"></i>
                                     </button>
 
                                 </td>
                             </tr>
-
-                            <!-- Modal tạo mới-->
-                            <div class="modal fade create_rec" id="modalCreate" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Table Customers - Tạo mới</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form enctype='multipart/form-data' id="createRecForm" method="post">
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="new_cus">Họ và tên</label>
-                                                    <input type="text" class="form-control" name="new_cus" id="new_cus">
-                                                    <small class="text-danger" id="new_cus_error"></small>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <small class="text-danger" id="new_all_error"></small>
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Đóng</button>
-                                                <button type="submit" name="submitRec" id="submitRec"
-                                                    class="btn btn-primary">Tạo</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Modal xem chi tiết-->
                             <div class="modal fade" id="exampleModal<?php echo $set['customer_id']; ?>" tabindex="-1"
@@ -200,9 +205,26 @@
                         ?>
                     </tbody>
                 </table>
+
+                <?php 
+                    if($trang <= 1){
+                        echo '';
+                    }else{
+                ?>
+                <div class="row mt-4">
+                    <nav aria-label="Page navigation example mt-3">
+                        <?php
+                            $link = "admin_index.php?action=admin_cus_list&act=pages&page=[i]";
+                            echo page::pagination($trang, $current_page, $link);
+                        ?>
+                    </nav>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
 </div>
 
 <script src="ajax/customer/status.js"></script>
+<script src="ajax/customer/restore.js"></script>
+<script src="ajax/customer/cus_page.js"></script>

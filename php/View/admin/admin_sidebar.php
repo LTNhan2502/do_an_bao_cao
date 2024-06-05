@@ -39,7 +39,7 @@
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_room_check">Hồ sơ đặt phòng</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ thanh toán</a>
+                <!-- <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ thanh toán</a> -->
             </div>
         </div>
     </li>

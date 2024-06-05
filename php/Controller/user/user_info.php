@@ -39,11 +39,12 @@
             break;
         case "change_info":            
             $customer_name = isset($_POST['customer_name']) ? $_POST['customer_name'] : '' ;
+            $customer_tel = isset($_POST['customer_tel']) ? $_POST['customer_tel'] : '' ;
             $customer_gender = isset($_POST['customer_gender']) ? $_POST['customer_gender'] : '' ;
             $customer_birthday = isset($_POST['customer_birthday']) ? $_POST['customer_birthday'] : '' ;
             $customer_email = $_POST['customer_email'];
             $customers = new customers();
-            $result = $customers->changeUserInfo($customer_email, $customer_name, $customer_gender, $customer_birthday);
+            $result = $customers->changeUserInfo($customer_email, $customer_name, $customer_tel, $customer_gender, $customer_birthday);
 
             if($result){
                 $res = array(

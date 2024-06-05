@@ -3,7 +3,7 @@
         $checkout = new checkout();
         $fmt = new formatter();
         $count = $checkout->getBill()->rowCount(); //Tổng bill
-        $limit = 8; //Giới hạn số bill trong 1 trang
+        $limit = 12; //Giới hạn số bill trong 1 trang
         $page = new page();
         $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
         $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
@@ -38,6 +38,11 @@
     <?php endwhile; } ?>
     </div>
     
+    <?php 
+        if($trang <= 1){
+            echo '';
+        }else{
+    ?>
     <div class="row mt-4">
         <nav aria-label="Page navigation example mt-3">
             <?php
@@ -46,6 +51,7 @@
             ?>
         </nav>
     </div>
+    <?php } ?>
 </div>
 
 <script src="ajax/bill/bill_page.js"></script>

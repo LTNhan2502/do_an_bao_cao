@@ -4,6 +4,8 @@
     $customers = new customers();
     $col_email = 'email';
     if(isset($_SESSION['customer_id'])){
+        $getUser = $customers->getCustomer($_SESSION['customer_email'], $col_email);
+        // $user = $getUser->fetch();
 ?>
 <div class="body">
     <aside class="sidebar">
@@ -62,6 +64,14 @@
                                 <div class="form-group">
                                     <label for="full-name">Tên đầy đủ</label>
                                     <input type="text" name="customer_name" id="customer_name" value="<?php echo $_SESSION['customer_name']; ?>">
+                                    <small class="text-danger" id="customer_name_error"></small>
+                                </div>
+
+                                 <!-- Số điện thoại -->
+                                 <div class="form-group">
+                                    <label for="">Số điện thoại</label>
+                                    <input type="text" name="customer_tel" id="customer_tel" value="<?php echo $getUser['tel'] ?>">
+                                    <small class="text-danger" id="customer_tel_error"></small>
                                 </div>
 
                                 <!-- Giới tính -->
@@ -78,12 +88,14 @@
                                             <?php echo $customer['customer_gender'] == $set['gender_id'] ? 'selected' : ''; ?>><?php echo $set['gender_name']; ?></option>
                                         <?php endwhile; ?>
                                     </select>
+                                    <small class="text-danger" id="customer_gender_error"></small>
                                 </div>
 
                                 <!-- Ngày sinh -->
                                 <div class="form-group">
                                     <label for="birthday">Ngày sinh</label>
                                     <input type="text" name="customer_birthday" id="customer_birthday" value="<?php echo $customer['customer_birthday']; ?>">
+                                    <small class="text-danger" id="customer_birthday_error"></small>
                                 </div>
                                 
                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">

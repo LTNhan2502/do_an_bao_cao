@@ -2,14 +2,43 @@
     <?php
         $room = new room();
         $fmt = new formatter();
+        $checkout = new checkout();
+        $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+        $page = new page();
+        $limit = 6; //Giới hạn số bill trong 1 trang
+        if($keyword && $keyword != ''){
+            $count = $room->getRoomsSearch($keyword)->rowCount();
+            $trang = $page->findPage($count, $limit);
+            $start = $page->findStart($limit);
+        }else{
+            $count = $room->getRooms()->rowCount(); //Tổng bill
+            $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
+            $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+        }
+        $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
+        $checkout = new checkout();
+        // $result = $room->getRoomsPage($start, $limit);
         
     ?>
+    <!-- Topbar Search -->
+    <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"> -->
+        <div class="input-group" style="width: 300px !important">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm theo tên" id="search">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="button">
+                    <i class="fas fa-search fa-sm"></i>
+                </button>
+            </div>
+        </div>
+    <!-- </form> -->
+
     <div class="card shadow mb-4 mt-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Room</span>
             <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list&act=create_room"><i class="fas fa-plus-circle"></i></a>
         </div>
         <div class="card-body">
+            <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -36,15 +65,19 @@
                             <th class="text-end">Hành động</th>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody id="room_list_body">
                         <?php
-                            $results = $room->getRooms();
+                        if($keyword && $keyword != ''){
+                            $results = $room->getRoomsSearchPage($keyword, $start, $limit);                            
+                        }else{
+                            $results = $room->getRoomsPage($start, $limit);                            
+                        }
                             $count = 1;
                             while($set = $results->fetch()):
                         ?>
                         <tr id="currency">
                             <!-- ID -->
-                            <td><div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $count; ?></div></td>
+                            <td><div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $set['id']; ?></div></td>
                             <!-- Image -->
                             <td>
                                 <img src="Content/images/<?php echo $set['img']; ?>" width="60px" height="60px" alt="">
@@ -103,7 +136,7 @@
                                 </select>
                             </td>
                             <td class="text-end">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
+                                <button type="button" class="btn btn-primary mr-1 modal_btn" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
                                     <i class="far fa-eye"></i>
                                 </button>
                                 <button type="button" data-delete_room_id="<?php echo $set['id']; ?>" id="delete_room_id" class="btn btn-danger">
@@ -250,6 +283,22 @@
                         ?>
                     </tbody>
                 </table>
+
+                <?php 
+                    if($trang <= 1){
+                        echo '';
+                    }else{
+                ?>
+                <div class="row mt-4" id="div_nav">
+                    <nav aria-label="Page navigation example mt-3">
+                        <?php
+                            $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+                            $link = "admin_index.php?action=admin_room_list&act=" . (isset($keyword) && $keyword != '' ? "search&keyword=$keyword" : "pages") . "&page=[i]";
+                            echo page::pagination($trang, $current_page, $link);                            
+                        ?>
+                    </nav>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -258,6 +307,8 @@
 
 <script src="ajax/room/status.js"></script>
 <script src="ajax/room/detail_modal.js"></script>
+<!-- <script src="ajax/room/room_page.js"></script> -->
+<script src="ajax/search/search_room.js"></script>
 <script>
     $(document).ready(function(){        
         $(document).on('click',"#delete_room_id", function(){

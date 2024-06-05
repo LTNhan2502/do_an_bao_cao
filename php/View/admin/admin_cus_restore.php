@@ -5,6 +5,7 @@
     $fmt = new formatter();
     $rec = new receptionist();
     $cus = new customers();
+    $c = $cus->getAllCusDeleted();
     ?>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
@@ -14,6 +15,10 @@
             </button>
         </div>
         <div class="card-body">
+        <?php
+            $c_count = $c->rowCount();
+            if($c_count != 0){
+        ?>
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -38,7 +43,6 @@
                     </tfoot>
                     <tbody>
                         <?php
-                        $c = $cus->getAllCusDeleted();
                         $count = 1;
                         while ($set = $c->fetch()):
                             ?>
@@ -87,9 +91,8 @@
                                         data-target="#exampleModal<?php echo $set['customer_id']; ?>">
                                         <i class="far fa-eye"></i>
                                     </button>
-                                    <button type="button" class="btn btn-danger" data-toggle="modal"
-                                        data-target="#exampleModal">
-                                        <i class="fas fa-ban"></i>
+                                    <button type="button" class="btn btn-secondary mr-1" id="restore_btn"><i class="fas fa-redo"></i> 
+                                    <button type="button" class="btn btn-danger" id="delete_btn"><i class="fas fa-trash"></i>
                                     </button>
 
                                 </td>
@@ -201,8 +204,12 @@
                     </tbody>
                 </table>
             </div>
+        <?php }else{
+            echo "<h4 class='text-decoration-underline'>Chưa có thông tin!</h4>";
+        }?>
         </div>
     </div>
 </div>
 
 <script src="ajax/customer/status.js"></script>
+<script src="ajax/customer/restore.js"></script>

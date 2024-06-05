@@ -16,7 +16,7 @@
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page'])){
                 //Phân trang
                 $checkout = new checkout();
-                $limit = 8; //Giới hạn số bill trong 1 trang
+                $limit = 12; //Giới hạn số bill trong 1 trang
                 $page = new page();
                 $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
                 $result = $checkout->getBillPage($start, $limit);

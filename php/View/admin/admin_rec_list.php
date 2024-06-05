@@ -1,21 +1,51 @@
 <div class="container-fluid">
     <?php
-        $room = new room();
+        $rec = new receptionist();
         $fmt = new formatter();
-        $count = $room->getRooms()->rowCount(); //Tổng đối tượng
-        $limit = 6; //Giới hạn số đối tượng trong 1 trang
+        $count = $rec->getAllRec()->rowCount(); //Tổng đối tượng
+        $limit = 4; //Giới hạn số đối tượng trong 1 trang
         $page = new page();
         $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
         $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
         $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
     ?>
+    <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Receptionist - Danh sách</span>
             <button class="btn m-0 font-weight-bold btn-primary" data-toggle="modal" data-target="#modalCreate">
                 <i class="fas fa-plus-circle"></i>
             </button>
+
+             <!-- Modal tạo mới-->
+             <div class="modal fade create_rec" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Table Receptionist - Tạo mới</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form enctype='multipart/form-data' id="createRecForm" method="post">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="new_rec">Họ và tên</label>
+                                    <input type="text" class="form-control" name="new_rec" id="new_rec">
+                                    <small class="text-danger" id="new_rec_error"></small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <small class="text-danger" id="new_all_error"></small>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                                <button type="submit" name="submitRec" id="submitRec" class="btn btn-primary">Tạo</button>
+                            </div>
+                        </form>                                
+                    </div>
+                </div>
+            </div>
         </div>
+        
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -39,14 +69,13 @@
                             <th class="text-end">Hành động</th>
                         </tr>
                     </tfoot>
-                    <tbody>
+                    <tbody id="rec_list">
                         <?php
-                            $rec = new receptionist();
-                            $r = $rec->getAllRec();
+                            $r = $rec->getAllRecPage($start, $limit);
                             $count = 1;
                             while($set = $r->fetch()):
                         ?>
-                        <tr id="currency">
+                        <tr>
                             <!-- STT -->
                             <td><div id="rec_id" data-id="<?php echo $set['rec_id']; ?>"><?php echo $count; ?></div></td>
                             <!-- Mã nhân viên -->
@@ -101,34 +130,6 @@
 
                             </td>
                         </tr>
-
-                        <!-- Modal tạo mới-->
-                        <div class="modal fade create_rec" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Table Receptionist - Tạo mới</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form enctype='multipart/form-data' id="createRecForm" method="post">
-                                        <div class="modal-body">
-                                            <div class="form-group">
-                                                <label for="new_rec">Họ và tên</label>
-                                                <input type="text" class="form-control" name="new_rec" id="new_rec">
-                                                <small class="text-danger" id="new_rec_error"></small>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <small class="text-danger" id="new_all_error"></small>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                            <button type="submit" name="submitRec" id="submitRec" class="btn btn-primary">Tạo</button>
-                                        </div>
-                                    </form>                                
-                                </div>
-                            </div>
-                        </div>
                         
                         <!-- Modal xem chi tiết-->
                         <div class="modal fade" id="exampleModal<?php echo $set['rec_id']; ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -272,15 +273,29 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        
+                        </div>    
+                        <!-- End modal -->
                         <?php 
                             $count++;
                             endwhile;
                         ?>
                     </tbody>
                 </table>
+
+                <?php 
+                    if($trang <= 1){
+                        echo '';
+                    }else{
+                ?>
+                <div class="row mt-4">
+                    <nav aria-label="Page navigation example mt-3">
+                        <?php
+                            $link = "admin_index.php?action=admin_rec_list&act=pages&page=[i]";
+                            echo page::pagination($trang, $current_page, $link);
+                        ?>
+                    </nav>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -295,6 +310,7 @@
     }
 </style>
 <script src="ajax/receptionist/status.js"></script>
+<script src="ajax/receptionist/rec_page.js"></script>
 <script>
     //Dùng datetimepicker
     $(document).ready(function(){

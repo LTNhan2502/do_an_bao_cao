@@ -9,13 +9,21 @@
         <?php
             $room = new room();
             $fmt = new formatter();
+            $count = $room->getBookedRooms()->rowCount(); //Tổng book
+            $limit = 5; //Giới hạn số book trong 1 trang
+            $page = new page();
+            $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
+            $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+            $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
+            $checkout = new checkout();
             $booked_room = $room->getBookedRooms();
             $rowCount = $booked_room->rowCount();
+            $booked_room_page = $room->getBookedRoomsPage($start, $limit);
         ?>
             <div class="table-responsive">
                 <?php
                     if( $rowCount == 0){
-                        echo "<h4 class='text-decoration-underline'>Chưa có phòng nào được đặt!</h4>";
+                        echo "<h4 class='text-decoration-underline'>Chưa có thông tin   !</h4>";
                     }else{
                 ?>
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -40,7 +48,7 @@
                     <tbody>
                         <?php                            
                             $count = 1;
-                            while ($result = $booked_room->fetch()):
+                            while ($result = $booked_room_page->fetch()):
                         ?>
                         <tr style="max-height: 100px">
                             <td><?php echo $count; ?></td>
@@ -92,7 +100,11 @@
                             <?php } ?>
                                
                             <!-- HUỶ ĐẶT PHÒNG -->
+                            <?php if($result['booked_session'] == 0 && $result['booked_done_session'] == 1){?>
+                                <button class="btn btn-outline-danger btn-same text-start button_recover" id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>
+                            <?php }else{ ?>
                                 <button class="btn btn-outline-danger btn-same text-start button_recover" disabled id="undo_book"><i class="fas fa-reply"></i> Thu hồi phòng</button>
+                            <?php } ?>
                             </td>
                         </tr>
                         <?php 
@@ -102,12 +114,27 @@
                         ?>
                     </tbody>
                 </table>
+                <?php 
+                    if($trang <= 1){
+                        echo '';
+                    }else{
+                ?>
+                <div class="row mt-4">
+                    <nav aria-label="Page navigation example mt-3">
+                        <?php
+                            $link = "admin_index.php?action=admin_room_check&act=pages&page=[i]";
+                            echo page::pagination($trang, $current_page, $link);
+                        ?>
+                    </nav>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
 </div>
 
 <script src="ajax/room/approve.js"></script>
+<script src="ajax/room/room_check_page.js"></script>
 
 <style>
     .btn-same{

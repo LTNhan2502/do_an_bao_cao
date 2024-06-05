@@ -1,16 +1,23 @@
 <div class="container-fluid">
     <?php
-        $room = new room();
+        $rec = new receptionist();
         $fmt = new formatter();
-        
+        $count = $rec->getAllRec()->rowCount(); //Tổng đối tượng
+        $limit = 4; //Giới hạn số đối tượng trong 1 trang
+        $page = new page();
+        $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
+        $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+        $current_page = isset($_GET['page']) ? $_GET['page'] : 1; //Lấy được trang hiện tại
     ?>
     <div class="card shadow mb-4 mt-4">
+        <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Receptionist - Danh sách lương</span>
         </div>
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -39,8 +46,7 @@
                     </tfoot>
                     <tbody>
                         <?php
-                            $rec = new receptionist();
-                            $r = $rec->getAllRec();
+                            $r = $rec->getAllRecPage($start, $limit);
                             $count = 1;
                             while($set = $r->fetch()):
                         ?>
@@ -110,6 +116,20 @@
                         ?>
                     </tbody>
                 </table>
+                <?php 
+                    if($trang <= 1){
+                        echo '';
+                    }else{
+                ?>
+                <div class="row mt-4">
+                    <nav aria-label="Page navigation example mt-3">
+                        <?php
+                            $link = "admin_index.php?action=admin_rec_salary&act=pages&page=[i]";
+                            echo page::pagination($trang, $current_page, $link);
+                        ?>
+                    </nav>
+                </div>
+                <?php } ?>
             </div>
         </div>
     </div>
@@ -125,6 +145,7 @@
 </script>
 
 <script src="ajax/receptionist/status.js"></script>
+<script src="ajax/receptionist/salary_page.js"></script>
 <script>
     $(document).ready(function(){        
         $(document).on('click',"#delete_room_id", function(){

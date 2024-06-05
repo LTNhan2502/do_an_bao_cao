@@ -1,4 +1,8 @@
 $(document).ready(function(){
+    let nameFlag = $("#customer_name").val() ? false : true
+    let numberFlag = $("#customer_tel").val() ? false : true
+    let genderFlag = $("#customer_gender").val() ? false : true
+    let dateFlag = $("#customer_birthday").val() ? false : true
     let passOldFlag = true;
     let passNewFlag = true;
     let passConfFlag = true;
@@ -102,6 +106,131 @@ $(document).ready(function(){
             }
         });
     })
+
+    //Chỉnh sửa cus_name
+    $(document).on('change', '#customer_name', function(){
+        let name_value  =$(this).val();
+
+        let regex_name_special = /[~!@#$%^&*()_+`\-={}[\]:;"'<>,.?/\\|]/;
+        let regex_name_number = /\d/;
+
+        //Kiểm tra trống
+        if(name_value == '' && name_value.trim() == ''){
+            nameFlag = true
+            $("#customer_name_error").html("Không được để trống!")
+            return
+        }
+        //Kiểm tra kí tự đặc biệt
+        else if(regex_name_special.test(name_value)){
+            nameFlag = true
+            $("#customer_name_error").html("Không được chứa các kí tự đặc biệt!")
+            return
+        }
+        //Kiểm tra số
+        else if(regex_name_number.test(name_value)){
+            nameFlag = true
+            $("#customer_name_error").html("Không được chứa số!")
+            return
+        }
+        //Kiểm tra độ dài phải từ 2-45
+        else if(name_value.length < 2 || name_value.length > 45){
+            nameFlag = true
+            $("#customer_name_error").html("Độ dài phải từ 2-45 kí tự!")
+            return
+        }
+        //Đều ổn
+        else{
+            nameFlag = false
+            $("#customer_name_error").html("")
+        }        
+    });
+
+    //Chỉnh sửa số điện thoại
+    $(document).on('change', '#customer_tel', function(){
+        let tel_value  =$(this).val();
+        let first_0 = tel_value.charAt(0) == 0 ? true : false;
+
+        //Kiểm tra trống
+        if(tel_value == '' && tel_value.trim() == ''){
+            numberFlag = true
+            $("#customer_tel_error").html("Không được để trống!")
+            return
+        }        
+        //Kiểm tra là số
+        else if(isNaN(tel_value)){
+            numberFlag = true
+            $("#customer_tel_error").html("Phải là số!")
+            return
+        }
+        //Kiểm tra phải có 10 chữ số
+        else if(tel_value.length != 10 && first_0){
+            numberFlag = true
+            $("#customer_tel_error").html("Phải có 10 chữ số!")
+            return
+        }
+        //Kiểm tra bắt đầu bằng số 0
+        else if(!first_0 && tel_value.length == 10){
+            numberFlag  =true
+            $("#customer_tel_error").html("Phải bắt đầu bằng số 0!")
+            return
+        }
+        //Kiểm tra hợp lệ
+        else if(!first_0 && tel_value.length != 10){
+            numberFlag =true
+            $("#customer_tel_error").html("Số điện thoại không hợp lệ!")
+            return
+        }
+        else{
+            numberFlag = false
+            $("#customer_tel_error").html("")
+        }        
+    });
+
+    //Chỉnh sửa giới tính
+    $(document).on('change', '#customer_gender', function(){
+        let tel_value  =$(this).val();
+
+        //Kiểm tra trống
+        if(tel_value == '' && tel_value.trim() == ''){
+            genderFlag = true
+            $("#customer_gender_error").html("Không được để trống!")
+            return
+        }        
+        //Kiểm tra khác 0
+        else if(tel_value == 0){
+            genderFlag = true
+            $("#customer_gender_error").html("Hãy chọn giới tính!")
+            return
+        }
+        //Đều ổn
+        else{
+            $("#customer_gender_error").html("")
+            genderFlag = false
+        }        
+    });
+
+    //Chỉnh sửa ngày sinh
+    $(document).on('change', '#customer_birthday', function(){
+        let tel_value  =$(this).val();
+
+        //Kiểm tra trống
+        if(tel_value == '' && tel_value.trim() == ''){
+            dateFlag = true
+            $("#customer_birthday_error").html("Không được để trống!")
+            return
+        }        
+        //Kiểm tra khác 0
+        else if(tel_value == 0){
+            dateFlag = true
+            $("#customer_birthday_error").html("Hãy chọn ngày sinh!")
+            return
+        }
+        //Đều ổn
+        else{
+            $("#customer_birthday_error").html("")
+            dateFlag = false
+        }        
+    });
 
     
     //Nhập password cũ
@@ -220,53 +349,62 @@ $(document).ready(function(){
 
     $.datetimepicker.setLocale('vi');
 
+    //Thay đổi thông tin cá nhân
     $(document).on("submit", "#changeInfoForm", function(e){
         e.preventDefault();
-        let customer_email = $("#customer_email").data("customer_email");
-        let form = $("#changeInfoForm")[0];
-        let formData = new FormData(form);
-        //Cách xem dữ liệu của formdata
-        // formData.append("customer_birthday", customer_birthday);
-        formData.append("customer_email", customer_email);
-
-        $.ajax({
-            url: "Controller/user/user_info.php?act=change_info",
-            method: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 200){
+        console.log(nameFlag, numberFlag, genderFlag, dateFlag);
+        if(nameFlag || numberFlag || genderFlag || dateFlag){
+            $("#info_all_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!")
+            return
+        }else{
+            $("#info_all_error").html("")
+            let customer_email = $("#customer_email").data("customer_email");
+            let form = $("#changeInfoForm")[0];
+            let formData = new FormData(form);
+            //Cách xem dữ liệu của formdata
+            // formData.append("customer_birthday", customer_birthday);
+            formData.append("customer_email", customer_email);
+    
+            $.ajax({
+                url: "Controller/user/user_info.php?act=change_info",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 200){
+                        Swal.fire({                                 
+                            title: "Thành công!",
+                            text: res.message,
+                            icon: "success",
+                            timer: 900,
+                            timerProgressBar: true
+                        }).then(function(){
+                            window.location.reload();
+                        });
+                    }else{
+                        Swal.fire({                                 
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3200,
+                            timerProgressBar: true
+                        })
+                    }
+                },
+                error: function(){
                     Swal.fire({                                 
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    }).then(function(){
-                        window.location.reload();
-                    });
-                }else{
-                    Swal.fire({                                 
-                        title: "Thất bại!",
-                        text: res.message,
+                        title: "Lỗi!",
+                        text: "Lỗi không xác định!",
                         icon: "error",
                         timer: 3200,
                         timerProgressBar: true
                     })
                 }
-            },
-            error: function(){
-                Swal.fire({                                 
-                    title: "Lỗi!",
-                    text: "Lỗi không xác định!",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+
+        }
     })
 
     //Submit thay đổi mật khẩu
