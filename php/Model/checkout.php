@@ -33,5 +33,21 @@
             $result = $db->getList($select);
             return $result;
         }
+
+        //Phương thức hiển thị tất cả bill dựa theo từ tìm kiếm
+        function getBillSearch($keyword){
+            $db = new connect();
+            $select = "SELECT * FROM bill WHERE bill.customer_name LIKE '%$keyword%' ORDER BY bill.bill_id DESC";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức hiển thị tất cả bill dựa theo từ tìm kiếm và có phân trang
+        function getBillSearchPage($keyword, $start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM bill WHERE bill.customer_name LIKE '%$keyword%' ORDER BY bill.bill_id DESC LIMIT $start, $limit";
+            $result = $db->getList($select);
+            return $result;
+        }
     }
 ?>
