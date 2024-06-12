@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="Content/admin/css/room_list.css">
 <div class="container-fluid">
     <?php
         $room = new room();
@@ -23,7 +24,7 @@
     <!-- Topbar Search -->
     <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"> -->
         <div class="input-group" style="width: 300px !important">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm theo tên" id="search">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm theo tên phòng" id="search">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button">
                     <i class="fas fa-search fa-sm"></i>
@@ -307,63 +308,9 @@
 
 <script src="ajax/room/status.js"></script>
 <script src="ajax/room/detail_modal.js"></script>
-<!-- <script src="ajax/room/room_page.js"></script> -->
+<script src="ajax/room/room_restore.js"></script>
 <script src="ajax/search/search_room.js"></script>
 <script>
-    $(document).ready(function(){        
-        $(document).on('click',"#delete_room_id", function(){
-            let delete_room_id = $(this).closest('tr').find('#id').data("id");
-            Swal.fire({
-                title: "Xoá phòng này?",
-                text: "Sau khi xoá phòng có thể vào Khôi phục để xem!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes!"
-                }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        url: "Controller/admin/admin_room_list.php?act=delete_room",
-                        method: "POST",
-                        data: {delete_room_id},
-                        dataType: "JSON",
-                        success: function(res){
-                            if(res.status == 'success'){
-                                Swal.fire({                                    
-                                    title: "Xoá phòng thành công!",
-                                    text: res.message,
-                                    icon: "success",
-                                    timer: 900,
-                                    timerProgressBar: true
-                                });
-                                setTimeout(function(){
-                                    window.location.reload();
-                                }, 930)
-                            }else{
-                                Swal.fire({                                    
-                                    title: "Xoá phòng thất bại!",
-                                    text: res.message,
-                                    icon: "error",
-                                    timer: 3200,
-                                    timerProgressBar: true
-                                });                           
-                            }
-                        },
-                        error: function(){
-                            Swal.fire({                                
-                                title: "Lỗi!",
-                                text: "Có lỗi xảy ra!",
-                                icon: "error",
-                                timer: 3200,
-                                timerProgressBar: true
-                            });
-                        }
-                    })
-                }
-            });
-        })
-    })
     $(document).on("click", ".image-small", function(){
         let image_container = $(this).closest(".image-container");
         let image_big = image_container.find(".image-big");
@@ -380,80 +327,4 @@
         //Cập nhật lại đường link của image-big
         image_big.attr("src", newSrc);
     });
-
-
 </script>
-<style>
-    .image-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .image-row {
-        display: flex;
-        justify-content: space-around;
-        width: 100%; /* Match width of the parent container */
-    }
-
-    .image-big{
-        border-radius: 10px;
-        max-height: 650px;
-    }
-
-    .image-small{
-        width: 150px; /* Adjust width of each small image */
-        height: 125px;
-        border-radius: 10px;
-        opacity: 0.4;
-    }
-
-    .shadow-inset-md{
-        border-radius: 9px;
-        background-color: #f2f2f2;
-        box-shadow: inset 1px 2px 4px rgba(255, 0, 0, 0.155) !important;
-    }
-
-    .selected{
-        border: 2px solid #0d6efd;
-        opacity: 1.2;
-    }
-
-    .hide{
-        display: none;
-    }
-
-    .show{
-        display: block;
-    }
-
-    .modal-header {
-        display: flex;
-        align-items: center;
-    }
-
-    .header-buttons {
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-edit i,
-    .btn-close span {
-        font-size: 1.5em; /* Tăng kích thước font */
-    }
-
-    .btn-edit,
-    .btn-close {
-        padding: 0.5em; /* Thêm padding để làm cho nút lớn hơn */
-    }
-
-    .btn-edit:hover{
-        color: rgb(64, 64, 64);
-    }
-
-
-
-    /* small{
-        margin: -15px 0 15px 0;
-    } */
-</style>

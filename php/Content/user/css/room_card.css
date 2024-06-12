@@ -32,7 +32,7 @@
     align-items: center;
     overflow: hidden;
     width: 95%;
-    max-height: 150px;
+    max-height: 165px;
 }
 
 .room_card_list:hover {
@@ -50,8 +50,8 @@
 }
 
 .room_card_list img {
-    width: 140px;
-    height: 170px;
+    width: 160px;
+    height: 190px;
     object-fit: cover;
     /* margin-right: 10px; */
 }
@@ -66,4 +66,17 @@
 .room_card_list .card-body p{
     margin: 0px !important;
     font-size: 15px;
+}
+
+.card-container-user-info{
+    width: 100%;
+    z-index: 10;
+    height: 500px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.card-title{
+    font-size: 17px;
+    font-weight: 700;
 }

@@ -186,9 +186,9 @@
                 return false;            
             }
 
-            // Kiểm tra độ dài 2 < name < 30
-            else if(value.length < 2 || value.length > 30){
-                $('#name_error').html('Tên phải từ 2 tới 30 kí tự!');
+            // Kiểm tra độ dài 2 < name < 50
+            else if(value.length < 2 || value.length > 50){
+                $('#name_error').html('Tên phải từ 2 tới 50 kí tự!');
                 nameValid = false; 
                 return false;
             }
@@ -324,7 +324,7 @@
                                 timer: 900,
                                 timerProgressBar: true
                             }).then(function() {
-                                window.location.reload();
+                                window.location.hre = 'admin_index.php?action=admin_room_list';
                             });                            
                         }else{
                             Swal.fire({

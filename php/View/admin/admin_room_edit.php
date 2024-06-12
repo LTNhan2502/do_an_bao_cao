@@ -181,7 +181,7 @@
                                         <?php for($i = 0; $i < $des_num; $i++): ?>
                                             <li class="des<?php echo $i; ?>">
                                                 <div class="d-flex flex-nowrap align-items-center mt-1">
-                                                    <span><?php echo $des[$i]; ?></span>
+                                                    <span style="width: 330px;"><?php echo $des[$i]; ?></span>
                                                     <button class="btn btn-danger ml-auto" id="delete_des_name"
                                                         data-description="<?php echo $des[$i]; ?>"
                                                         data-detail_id="<?php echo $id; ?>">

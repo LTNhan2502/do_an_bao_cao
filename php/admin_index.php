@@ -46,7 +46,8 @@
 
     <!-- Datetimepicker css -->
     <link rel="stylesheet" href="Content/admin/datetimepicker-master/build/jquery.datetimepicker.min.css">   
-
+    <!-- Current time function -->
+    <script src="ajax/current_time/datetime.js"></script>
 </head>
 
 <body id="page-top">

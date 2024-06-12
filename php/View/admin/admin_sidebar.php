@@ -96,8 +96,7 @@
         </a>
         <div id="collapseSV" class="collapse" aria-labelledby="headingSV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="utilities-color.html">Thông tin sơ bộ</a>
-                <a class="collapse-item" href="utilities-color.html">Phân quyền</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>
 
             </div>
         </div>
@@ -121,13 +120,12 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=admin_room_restore">Phòng</a>
-                <a class="collapse-item" href="register.html">Hoá đơn</a>
-                <a class="collapse-item" href="forgot-password.html">Nhân viên</a>
+                <a class="collapse-item" href="admin_index.php?action=admin_rec_list&act=admin_rec_restore">Nhân viên</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_cus_list&act=admin_cus_restore">Khách hàng</a>
-                <div class="collapse-divider"></div>
+                <!-- <div class="collapse-divider"></div>
                 <h6 class="collapse-header">Other Pages:</h6>
                 <a class="collapse-item" href="404.html">404 Page</a>
-                <a class="collapse-item" href="blank.html">Blank Page</a>
+                <a class="collapse-item" href="blank.html">Blank Page</a> -->
             </div>
         </div>
     </li>

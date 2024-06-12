@@ -42,6 +42,7 @@
                         }else{
                             $_SESSION['customer_id'] = $isExist['customer_id'];
                             $_SESSION['customer_email'] = $isExist['email'];
+                            $_SESSION['customer_booked_id'] = $isExist['customer_booked_id'];
                             $_SESSION['customer_name'] = $isExist['customer_name'];
                             $_SESSION['customer_tel'] = $isExist['tel'];
                             $res = array(
@@ -65,6 +66,7 @@
         case "logout_action":
             unset($_SESSION['customer_id']);
             unset($_SESSION['customer_email']);
+            unset($_SESSION['customer_booked_id']);
             unset($_SESSION['customer_name']);
             unset($_SESSION['customer_tel']);
             $res = array(

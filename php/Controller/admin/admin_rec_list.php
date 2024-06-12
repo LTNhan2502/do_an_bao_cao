@@ -503,6 +503,69 @@ switch ($act) {
             echo json_encode($res);
         }
         break;
+    case 'admin_rec_restore':
+        include_once 'View/admin/admin_rec_restore.php';
+        break;
+    case 'soft_delete':
+        if (isset($_POST['rec_code'])) {
+            $rec_code = $_POST['rec_code'];
+            $rec = new receptionist();
+            $result = $rec->deleteRec($rec_code);
+
+            if ($result) {
+                $res = array(
+                    'status' => 200,
+                    'message' => 'Xoá đối tượng thành công!'
+                );
+            } else {
+                $res = array(
+                    'status' => 403,
+                    'message' => 'Xoá thất bại!'
+                );
+            }
+            echo json_encode($res);
+        }
+        break;
+    case 'cpl_delete':
+        if (isset($_POST['rec_code'])) {
+            $rec_code = $_POST['rec_code'];
+            $rec = new receptionist();
+            $result = $rec->cplDeleteRec($rec_code);
+
+            if ($result) {
+                $res = array(
+                    'status' => 200,
+                    'message' => 'Xoá đối tượng thành công!'
+                );
+            } else {
+                $res = array(
+                    'status' => 403,
+                    'message' => 'Xoá thất bại!'
+                );
+            }
+            echo json_encode($res);
+        }
+        break;
+    case 'restore_rec':
+        if (isset($_POST['rec_code'])) {
+            $rec_code = $_POST['rec_code'];
+            $rec = new receptionist();
+            $result = $rec->restoreRec($rec_code);
+
+            if ($result) {
+                $res = array(
+                    'status' => 200,
+                    'message' => 'Đối tượng đã được khôi phục!'
+                );
+            } else {
+                $res = array(
+                    'status' => 403,
+                    'message' => 'Khôi phục thất bại!'
+                );
+            }
+            echo json_encode($res);
+        }
+        break;
     case "pages":
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page']) && isset($_GET['limit'])) {
             $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;

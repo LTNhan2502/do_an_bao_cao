@@ -108,10 +108,10 @@ switch ($act) {
         include_once 'View/admin/admin_cus_restore.php';
         break;
     case 'soft_delete':
-        if (isset($_POST['customer_email'])) {
-            $email = $_POST['customer_email'];
+        if (isset($_POST['customer_booked_id'])) {
+            $customer_booked_id = $_POST['customer_booked_id'];
             $customers = new customers();
-            $result = $customers->deleteCus($email);
+            $result = $customers->deleteCus($customer_booked_id);
 
             if ($result) {
                 $res = array(
@@ -128,10 +128,10 @@ switch ($act) {
         }
         break;
     case 'cpl_delete':
-        if (isset($_POST['customer_email'])) {
-            $email = $_POST['customer_email'];
+        if (isset($_POST['customer_booked_id'])) {
+            $customer_booked_id = $_POST['customer_booked_id'];
             $customers = new customers();
-            $result = $customers->cplDeleteCus($email);
+            $result = $customers->cplDeleteCus($customer_booked_id);
 
             if ($result) {
                 $res = array(
@@ -148,15 +148,16 @@ switch ($act) {
         }
         break;
     case 'restore_customer':
-        if (isset($_POST['customer_email'])) {
-            $email = $_POST['customer_email'];
+        if (isset($_POST['customer_booked_id'])) {
+            $customer_booked_id = $_POST['customer_booked_id'];
             $customers = new customers();
-            $result = $customers->restoreCus($email);
+            $result = $customers->restoreCus($customer_booked_id);
 
             if ($result) {
                 $res = array(
                     'status' => 200,
-                    'message' => 'Đối tượng đã được khôi phục!'
+                    'message' => 'Đối tượng đã được khôi phục!',
+                    'data' => '123'
                 );
             } else {
                 $res = array(
@@ -260,7 +261,7 @@ switch ($act) {
                             echo '<p>' . $history_room['quantity'] . ' khách</p>';
                             echo '</div>';
                             echo '</div>';
-                            echo '<p><strong>Tổng: ' . $fmt->formatCurrency($history_room['sale']) . ' VND</strong></p>';
+                            echo '<p><strong>Tổng: ' . $fmt->formatCurrency($history_room['booked_sum']) . ' VND</strong></p>';
                             echo '<p>Lúc vào: ' . $history_room['booked_arrive'] . '</p>';
                             echo '<p>Lúc ra: ' . $history_room['booked_quit'] . '</p>';
                             echo '<p>Thanh toán: ' . $history_room['booked_left_at'] . '</p>';

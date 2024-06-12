@@ -12,11 +12,13 @@ $(document).ready(function(){
     }
     //Xác nhận nhận phòng
     $(document).on("click", "#receive", function(){
-        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-        let status = $(this).closest("tr").find("#badge_receive");
-        let button_receive = $(this).closest("tr").find(".button_receive");
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
         let undo_receive_id = "undo_receive"; 
-        let disable_leave = $(this).closest("tr").find(".button_leave");
+        let disable_leave = $input.find(".button_leave");
+        let button_cancel = $input.find(".button_cancel");
         console.log(button_receive);
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=approve_arrive",
@@ -24,14 +26,7 @@ $(document).ready(function(){
             data: {booked_room_id},
             dataType: "JSON",
             success: function(res){
-                if(res.status == "success"){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });                    
+                if(res.status == "success"){                                      
                     status.html("Đã nhận");
                     status.removeClass('badge-warning');
                     status.addClass('badge-info');
@@ -45,9 +40,10 @@ $(document).ready(function(){
                         disable_leave.attr("disabled", false);
                     }
                     
+                    button_cancel.attr("disabled", true)
+
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -57,8 +53,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -71,11 +66,13 @@ $(document).ready(function(){
 
     //Huỷ nhận phòng
     $(document).on("click", "#undo_receive", function(){
-        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-        let status = $(this).closest("tr").find("#badge_receive");
-        let button_receive = $(this).closest("tr").find(".button_receive");
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
         let receive_id = "receive";
-        let disable_leave = $(this).closest("tr").find(".button_leave");
+        let disable_leave = $input.find(".button_leave");
+        let button_cancel = $input.find(".button_cancel");
         console.log(button_receive);
         $.ajax({
             url: "Controller/admin/admin_room_check.php?act=undo_approve_arrive",
@@ -83,14 +80,7 @@ $(document).ready(function(){
             data: {booked_room_id},
             dataType: "JSON",
             success: function(res){
-                if(res.status == "success"){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });                    
+                if(res.status == "success"){                                      
                     status.html("Chưa nhận");
                     status.removeClass('badge-info');
                     status.addClass('badge-warning');
@@ -104,11 +94,14 @@ $(document).ready(function(){
                     if(button_receive.attr("disabled")){
                         button_receive.attr("disabled", false);
                     }
+
+                    if(button_cancel.attr("disabled")){
+                        button_cancel.attr("disabled", false);
+                    }
                     
                     
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -118,8 +111,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -132,11 +124,12 @@ $(document).ready(function(){
 
     //Xác nhận trả phòng
     $(document).on("click", "#leave", function(){
-        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-        let status = $(this).closest("tr").find("#badge_receive");
-        let button_receive = $(this).closest("tr").find(".button_receive");
-        let button_leave = $(this).closest("tr").find(".button_leave");
-        let button_recover = $(this).closest("tr").find(".button_recover");
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
+        let button_leave = $input.find(".button_leave");
+        let button_recover = $input.find(".button_recover");
         let undo_leave_id = "undo_leave"; 
         let receive_id = "receive";
         console.log(button_leave);
@@ -146,13 +139,7 @@ $(document).ready(function(){
             data: {booked_room_id},
             dataType: "JSON",
             success: function(res){
-                if(res.status == "success"){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });
+                if(res.status == "success"){                    
                     status.html("Đã trả");
                     status.removeClass('badge-info');
                     status.addClass('badge-success');
@@ -195,11 +182,12 @@ $(document).ready(function(){
 
     //Huỷ trả phòng
     $(document).on("click", "#undo_leave", function(){
-        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-        let status = $(this).closest("tr").find("#badge_receive");
-        let button_receive = $(this).closest("tr").find(".button_receive");
-        let button_leave = $(this).closest("tr").find(".button_leave");
-        let button_recover = $(this).closest("tr").find(".button_recover");
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
+        let button_leave = $input.find(".button_leave");
+        let button_recover = $input.find(".button_recover");
         let leave_id = "leave";
         let undo_receive_id = "undo_receive";
         console.log(button_leave);
@@ -209,13 +197,7 @@ $(document).ready(function(){
             data: {booked_room_id},
             dataType: "JSON",
             success: function(res){
-                if(res.status == "success"){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });                    
+                if(res.status == "success"){                                       
                     status.html("Đã nhận");
                     status.removeClass('badge-success');
                     status.addClass('badge-info');
@@ -257,20 +239,20 @@ $(document).ready(function(){
     });
 
     //Thu hồi phòng
-    $('#undo_book').on('click', function() {
-        let booked_room_id = $(this).closest("tr").find(".booked_room_id").data("id");
-        let email = $(this).closest("tr").find("#customer_email").data("email");
-        let customer_sum = $(this).closest("tr").find(".customer_sum").data("customer_sum");
-        let arrive = $(this).closest("tr").find(".arrive").data("arrive");
-        let quit = $(this).closest("tr").find(".quit").data("quit");
+    $('#undo_book').on('click', function(){
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let email = $input.find("#customer_email").data("email");
+        let customer_sum = $input.find(".customer_sum").data("customer_sum");
+        let arrive = $input.find(".arrive").data("arrive");
+        let quit = $input.find(".quit").data("quit");
         //Lấy thời gian hiện tại theo kiểu yyyy-mm-dd hh:ii:ss  
         let left_at = getLocalTimeString();
         
-        let room_name = $(this).closest("tr").find(".room_name").data("room_name");
-        let customer_name = $(this).closest("tr").find(".customer_name").data("customer_name");
-        let tel = $(this).closest("tr").find(".tel").data("tel");
-        let customer_booked_id = $(this).closest("tr").find(".customer_booked_id").data("customer_booked_id");
-        let $input = $(this);
+        let room_name = $input.find(".room_name").data("room_name");
+        let customer_name = $input.find(".customer_name").data("customer_name");
+        let tel = $input.find(".tel").data("tel");
+        let customer_booked_id = $input.find(".customer_booked_id").data("customer_booked_id");
         // alert(booked_room_id);
 
         Swal.fire({
@@ -351,5 +333,136 @@ $(document).ready(function(){
                 })
             }
         });
+    })
+
+    //Huỷ đặt phòng
+    $(document).on('click', '#button_cancel', function(){
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
+        let button_recover = $input.find(".button_recover");
+        let button_cancel = $input.find(".button_cancel")
+        let undo_cancel_id = "undo_cancel";
+        let cancel_time = $("#cancel_time");
+        let currentTime = getLocalTimeString();
+
+        Swal.fire({
+            title: "Huỷ đặt phòng này?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Có",
+            cancelButtonText: "Không",
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "Controller/admin/admin_room_check.php?act=cancel_book",
+                    method: "POST",
+                    data: {booked_room_id},
+                    dataType: "JSON",
+                    success: function(res){
+                        if(res.status == "success"){
+                            Swal.fire({                         
+                                title: "Thành công!",
+                                text: res.message,
+                                icon: "success",
+                                timer: 900
+                            });
+
+                            status.html("Đã huỷ");
+                            status.removeClass('badge-warning');
+                            status.addClass('badge-danger');
+
+                            if(button_recover.attr("disabled")){
+                                button_recover.attr("disabled", false);
+                            }
+
+                            button_receive.attr("disabled", true)
+
+                            button_cancel.html('<i class="fas fa-ban"></i> Hoàn tác')
+                            button_cancel.attr("id", undo_cancel_id)
+                            button_cancel.removeClass("button_cancel")
+                            button_cancel.addClass("undo_cancel")
+                            cancel_time.html("Huỷ lúc: "+currentTime)
+                        }else{
+                            Swal.fire({                         
+                                title: "Thất bại!",
+                                text: res.message,
+                                icon: "error",
+                                timer: 3200,
+                                timerProgressBar: true
+                            });
+                        }
+                    },
+                    error: function(){
+                        Swal.fire({                     
+                            title: "Lỗi!",
+                            text: "Có lỗi xảy ra!",
+                            icon: "error",
+                            timer: 3200,
+                            timerProgressBar: true
+                        });
+                    }
+                })
+            }
+        });
+    })
+
+    //Hoàn tác huỷ đặt phòng
+    $(document).on('click', '#undo_cancel', function(){
+        let $input = $(this).closest("tr")
+        let booked_room_id = $input.find(".booked_room_id").data("id");
+        let status = $input.find("#badge_receive");
+        let button_receive = $input.find(".button_receive");
+        let button_recover = $input.find(".button_recover");
+        let undo_cancel = $input.find(".undo_cancel");
+        let cancel_id = "button_cancel";
+        let cancel_time = $("#cancel_time");
+        
+        $.ajax({
+            url: "Controller/admin/admin_room_check.php?act=undo_cancel",
+            method: "POST",
+            data: {booked_room_id},
+            dataType: "JSON",
+            success: function(res){
+                if(res.status == "success"){                    
+                    status.html("Chưa nhận");
+                    status.removeClass('badge-danger');
+                    status.addClass('badge-warning');
+
+                    if(button_receive.attr("disabled")){
+                        button_receive.attr("disabled", false);
+                    }
+
+                    button_recover.attr("disabled", true) 
+
+                    undo_cancel.html('<i class="fas fa-ban"></i> Huỷ đặt phòng')
+                    undo_cancel.attr("id", cancel_id)
+                    undo_cancel.removeClass("undo_cancel")
+                    undo_cancel.addClass("button_cancel")
+                    cancel_time.html('')
+
+                }else{
+                    Swal.fire({                         
+                        title: "Thất bại!",
+                        text: res.message,
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({                     
+                    title: "Lỗi!",
+                    text: "Có lỗi xảy ra!",
+                    icon: "error",
+                    timer: 3200,
+                    timerProgressBar: true
+                });
+            }
+        })
     })
 })

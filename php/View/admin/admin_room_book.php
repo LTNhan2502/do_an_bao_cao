@@ -4,25 +4,29 @@
             <div class="card" id="customer">
                 <div class="card-body">
                     <div class="card-title">
-                        <h3 class="text-bolder">Thông tin khách hàng</h3>
+                        <h4 class="text-bolder">Thông tin khách hàng</h4>
                     </div>
                     <div class="card-text">
                         <div class="row">
                             <div class="col-lg-12">
                                 <label for="email">Email</label>
-                                <input type="email" class="form-control" name="email" id="email_user">
-                                <small class="text-danger" name="email_error" id="email_user_error"></small>   
+                                <input type="email" class="form-control" 
+                                    name="email_guest" id="email_user">
+                                <small class="text-danger" name="email_error" id="email_user_error"></small>  
+                                
                             </div>
                         </div>                     
                         <div class="row mt-3">
                             <div class="col-lg-6">
                                 <label for="name">Họ và tên (Nhập không dấu)</label>
-                                <input type="text" class="form-control" name="name" id="name_user">
+                                <input type="text" class="form-control" 
+                                    name="name" id="name_user">
                                 <small class="text-danger" name="name_error" id="name_user_error"></small>
                             </div>
                             <div class="col-lg-6">
                                 <label for="tel">Số điện thoại</label>
-                                <input type="text" class="form-control" name="tel" id="tel_user">
+                                <input type="text" class="form-control" 
+                                    name="tel" id="tel_user">
                                 <small class="text-danger" name="tel_error" id="tel_user_error"></small>
                             </div>
                         </div>
@@ -33,7 +37,7 @@
             <div class="card mt-4" id="general_info">
                 <div class="card-body">
                     <div class="card-title">
-                        <h3 class="text-bolder">Thông tin chung</h3>
+                        <h4 class="text-bolder">Thông tin chung</h4>
                     </div>
                     <div class="card-text">
                         <table class="table table-striped">
@@ -67,7 +71,7 @@
             <div class="card mt-4" id="selected_detail_price">
                 <div class="card-body">
                     <div class="card-title">
-                        <h3>Chi tiết giá</h3>
+                        <h4>Chi tiết giá</h4>
                     </div>
                     <div class="card-text">
                         <div class="row">
@@ -122,10 +126,10 @@
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h6 class="card-title pt-2"><?php echo $sets['name']; ?></h6>
+                                    <h6 class="card-title pt-2 room_name" data-room_name="<?php echo $sets['name']; ?>"><?php echo $sets['name']; ?></h6>
                                     <p><?php echo $sets['square_meter']; ?>m²</p>
                                     <p><?php echo $sets['quantity']; ?> khách</p>
-                                    <p><strong>Giá từ <?php echo $fmt->formatCurrency($sets['sale']); ?>VND</strong></p>
+                                    <p><strong>Bắt đầu từ <?php echo $fmt->formatCurrency($sets['sale']); ?>VND</strong></p>
                                 </div>
                             </div>
                             </div>
@@ -134,8 +138,7 @@
                     </div>
 
                 <input class="form-control" name="select_room" id="select_room" style="display:none;">
-            </div>
-            
+            </div>            
 
             <div class="mt-3" id="selected_message">
                 <h5>Chưa đưa vào hoạt động.</h5>
@@ -220,11 +223,11 @@
         border: 1px solid #ccc;
         border-radius: 17px;
         z-index: 10;
-        height: 400px;
+        height: 500px;
         overflow-y: auto;
         padding: 10px;
         margin-top: 10px;
-        width: 88%;
+        width: 94%;
     }
 
     .overlay {
@@ -249,7 +252,7 @@
         align-items: center;
         overflow: hidden;
         width: 93%;
-        max-height: 110px;
+        max-height: 150px;
     }
 
     .room_card_list:hover {
@@ -302,6 +305,8 @@
         var stay_to_day = 0;
         var stay_time = 0;
         var stay_sum = 0;
+        var guestFlag = 0;
+        var act = '';
 
         var form = $("#formBook")[0];
         var formTimeData = new FormData(form);
@@ -470,7 +475,7 @@
         //Kiểm tra email
         $(document).on("change", "#email_user", function() {
             let email = $(this).val();
-            let regex_email = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            let regex_email = /^[a-zA-Z0-9._%+-]+@gmail+\.com$/;
             
         
             //Kiểm tra rỗng
@@ -486,56 +491,51 @@
                 emailflag = true;
                 return false;
             }
-
-            //Đều ổn
-            else{
-                $("#email_user_error").html('');
-                emailflag = false;
-            }
         
             //Kiểm tra tồn tại
-            // else {
-            //     $.ajax({
-            //         url: "Controller/admin/admin_room_book.php?act=check_email",
-            //         method: "POST",
-            //         data: { email },
-            //         success: function(res) {
-                //          true là đã tồn tại, không cho thực hiện submit
-            //             let isExist = (res == 0) ? false : true;
-        //                    Đã tồn tại nhưng chưa đăng kí -> yêu cầu đăng kí
-            //             if (isExist) {
-                            // Swal.fire({
-                            //     title: "Email này đã từng được sử dụng!",
-                            //     text: "Bạn có muốn đăng kí không? Đăng kí sẽ thêm ưu đãi!",
-                            //     icon: "info",
-                            //     showCancelButton: true,
-                            //     confirmButtonColor: "#3085d6",
-                            //     cancelButtonColor: "#d33",
-                            //     confirmButtonText: "Có!",
-                            //     cancelButtonText: "Không!"
-                            // }).then((result) => {
-                            //     if (result.isConfirmed) {
-                            //         Swal.fire({
-                                //         window.location.href("admmin_index.php?action=admin_signup");
-                            //         });
-                            //     }else{
-                            //         emailflag = false;
+            else {
+                $.ajax({
+                    url: "Controller/admin/admin_room_book.php?act=check_email",
+                    method: "POST",
+                    data: { email },
+                    dataType: "JSON",
+                    success: function(res) {
+                        console.log(res);
+                        // let isGuest =  ? true : false;
+                        // Đã tồn tại (email_guest) nhưng chưa đăng kí -> gợi ý đăng kí
+                        if ((res.countExist != 0 && res.countSignup == 0)) {
+                            $("#email_user_error").html('Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không? <p class=" badge badge-primary" id="exist_email_btn">Đăng kí</p>');
+                            $(document).on("click", "#exist_email_btn", function(){
+                                window.location.href = "index.php?action=signup"
+                            })
+                            guestFlag = 1;
+                            emailflag = false;
 
-                            //     }
-                            // });
-            //                 $("#email_user_error").html("Email này đã tồn tại! Bạn có muốn đăng kí không? Đăng kí sẽ có thêm nhiều ưu đãi!");
-            //                 //Không muốn đăng kí thì flag trả về false
-            //                 //Muốn đăng nhập đăng kí thì chuyển sang đăng kí cho user
-            //                 flag = false;
-            //             }
-            //             //Đều ổn
-            //             else {
-            //                 $("#email_user_error").html('');
-            //                 flag = false;
-            //             }
-            //         }
-            //     });
-            // }
+                            $("#name_user").val(res.data_customer_name)
+                            $('#tel_user').val(res.data_customer_tel)
+
+                            $("#name_flag").val() != '' ? nameflag = false : nameflag = true
+                            $("#tel_user").val() != '' ? telflag = false : telflag = true
+                        }
+                        //Đã tồn tại (email)
+                        else if((res.countExist == 0 && res.countSignup != 0)){
+                            $("#email_user_error").html('');
+                            guestFlag = 2;
+                            $("#name_user").val(res.data_customer_name)
+                            $('#tel_user').val(res.data_customer_tel)
+                            emailflag = false;
+                            $("#name_flag").val() != '' ? nameflag = false : nameflag = true
+                            $("#tel_user").val() != '' ? telflag = false : telflag = true
+                        }
+                        //Email chưa tồn tại
+                        else if(res.countExist == 0 && res.countSignup == 0){
+                            $("#email_user_error").html('');
+                            guestFlag = 0;
+                            emailflag = false;
+                        }
+                    }
+                });
+            }
         });
         
 
@@ -588,18 +588,20 @@
             e.preventDefault();
             if(nameflag || emailflag || telflag || fromflag || toflag){
                 $(".checkout_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
-                console.log(nameflag, emailflag, telflag, fromflag, toflag, now);
+                console.log( emailflag, nameflag, telflag, fromflag, toflag, now);
             
-            }else if($("#name_user").val() == '' || $("#email_user").val() == '' || 
-                    $("#tel_user").val() == '' || $("#from").val() == '' || $("#to").val() == ''){
+            }else if($("#name_user").val() == "" || $("#email_user").val() == "" || 
+                    $("#tel_user").val() == "" || $("#from").val() == "" || $("#to").val() == ""){
                 $(".checkout_error").html("Hãy nhập đầy đủ các thông tin hợp lệ!");
-                console.log($("#name_user").val());
+                console.log(nameflag, emailflag, telflag, fromflag, toflag);
             }else{
                 $(".checkout_error").html("");
                 console.log(nameflag, emailflag, telflag, fromflag, toflag);
                 let name = $("#name_user").val();
                 let email = $("#email_user").val();
                 let tel = $("#tel_user").val();
+                let room_name = $(".room_name").data("room_name");
+                let currentTime = getLocalTimeString();
                 
                 //Vì datetimepicker và input bình thường không trả về giá trị đúng cho formdata
                 //nên phải tách ra một bên formdata của datetimepick, một bên formdata của input thường
@@ -659,9 +661,14 @@
                         // Thêm các trường khác như bình thường
                         formData.append(key, value);
                     }
+                    formData.append("stay_sum", stay_sum);
                 }
+                formData.append("room_name", room_name);
+                formData.append("act", guestFlag);
+                formData.append("current_time", currentTime);
+
                 $.ajax({
-                    url: "Controller/admin/admin_room_book.php?act=book_room",
+                    url: "Controller/user/booking.php?act=book_room",
                     method: "POST",
                     data: formData,
                     contentType: false,
@@ -676,22 +683,17 @@
                                 icon: "success",
                                 timer: 900,
                                 timerProgressBar: true
+                            }).then(function(){
+                                window.location.reload();
                             });
-                            // $.ajax({
-                            //     url: "Controller/admin/admin_room_book.php?act=update_sum",
-                            //     method: "POST",
-                            //     data: {stay_sum},
-                            //     dataType: "JSON",
-                            //     success: function(res){
-                            //         console.log(res.status, res.message);
-                            //     },
-                            //     error: function(){
-                            //         console.log(res.status, res.message);
-                            //     }
-                            // });
-                            // setTimeout(function(){
-                            //     window.location.reload();
-                            // }, 950)
+                        }else if(res.status == 'booked'){
+                            Swal.fire({                                 
+                                title: "Thất bại!",
+                                text: res.message,
+                                icon: "error",
+                                timer: 3200,
+                                timerProgressBar: true
+                            });
                         }else{
                             Swal.fire({                                 
                                 title: "Thất bại!",
@@ -701,7 +703,6 @@
                                 timerProgressBar: true
                             });
                         }
-
                     },
                     error: function(){
                         Swal.fire({                             

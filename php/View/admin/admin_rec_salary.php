@@ -3,7 +3,7 @@
         $rec = new receptionist();
         $fmt = new formatter();
         $count = $rec->getAllRec()->rowCount(); //Tổng đối tượng
-        $limit = 4; //Giới hạn số đối tượng trong 1 trang
+        $limit = 6; //Giới hạn số đối tượng trong 1 trang
         $page = new page();
         $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
         $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
@@ -103,12 +103,16 @@
                                     data-rec_value="<?php echo $fmt->formatCurrency(($set['rec_salary']*$set['rec_factor'])+$set['rec_bonus']); ?>">
                             </td>
                     
-                            <td class="text-end" width="110px">                                
-                                <button type="button" class="btn btn-primary">
-                                    <i class="fas fa-hand-holding-usd"></i>
-                                </button>
-
+                            <td class="text-end" width="120px">   
+                                <?php 
+                                    if(!$set['rec_timeSalary']){                                                            
+                                        echo '<button type="button" class="btn btn-primary btn-sm" id="claimSalary_">Nhận lương</button>';                                
+                                    }else{
+                                        echo '<button type="button" class="btn btn-danger btn-sm" id="unClaimSalary_">Huỷ nhận</button>';
+                                    }
+                                ?>
                             </td>
+
                         </tr>                        
                         <?php 
                             $count++;
@@ -256,5 +260,7 @@
         opacity: 1.2;
     }
 
-
+    .btn-sm{
+        width: 91px !important;
+    }
 </style>

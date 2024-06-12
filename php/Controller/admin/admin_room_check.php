@@ -116,7 +116,47 @@
                 }
                 echo json_encode($res);
             }
-            break;  
+            break; 
+        case "cancel_book":
+            if(isset($_POST["booked_room_id"])){
+                $booked_room_id = $_POST["booked_room_id"];
+                $room = new room();
+        
+                $undo = $room->cancelBookedRoom($booked_room_id);
+                if ($undo) {
+                    $res = [
+                        'status' => 'success',
+                        'message' => "Phòng đã bị huỷ!"
+                    ];
+                } else {
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Xem lại hàm cancelBookedRoom, left_at, url, id thẻ!"
+                    );
+                }
+                echo json_encode($res);
+            }
+            break; 
+        case "undo_cancel":
+            if(isset($_POST["booked_room_id"])){
+                $booked_room_id = $_POST["booked_room_id"];
+                $room = new room();
+        
+                $undo = $room->undoCancelBookedRoom($booked_room_id);
+                if ($undo) {
+                    $res = [
+                        'status' => 'success',
+                        'message' => "Hoàn tác huỷ phòng thành công!"
+                    ];
+                } else {
+                    $res = array(
+                        "status" => "fail",
+                        "message" => "Xem lại hàm undoCancelBookedRoom, left_at, url, id thẻ!"
+                    );
+                }
+                echo json_encode($res);
+            }
+            break; 
         case "pages":
             if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page'])) {
                 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;

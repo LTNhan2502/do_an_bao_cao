@@ -1,6 +1,8 @@
+<link rel="stylesheet" href="Content/user/css/user-search.css">
+
 <section class="site-hero overlay" style="background-image: url(Content/images/hero_4.jpg)"
   data-stellar-background-ratio="0.5">
-  <div class="container">
+  <div class="container" id="container">
     <div class="row site-hero-inner justify-content-center align-items-center">
       <div class="col-md-10 text-center" data-aos="fade-up">
         <span class="custom-caption text-white d-block  mb-3">Chào mừng bạn đến với</span>
@@ -18,27 +20,29 @@
 <!-- END section Carousel -->
 
 <section class="section bg-light pb-0">
-  <div class="container">
-
+  <div class="overlayy" id="overlayy"></div>
+  <div class="container" id="container">
     <div class="row check-availabilty" id="next">
       <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
         <form action="#">
           <div class="row">
-            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-              <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
+            <div class="col-md-12 mb-6 mb-lg-0 col-lg-9">
+              <label for="checkin_date" class="font-weight-bold text-black">Tên phòng</label>
               <div class="field-icon-wrap">
                 <div class="icon"><span class="icon-calendar"></span></div>
-                <input type="text" id="checkin_date" class="form-control">
+                <input type="text" class="input-box" placeholder="" id="searchInput">
+                <div class="dropdown" id="dropdownMenu">
+                  <?php
+                  $room = new room();
+                  $rooms = $room->getEmptyRoom();
+                  while ($sets = $rooms->fetch()):
+                    ?>
+                    <div class="item"><?php echo $sets['name']; ?></div>
+                  <?php endwhile; ?>
+                </div>
               </div>
             </div>
-            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-              <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
-              <div class="field-icon-wrap">
-                <div class="icon"><span class="icon-calendar"></span></div>
-                <input type="text" id="checkout_date" class="form-control">
-              </div>
-            </div>
-            <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
+            <!-- <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
               <div class="row">
                 <div class="col-md-6 mb-3 mb-md-0">
                   <label for="adults" class="font-weight-bold text-black">Số người ở</label>
@@ -53,7 +57,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
             <div class="col-md-6 col-lg-3 align-self-end">
               <button class="btn btn-primary btn-block text-white">Tìm kiếm</button>
             </div>
@@ -68,7 +72,8 @@
 <!-- End Section Search -->
 
 <section class="section">
-  <div class="container">
+  <div class="container" id="container">
+
     <div class="row justify-content-center text-center mb-5">
       <div class="col-md-7">
         <h2 class="heading" data-aos="fade-up">Loại phòng</h2>
@@ -122,12 +127,72 @@
 </section>
 <!-- End Section Kind -->
 
+<script>
+  const inputBox = document.getElementById('searchInput');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const overlay = document.getElementById('overlayy');
+  const searchCard = document.querySelector('.block-32');
+  const dropdownItems = document.querySelectorAll('.dropdown .item');
+
+  inputBox.addEventListener('focus', () => {
+    dropdownMenu.style.display = 'block';  //Hiển thị dropdownMenu
+    setTimeout(() => dropdownMenu.classList.add('show'), 10); //Delay 10ms rồi mới thực hiện
+    overlay.style.display = 'block';
+  });
+
+  //Click vào overlay thì thoát overlay và chuyển thành trạng thái bình thường
+  overlay.addEventListener('click', () => {
+    dropdownMenu.classList.remove('show');
+    overlay.style.display = 'none';
+  });
+
+  // Khi chọn giá trị trong dropdown
+  dropdownMenu.addEventListener("click", function (event) {
+    // Kiểm tra xem phần tử được nhấp có phải là một mục trong dropdown không
+    if (event.target.classList.contains("item")) {
+      // Lấy giá trị của mục đã chọn
+      var selectedValue = event.target.textContent;
+      // Gán giá trị đã chọn vào ô input
+      inputBox.value = selectedValue; // Thay đổi tại đây từ searchInput thành inputBox
+      // Ẩn dropdown sau khi chọn
+      dropdownMenu.classList.remove('show');
+      overlay.style.display = 'none';
+    }
+  });
+
+
+  //
+  document.addEventListener('click', (event) => {
+    if (!searchCard.contains(event.target) && !dropdownMenu.contains(event.target) && !inputBox.contains(event.target)) {
+      dropdownMenu.classList.remove('show');
+      overlay.style.display = 'none';
+    }
+  });
+
+  // Adjust the display property when dropdown is shown or hidden
+  dropdownMenu.addEventListener('transitionend', () => {
+    if (!dropdownMenu.classList.contains('show')) {
+      dropdownMenu.style.display = 'none';
+    }
+  });
+
+  inputBox.addEventListener('blur', () => {
+    setTimeout(() => { // Delay to allow click event to register on dropdown items
+      if (!document.activeElement.classList.contains('item')) {
+        dropdownMenu.classList.remove('show');
+        overlay.style.display = 'none';
+      }
+    }, 100);
+  });
+
+</script>
+
 <style>
   .mt {
     margin-top: -15px;
   }
 
-  figure img{
+  figure img {
     width: 360px;
     max-height: 230px;
   }

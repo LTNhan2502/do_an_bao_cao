@@ -7,7 +7,7 @@
     $cus = new customers();
     $fmt = new formatter();
     $count = $cus->getAllCus()->rowCount(); //Tổng đối tượng
-    $limit = 3; //Giới hạn số đối tượng trong 1 trang
+    $limit = 6; //Giới hạn số đối tượng trong 1 trang
     $page = new page();
     $trang = $page->findPage($count, $limit); //Lấy được số trang cần có
     $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
@@ -30,7 +30,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form enctype='multipart/form-data' id="createRecForm" method="post">
+                        <form enctype='multipart/form-data' id="createCusForm" method="post">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label for="new_cus">Họ và tên</label>
@@ -42,7 +42,7 @@
                                 <small class="text-danger" id="new_all_error"></small>
                                 <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">Đóng</button>
-                                <button type="submit" name="submitRec" id="submitRec"
+                                <button type="submit" name="submitCus" id="submitCus"
                                     class="btn btn-primary">Tạo</button>
                             </div>
                         </form>
@@ -82,8 +82,8 @@
                             <tr id="currency">
                                 <!-- STT/ID -->
                                 <td>
-                                    <div id="customer_id" data-id="<?php echo $set['customer_id']; ?>"><?php echo $count; ?>
-                                    </div>
+                                    <div id="customer_id" data-id="<?php echo $set['customer_id']; ?>"><?php echo $count; ?></div>
+                                    <div class="d-none" id="customer_booked_id" data-customer_booked_id="<?php echo $set['customer_booked_id']; ?>"></div>
                                 </td>
 
                                 <!-- Tên khách hàng -->
@@ -155,34 +155,49 @@
                                                 <!-- <h6>Đã đặt phòng</h6> -->
                                                 <div id="room_cards" class="card-container-">
                                                     <?php
-                                                        $history_arr = explode(' - ', $set['history']);
+                                                        $history_arr = array_unique(explode(' - ', $set['history']));
                                                         $history_count = count($history_arr);
-                                                        for($i = 0; $i < $history_count; $i++){
-                                                            $result = $room->getHistoryRooms($history_arr[$i]);
-                                                            if($result){  
-                                                                $history_room = $result->fetch();                                                          
+                                                        $booked_customer_id = $set['customer_booked_id'];
+                                                        
+                                                        // Mảng để lưu trữ kết quả cuối cùng
+                                                        $final_results = [];
+
+                                                        // Thực hiện truy vấn cho mỗi ID phòng trong lịch sử
+                                                        foreach ($history_arr as $room_id) {
+                                                            $result = $room->getHistoryRoomsForUser($room_id, $booked_customer_id);
+                                                            if ($result) {
+                                                                // Fetch tất cả kết quả có thể có cho một ID phòng cụ thể
+                                                                while ($history_room = $result->fetch(PDO::FETCH_ASSOC)) {
+                                                                    // Lưu kết quả vào mảng cuối cùng
+                                                                    $final_results[] = $history_room;
+                                                                }
+                                                            }
+                                                        }
+                                                        
+                                                        if(count($final_results) > 0){
+                                                            foreach ($final_results as $rooms) {                                                         
                                                     ?>
                                                             <div class="card mb-3 room_card_list">
                                                                 <div class="row g-0">
                                                                     <div class="col-md-4">
-                                                                        <img src="Content/images/<?php echo $history_room['img']; ?>"
+                                                                        <img src="Content/images/<?php echo $rooms['img']; ?>"
                                                                             class="img-fluid rounded-start" alt="...">
                                                                     </div>
                                                                     <div class="col-md-8">
                                                                         <div class="card-body">
-                                                                            <h6 class="card-title pt-2"><?php echo $history_room['name']; ?></h6>
+                                                                            <h6 class="card-title pt-2"><?php echo $rooms['name']; ?></h6>
                                                                             <div class="row">                                                                                
                                                                                 <div class="col">
-                                                                                    <p><?php echo $history_room['square_meter']; ?>m²</p>
+                                                                                    <p><?php echo $rooms['square_meter']; ?>m²</p>
                                                                                 </div>
                                                                                 <div class="col">
-                                                                                    <p><?php echo $history_room['quantity']; ?> khách</p>                                                                                    
+                                                                                    <p><?php echo $rooms['quantity']; ?> khách</p>                                                                                    
                                                                                 </div>
                                                                             </div>
-                                                                            <p><strong>Tổng: <?php echo $fmt->formatCurrency($history_room['sale']); ?>VND</strong></p>
-                                                                            <p>Lúc vào: <?php echo $history_room['booked_arrive']; ?></p>
-                                                                            <p>Lúc ra: <?php echo $history_room['booked_quit']; ?></p>
-                                                                            <p>Thanh toán: <?php echo $history_room['booked_left_at']; ?></p>
+                                                                            <p><strong>Tổng: <?php echo $fmt->formatCurrency($rooms['booked_sum']); ?>VND</strong></p>
+                                                                            <p>Lúc vào: <?php echo $rooms['booked_arrive']; ?></p>
+                                                                            <p>Lúc ra: <?php echo $rooms['booked_quit']; ?></p>
+                                                                            <p>Thanh toán: <?php echo $rooms['booked_left_at']; ?></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -228,3 +243,4 @@
 <script src="ajax/customer/status.js"></script>
 <script src="ajax/customer/restore.js"></script>
 <script src="ajax/customer/cus_page.js"></script>
+<script src="ajax/customer/create.js"></script>

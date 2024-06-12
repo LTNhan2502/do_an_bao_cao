@@ -37,20 +37,37 @@
         case 'check_email':
             $email = $_POST['email'];
             $validate = new validate();
-            //Kiểm tra tồn tại
+            $customers = new customers();
+            $col_email = 'email';
+            $col_guest = 'email_guest';
+            //Kiểm tra tồn tại email_guest
             $exist = $validate->checkEmail($email);//Bên model chỉ trả về câu lệnh SQL
             $exist->execute();//Thực thi câu lệnh SQL ở trên
-            //Kiểm tra đăng kí
+            //Kiểm tra đăng kí email (đã có email hay chưa)
             $signup = $validate->checkSignup($email);
             $signup->execute();
             //Trả về số cột
             $countExist = $exist->fetchColumn();
             $countSignup = $signup->fetchColumn();
-            
-            $res = array(
-                'countExist' => $countExist,
-                'countSignup' => $countSignup
-            );
+           
+            if($countExist == 1 && $countSignup == 0){
+                $customer = $customers->getCustomer($email, $col_guest);
+                $res = array(
+                    'countExist' => $countExist,
+                    'countSignup' => $countSignup,
+                    'data_customer_name' => $customer['customer_name'],
+                    'data_customer_tel' => $customer['tel']
+                );
+            }else if($countExist == 0 && $countSignup == 1){
+                $customer = $customers->getCustomer($email, $col_email);
+                $res = array(
+                    'countExist' => $countExist,
+                    'countSignup' => $countSignup,
+                    'data_customer_name' => $customer['customer_name'],
+                    'data_customer_tel' => $customer['tel']
+                );
+            }
+            // echo json_encode($customer);
             echo json_encode($res);
             break;
         case 'book_room':

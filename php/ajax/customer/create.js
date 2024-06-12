@@ -14,15 +14,22 @@ $(document).ready(function(){
         }
 
         // Kiểm tra độ dài 2 < name < 30
-        else if(value.length < 2 || value.length > 30){
-            $('#new_cus_error').html('Tên phải từ 2 tới 30 kí tự!');
+        else if(value.length < 2 || value.length > 50){
+            $('#new_cus_error').html('Tên phải từ 2 tới 50 kí tự!');
             nameValid = false; 
             return false;
         }
 
         // Kiểm tra kí tự đặc biệt
         else if(regex.test(value)){
-            $('#new_cus_error').html('Tên không được bao gồm số và kí tự đặc biệt!');
+            $('#new_cus_error').html('Tên không được bao gồm kí tự đặc biệt!');
+            nameValid = false; 
+            return false;
+        }
+
+        //Kiểm tra số
+        else if(!isNaN(value)){
+            $('#new_cus_error').html('Tên không được bao gồm số!');
             nameValid = false; 
             return false;
         }
@@ -40,10 +47,10 @@ $(document).ready(function(){
         if (!nameValid) { // kiểm tra trạng thái của input
             $("#new_all_error").html("Hãy nhập đầy đủ thông tin hợp lệ!");
             return false;
-        }else if($("#new_rec").val() == ''){
+        }else if($("#new_cus").val() == ''){
             $("#new_all_error").html("Hãy nhập đầy đủ thông tin hợp lệ!");
         }else{
-            var form = $("#createRecForm")[0]; //Truy cập vào đối tượng DOM
+            var form = $("#createCusForm")[0]; //Truy cập vào đối tượng DOM
             var formData = new FormData(form);
     
             $("#new_all_error").html("");

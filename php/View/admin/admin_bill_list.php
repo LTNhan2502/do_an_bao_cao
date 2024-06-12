@@ -24,7 +24,7 @@
     <!-- Topbar Search -->
     <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"> -->
     <div class="input-group m-4" style="width: 300px !important">
-            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm theo tên" id="search">
+            <input type="text" class="form-control bg-light border-0 small" placeholder="Tìm kiếm theo tên khách hàng" id="search">
             <div class="input-group-append">
                 <button class="btn btn-primary" type="button">
                     <i class="fas fa-search fa-sm"></i>
@@ -36,7 +36,7 @@
         <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
     <?php 
         if($count == 0){
-            echo "<h4 class='text-decoration-underline pt-4'>Chưa có thông tin!</h4>";
+            echo "<h4 class='text-decoration-underline pt-4'>Không có thông tin!</h4>";
         }else{
             while ($set = $result->fetch()):
     ?>
@@ -75,5 +75,5 @@
     <?php } ?>
 </div>
 
-<script src="ajax/bill/bill_page.js"></script>
+<!-- <script src="ajax/bill/bill_page.js"></script> -->
 <script src="ajax/search/search_bill.js"></script>

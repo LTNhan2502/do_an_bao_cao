@@ -63,6 +63,14 @@
             return $result;
         }
 
+        //Phương thức lấy tiền của room chỉ định 
+        function getPrice($id){
+            $db = new connect();
+            $select = "SELECT r.price FROM room as r WHERE r.id = '$id'";
+            $result = $db->getInstance($select);
+            return $result;
+        }
+
         //Phương thức lấy tất cả room
         function getRooms(){
             $db = new connect();
@@ -106,7 +114,7 @@
         //Phương thức lấy ra các room chưa đặt
         function getEmptyRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.arrive IS NULL AND room.deleted_at IS NULL AND room.status_id = 1";
+            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.kind_id = 1 AND room.deleted_at IS NULL AND room.status_id = 1";
             $result = $db->getList($select);
             return $result;
         }
@@ -120,16 +128,64 @@
         }
 
         //Phương thức lấy ra chi tiết phòng có trong history table booked_room
-        function getHistoryRooms($id){
+        function getHistoryRooms($id) {
             $db = new connect();
-            $select = "SELECT r.img, r.name, r.sale, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_left_at
-                       FROM room as r, detail_room as d, booked_room as b
-                       WHERE r.id = d.room_id AND r.id = b.room_id AND r.id = $id";
+            $select = "SELECT r.img, r.name, r.sale, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_left_at, b.booked_sum
+                       FROM room as r
+                       JOIN detail_room as d ON r.id = d.room_id
+                       JOIN booked_room as b ON r.id = b.room_id
+                       WHERE r.id = $id";
             $result = $db->getList($select);
             return $result;
         }
 
-        //Phương thức thay đổi ảnh chỉnh
+        //Phương thức lấy ra chi tiết phòng có trong history table booked_room
+        function getHistoryRoomsForUser($id, $booked_customer_id) {
+            $db = new connect();
+            $select = "SELECT r.img, r.name, r.sale, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_left_at, b.booked_sum
+                       FROM room as r
+                       JOIN detail_room as d ON r.id = d.room_id
+                       JOIN booked_room as b ON r.id = b.room_id
+                       WHERE r.id = $id AND b.booked_customer_id = '$booked_customer_id'";
+            $result = $db->getList($select);
+            return $result;
+        }
+        
+
+        //Phương thức lấy ra các phòng vừa đặt (user)
+        function getRoomsJustBooked($customer_id){
+            $db = new connect();
+            $select = "SELECT DISTINCT r.img, r.name, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_time_book, b.booked_sum
+                       FROM room AS r
+                       JOIN detail_room AS d ON r.id = d.room_id
+                       JOIN booked_room AS b ON r.id = b.room_id
+                       WHERE b.booked_left_at IS NULL AND b.booked_unbook = 0 AND b.booked_session = 0 
+                             AND b.booked_done_session = 0 AND b.customer_id = '$customer_id'";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra các phòng đã huỷ (user)
+        function getRoomsCanceled($customer_id){
+            $db = new connect();
+            $select = "SELECT DISTINCT r.img, r.name, d.square_meter, d.quantity, b.booked_arrive, b.booked_quit, b.booked_cancel_time, b.booked_sum
+                       FROM room AS r
+                       JOIN detail_room AS d ON r.id = d.room_id
+                       JOIN booked_room AS b ON r.id = b.room_id
+                       WHERE b.booked_unbook = 1 AND b.customer_id = '$customer_id'";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy dòng cuối của table booked_room
+        function getLastInsert(){
+            $db = new connect();
+            $select = "SELECT * FROM booked_room ORDER BY booked_id DESC LIMIT 1";
+            $result = $db->getInstance($select);
+            return $result;
+        }
+
+        //Phương thức thay đổi ảnh chính
         function changeImg($id, $img_main){
             $db = new connect();
             $query = "UPDATE room as r SET r.img = '$img_main' WHERE r.id = $id";
@@ -298,6 +354,14 @@
             return $result;
         }
 
+        //Phương thức xoá room hoàn toàn
+        function cplDeleteRoom($id){
+            $db = new connect();
+            $query = "DELETE FROM room WHERE room.id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
         //Phương thức khôi phục room
         function restoreRoom($id){
             $db = new connect();
@@ -307,12 +371,12 @@
         }
         
         //Phương thức đặt phòng
-        function bookRoom($room_id, $customer_id, $customer_booked_id, $booked_customer_name, $booked_tel, $booked_email, $booked_room_name, $booked_price, $booked_sum, $booked_arrive, $booked_quit){
+        function bookRoom($room_id, $customer_id, $customer_booked_id, $booked_customer_name, $booked_tel, $booked_email, $booked_room_name, $booked_price, $booked_sum, $booked_time_book, $booked_arrive, $booked_quit){
             $db = new connect();
             $str = "ORD_";
             $random = rand(0, 99999999);
             $str_rand_room = $str . $random;
-            $query = "INSERT INTO booked_room VALUES(NULL,$room_id, $customer_id, '$str_rand_room', '$customer_booked_id', '$booked_customer_name', '$booked_tel', '$booked_email','$booked_room_name', '$booked_price', '$booked_sum', '$booked_arrive', '$booked_quit', NULL, 0, 0)";
+            $query = "INSERT INTO booked_room VALUES(NULL, $room_id, $customer_id, '$str_rand_room', '$customer_booked_id', '$booked_customer_name', '$booked_tel', '$booked_email', '$booked_room_name', '$booked_price', '$booked_sum', '$booked_time_book', NULL, '$booked_arrive', '$booked_quit', NULL, 0, 0, 0)";
             $result = $db->exec($query);
             return $result;
         }
@@ -365,6 +429,24 @@
             $db = new connect();
             $query = "UPDATE booked_room as b JOIN room as r ON b.room_id = r.id
                       SET b.booked_left_at = CURRENT_TIMESTAMP, r.status_id = 1 WHERE b.booked_room_id = '$booked_room_id'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức huỷ đặt phòng
+        function cancelBookedRoom($booked_room_id){
+            $db = new connect();
+            $query = "UPDATE booked_room as b JOIN room as r ON b.room_id = r.id
+                      SET b.booked_unbook = 1, r.status_id = 1, b.booked_cancel_time = CURRENT_TIMESTAMP WHERE b.booked_room_id = '$booked_room_id'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức hoàn tác huỷ đặt phòng
+        function undoCancelBookedRoom($booked_room_id){
+            $db = new connect();
+            $query = "UPDATE booked_room as b JOIN room as r ON b.room_id = r.id
+                      SET b.booked_unbook = 0, r.status_id = 2, b.booked_cancel_time = NULL WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }

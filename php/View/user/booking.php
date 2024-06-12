@@ -63,7 +63,7 @@
         align-items: center;
         overflow: hidden;
         width: 93%;
-        max-height: 110px;
+        max-height: 130px;
     }
 
     .room_card_list:hover {
@@ -136,7 +136,6 @@
                                     value="<?php echo isset($_SESSION['customer_id']) ? $_SESSION['customer_email'] : '' ?>"
                                     name="email_guest" id="email_user">
                                 <small class="text-danger" name="email_error" id="email_user_error"></small>  
-                                <p class=" badge badge-primary" id="exist_email_btn" hidden>Đăng kí</p> 
                             </div>
                         </div>                     
                         <div class="row mt-3">
@@ -321,6 +320,7 @@
 </form>
 
 <script src="ajax/room/show_selected_room.js"></script>
+<script src="ajax/current_time/datetime.js"></script>
 <!-- <script src="ajax/room/validate.js"></script> -->
 <!-- <script src="Content/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script> -->
 <script>
@@ -524,12 +524,6 @@
                 emailflag = true;
                 return false;
             }
-
-            //Đều ổn
-            // else{
-            //     $("#email_user_error").html('');
-            //     emailflag = false;
-            // }
         
             //Kiểm tra tồn tại
             else {
@@ -542,15 +536,14 @@
                         // let isGuest =  ? true : false;
                         // Đã tồn tại (email_guest) nhưng chưa đăng kí -> gợi ý đăng kí
                         if ((res.countExist != 0 && res.countSignup == 0)) {
-                            $("#email_user_error").html("Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không?");
-                            if($("#exist_email_btn").attr("hidden")){
-                                $("#exist_email_btn").attr("hidden", false);
-                            }
+                            $("#email_user_error").html('Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không? <p class=" badge badge-primary" id="exist_email_btn">Đăng kí</p>');
+                            
                             $(document).on("click", "#exist_email_btn", function(){
                                 window.location.href = "index.php?action=signup"
                             })
                             guestFlag = 1;
                             emailflag = false;
+                            
                         }
                         //Đã tồn tại (email)
                         else if((res.countExist == 0 && res.countSignup != 0)){
@@ -584,7 +577,7 @@
             }
 
             //Kiểm tra số
-            if(isNaN(tel)){
+            else if(isNaN(tel)){
                 $("#tel_user_error").html("Phải là số!");
                 telflag = true;
                 return false;
@@ -644,6 +637,7 @@
                 let email = $("#email_user").val();
                 let tel = $("#tel_user").val();
                 let room_name = $(".room_name").data("room_name");
+                let currentTime = getLocalTimeString();
                 
                 //Vì datetimepicker và input bình thường không trả về giá trị đúng cho formdata
                 //nên phải tách ra một bên formdata của datetimepick, một bên formdata của input thường
@@ -707,6 +701,7 @@
                 }
                 formData.append("room_name", room_name);
                 formData.append("act", guestFlag);
+                formData.append("current_time", currentTime);
 
                 $.ajax({
                     url: "Controller/user/booking.php?act=book_room",

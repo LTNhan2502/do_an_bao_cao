@@ -26,17 +26,17 @@
             break;
         case "search":
             if($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_GET['page']) && isset($_GET['limit'])){
-                //Phân trang
                 $checkout = new checkout();
-                $limit = $_GET['limit']; //Giới hạn số bill trong 1 trang
+                $limit = $_GET['limit']; // Giới hạn số bill trong 1 trang
                 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
                 $page = new page();
-                $start = $page->findStart($limit); //Lấy được sản phẩm bắt đầu trong 1 trang
+                $start = $page->findStart($limit); // Lấy được sản phẩm bắt đầu trong 1 trang
                 $result = $checkout->getBillSearchPage($keyword, $start, $limit);
                 $res = $result->fetchAll(PDO::FETCH_ASSOC);
                 echo json_encode($res);
             }  
             break;
+            
     }
 
     

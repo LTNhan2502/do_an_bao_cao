@@ -13,16 +13,23 @@ $(document).ready(function(){
             return false;            
         }
 
-        // Kiểm tra độ dài 2 < name < 30
-        else if(value.length < 2 || value.length > 30){
-            $('#new_rec_error').html('Tên phải từ 2 tới 30 kí tự!');
+        // Kiểm tra độ dài 2 < name < 50
+        else if(value.length < 2 || value.length > 50){
+            $('#new_rec_error').html('Tên phải từ 2 tới 50 kí tự!');
             nameValid = false; 
             return false;
         }
 
         // Kiểm tra kí tự đặc biệt
         else if(regex.test(value)){
-            $('#new_rec_error').html('Tên không được bao gồm số và kí tự đặc biệt!');
+            $('#new_rec_error').html('Tên không được chứa kí tự đặc biệt!');
+            nameValid = false; 
+            return false;
+        }
+
+        //Kiểm tra số
+        else if(!isNaN(value)){
+            $('#new_rec_error').html('Tên không được chứa số!');
             nameValid = false; 
             return false;
         }

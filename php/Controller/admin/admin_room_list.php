@@ -295,6 +295,25 @@ switch ($act) {
             echo json_encode($res);
         }
         break;
+    case "cpl_delete_room":
+        if (isset($_POST["delete_room_id"])) {
+            $id = $_POST["delete_room_id"];
+            $room = new room();
+            $delete = $room->cplDeleteRoom($id);
+            if ($delete) {
+                $res = array(
+                    "status" => "success",
+                    "message" => "Xoá thành công!"
+                );
+            } else {
+                $res = array(
+                    "status" => "fail",
+                    "message" => "Xoá thất bại! Kiểm tra lại!"
+                );
+            }
+            echo json_encode($res);
+        }
+        break;
     case "restore_room":
         if (isset($_POST["restore_room_id"])) {
             $id = $_POST["restore_room_id"];

@@ -34,7 +34,7 @@
             $rand = rand(0, 99999999);
             $str = "CTM_";
             $str_rand = $str.$rand;
-            $query = "INSERT INTO customers VALUES(NULL, 0, '$str_rand', '$name', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL)";
+            $query = "INSERT INTO customers VALUES(NULL, 0, '$str_rand', '$name', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL)";
             $result = $db->exec($query);
             return $result;
         }
@@ -48,25 +48,25 @@
         }
 
         //Phương thức xoá account khách hàng (soft delete)
-        function deleteCus($email){
+        function deleteCus($customer_booked_id){
             $db = new connect();
-            $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.email = '$email'";
+            $query = "UPDATE customers as c SET c.deleted_at = CURRENT_TIMESTAMP WHERE c.customer_booked_id = '$customer_booked_id'";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức xoá account khách hàng (delete)
-        function cplDeleteCus($email){
+        function cplDeleteCus($customer_booked_id){
             $db = new connect();
-            $query = "DELETE FROM customers as c WHERE c.email = '$email'";
+            $query = "DELETE FROM customers as c WHERE c.customer_booked_id = '$customer_booked_id'";
             $result = $db->exec($query);
             return $result;
         }
 
         //Phương thức khôi phục account khách hàng
-        function restoreCus($email){
+        function restoreCus($customer_booked_id){
             $db = new connect();
-            $query = "UPDATE customers as c SET c.deleted_at = NULL WHERE c.email = '$email'";
+            $query = "UPDATE customers as c SET c.deleted_at = NULL WHERE c.customer_booked_id = '$customer_booked_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -79,7 +79,7 @@
             return $result;
         }
 
-         //Phương thức lấy ra customer chỉ định bằng email (email_guest)
+         //Phương thức lấy ra customer chỉ định bằng email/email_guest)
         function getCustomer($email, $col){
             $db = new connect();
             $select = "SELECT * FROM customers WHERE customers.$col = '$email'";

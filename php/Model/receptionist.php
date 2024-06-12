@@ -3,7 +3,7 @@
         //Phương thức lấy tất cả 
         function getAllRec(){
             $db = new connect();
-            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id ORDER BY r.rec_id DESC";
+            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id AND r.deleted_at IS NULL ORDER BY r.rec_id DESC";
             $result = $db->getList($select);
             return $result;
         }
@@ -11,7 +11,15 @@
         //Phương thức lấy ra tất cả các tiếp tân có phân trang
         function getAllRecPage($start, $limit){
             $db = new connect();
-            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id ORDER BY r.rec_id DESC LIMIT ".$start.", ".$limit;
+            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id AND r.deleted_at IS NULL ORDER BY r.rec_id DESC LIMIT ".$start.", ".$limit;
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra tất cả các tiếp tân đã bị xoá
+        function getAllRecDeleted(){
+            $db = new connect();
+            $select = "SELECT * FROM receptionist as r, part, shift WHERE r.rec_part = part.part_id AND r.rec_shift = shift.shift_id AND r.deleted_at IS NOT NULL ORDER BY r.rec_id DESC";
             $result = $db->getList($select);
             return $result;
         }
@@ -178,6 +186,30 @@
         function unClaimSalary($id){
             $db = new connect();
             $query = "UPDATE receptionist as r SET r.rec_timeSalary = NULL WHERE r.rec_id = $id";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức xoá thông tin nhân viên (soft delete)
+        function deleteRec($rec_code){
+            $db = new connect();
+            $query = "UPDATE receptionist as r SET r.deleted_at = CURRENT_TIMESTAMP WHERE r.rec_code = '$rec_code'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức xoá thông tin nhân viên (delete)
+        function cplDeleteRec($rec_code){
+            $db = new connect();
+            $query = "DELETE FROM receptionist as r WHERE r.rec_code = '$rec_code'";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức khôi phục thông tin nhân viên
+        function restoreRec($rec_code){
+            $db = new connect();
+            $query = "UPDATE receptionist as r SET r.deleted_at = NULL WHERE r.rec_code = '$rec_code'";
             $result = $db->exec($query);
             return $result;
         }

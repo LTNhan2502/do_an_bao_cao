@@ -9,10 +9,7 @@
     ?>
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between">
-            <span class="m-0 font-weight-bold text-primary">Table Customers - Danh sách khách hàng đã bị xoá</span>
-            <button class="btn m-0 font-weight-bold btn-primary" data-toggle="modal" data-target="#modalCreate">
-                <i class="fas fa-plus-circle"></i>
-            </button>
+            <span class="m-0 font-weight-bold text-primary">Table Customers - Khôi phục</span>
         </div>
         <div class="card-body">
         <?php
@@ -49,8 +46,8 @@
                             <tr id="currency">
                                 <!-- STT/ID -->
                                 <td>
-                                    <div id="customer_id" data-id="<?php echo $set['customer_id']; ?>"><?php echo $count; ?>
-                                    </div>
+                                    <div id="customer_id" data-id="<?php echo $set['customer_id']; ?>"><?php echo $count; ?></div>
+                                    <div class="d-none" id="customer_booked_id" data-customer_booked_id="<?php echo $set['customer_booked_id']; ?>"></div>
                                 </td>
 
                                 <!-- Tên khách hàng -->
@@ -177,7 +174,7 @@
                                                                                     <p><?php echo $history_room['quantity']; ?> khách</p>                                                                                    
                                                                                 </div>
                                                                             </div>
-                                                                            <p><strong>Tổng: <?php echo $fmt->formatCurrency($history_room['sale']); ?>VND</strong></p>
+                                                                            <p><strong>Tổng: <?php echo $fmt->formatCurrency($history_room['booked_sum']); ?>VND</strong></p>
                                                                             <p>Lúc vào: <?php echo $history_room['booked_arrive']; ?></p>
                                                                             <p>Lúc ra: <?php echo $history_room['booked_quit']; ?></p>
                                                                             <p>Thanh toán: <?php echo $history_room['booked_left_at']; ?></p>
@@ -211,5 +208,4 @@
     </div>
 </div>
 
-<script src="ajax/customer/status.js"></script>
 <script src="ajax/customer/restore.js"></script>

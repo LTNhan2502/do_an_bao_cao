@@ -1,11 +1,11 @@
 $(document).ready(function(){
     //Đưa vào phần khôi phục
     $(document).on("click", "#soft_delete_btn", function(){
-        let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("customer_booked_id")
+        let rec_code = $(this).closest("tr").find("#rec_code").data("rec_code")
 
         Swal.fire({
-            title: "Xoá tài khoản khách hàng này?",
-            text: "Tài khoản bị xoá có thể xem lại trong phần Khôi phục!",
+            title: "Xoá thông tin nhân viên này?",
+            text: "Thông tin bị xoá có thể xem lại trong phần Khôi phục!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -15,12 +15,11 @@ $(document).ready(function(){
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "Controller/admin/admin_cus_list.php?act=soft_delete",
+                    url: "Controller/admin/admin_rec_list.php?act=soft_delete",
                     method: "POST",
-                    data: {customer_booked_id},
+                    data: {rec_code},
                     dataType: "JSON",
                     success: function(res){
-                        // console.log(res);
                         if(res.status == 200){
                             Swal.fire({                         
                                 title: "Thành công!",
@@ -51,11 +50,11 @@ $(document).ready(function(){
 
     //Xoá vĩnh viễn
     $(document).on("click", "#delete_btn", function(){
-        let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("customer_booked_id")
+        let rec_code = $(this).closest("tr").find("#rec_code").data("rec_code")
 
         Swal.fire({
-            title: "Xoá tài khoản khách hàng này?",
-            text: "Tài khoản bị xoá sẽ không thể khôi phục!",
+            title: "Xoá thông tin nhân viên này?",
+            text: "Thông tin bị xoá sẽ không thể khôi phục!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -65,9 +64,9 @@ $(document).ready(function(){
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "Controller/admin/admin_cus_list.php?act=cpl_delete",
+                    url: "Controller/admin/admin_rec_list.php?act=cpl_delete",
                     method: "POST",
-                    data: {customer_booked_id},
+                    data: {rec_code},
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == 200){
@@ -100,22 +99,22 @@ $(document).ready(function(){
 
     //Khôi phục
     $(document).on("click", "#restore_btn", function(){
-        let customer_booked_id = $(this).closest("tr").find("#customer_booked_id").data("customer_booked_id")
+        let rec_code = $(this).closest("tr").find("#rec_code").data("rec_code")
 
         Swal.fire({
-            title: "Khôi phục?",
-            icon: "warning",
+            title: "Khôi phục tài khoản khách hàng này?",
+            icon: "info",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
             confirmButtonText: "Có",
-            cancelButtonText: "Không",
+            cancelButtonText: "Huỷ",
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "Controller/admin/admin_cus_list.php?act=restore_customer",
+                    url: "Controller/admin/admin_rec_list.php?act=restore_rec",
                     method: "POST",
-                    data: {customer_booked_id},
+                    data: {rec_code},
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == 200){

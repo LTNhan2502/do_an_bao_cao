@@ -40,11 +40,11 @@ h1, h2, h3, h4, h5 {
   max-width: 1600px; }
 
 .btn {
-  padding-left: 30px;
-  padding-right: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-radius: 50px; }
+  padding-left: 30px !important;
+  padding-right: 30px !important;
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+  border-radius: 50px !important; }
   .btn.btn-outline-white {
     border: 2px solid #fff; }
     .btn.btn-outline-white:hover {

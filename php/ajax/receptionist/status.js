@@ -3,18 +3,18 @@ $(document).ready(function(){
     let error_special = 'Không được có kí tự đặc biệt!';
     let error_number = 'Không được có kí tự số!';
     let error_length = 'Độ dài kí tự từ 2-45!';
-    //Lấy thời gian yyyy-mm-dd hh:ii:ss
-    function getLocalTimeString() {
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng từ 0-11 nên cần +1
-        const day = String(now.getDate()).padStart(2, '0');
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
+    // //Lấy thời gian yyyy-mm-dd hh:ii:ss
+    // function getLocalTimeString() {
+    //     const now = new Date();
+    //     const year = now.getFullYear();
+    //     const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng từ 0-11 nên cần +1
+    //     const day = String(now.getDate()).padStart(2, '0');
+    //     const hours = String(now.getHours()).padStart(2, '0');
+    //     const minutes = String(now.getMinutes()).padStart(2, '0');
+    //     const seconds = String(now.getSeconds()).padStart(2, '0');
     
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-    }
+    //     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    // }
     //Vừa nhập vừa định dạng
     function formatCurrency(number) {
         const formatter = new Intl.NumberFormat('vi-VI', {
@@ -741,6 +741,113 @@ $(document).ready(function(){
                             badge.text("Chưa nhận");
 
                             input_timeSalary.val("");                            
+                        }else{
+                            Swal.fire({                                 
+                                title: "Thất bại!",
+                                text: res.message,
+                                icon: "error",
+                                timer: 3200,
+                                timerProgressBar: true
+                            });
+                        }
+                    },
+                    error: function(){
+                        Swal.fire({                             
+                            title: "Lỗi!",
+                            text: "Có lỗi xảy ra!",
+                            icon: "error",
+                            timer: 3200,
+                            timerProgressBar: true
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+    //Xác nhận nhận lương (admin_rec_salary)
+    $(document).on("click", "#claimSalary_", function(){
+        let $input = $(this).closest("tr");
+        let rec_id = $input.find("#rec_id").data("id");
+        let claim = $input.find("#claimSalary_");
+        let new_id = 'unClaimSalary_'
+        $.ajax({
+            url: "Controller/admin/admin_rec_list.php?act=claim_salary",
+            method: "POST",
+            data: {rec_id},
+            dataType: "JSON",
+            success: function(res){
+                if(res.status == "success"){
+                    Swal.fire({                         
+                        title: "Thành công!",
+                        text: res.message,
+                        icon: "success",
+                        timer: 900
+                    });                    
+                                        
+                    claim.removeClass("btn-primary");
+                    claim.addClass("btn-danger");
+                    claim.text("Huỷ nhận");
+                    claim.attr("id", new_id)
+                    
+                }else{
+                    Swal.fire({                         
+                        title: "Thất bại!",
+                        text: res.message,
+                        icon: "error",
+                        timer: 3200,
+                        timerProgressBar: true
+                    });
+                }
+            },
+            error: function(){
+                Swal.fire({
+                     
+                    title: "Lỗi!",
+                    text: "Có lỗi xảy ra!",
+                    icon: "error",
+                    timer: 3200,
+                    timerProgressBar: true
+                });
+            }
+        });
+    });
+
+    //Xác nhận huỷ nhận lương (admin_rec_salary)
+    $(document).on("click", "#unClaimSalary_", function(){
+        let $input = $(this).closest("tr");
+        let rec_id = $input.find("#rec_id").data("id");
+        let unClaim = $input.find("#unClaimSalary_");
+        let new_id = 'claimSalary_'
+
+        Swal.fire({
+            title: "Huỷ nhận lương?",
+            text: "Huỷ nhận lương sẽ xoá mất thời gian nhận lương!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "Controller/admin/admin_rec_list.php?act=un_claim_salary",
+                    method: "POST",
+                    data: {rec_id},
+                    dataType: "JSON",
+                    success: function(res){
+                        if(res.status == "success"){
+                            Swal.fire({
+                                title: "Thành công!",
+                                text: res.message,
+                                icon: "success",
+                                timer: 900
+                            });                    
+                            
+                            unClaim.removeClass("btn-danger");
+                            unClaim.addClass("btn-primary");
+                            unClaim.text("Nhận lương");
+                            unClaim.attr("id", new_id)                          
                         }else{
                             Swal.fire({                                 
                                 title: "Thất bại!",
