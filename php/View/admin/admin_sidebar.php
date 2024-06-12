@@ -97,7 +97,7 @@
         <div id="collapseSV" class="collapse" aria-labelledby="headingSV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>
-
+                <a class="collapse-item" href="admin_index.php?action=admin_authority">Cấp bậc</a>
             </div>
         </div>
     </li>

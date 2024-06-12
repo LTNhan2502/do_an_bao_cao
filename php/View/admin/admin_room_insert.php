@@ -44,7 +44,7 @@
                                 <!-- Name -->
                                 <div class="row d-flex justify-content-between">
                                     <div>
-                                        <label for="name">Name</label>
+                                        <label for="name">Tên phòng</label>
                                         <input type="text" class="form-control" name="name" id="name">
                                         <small id="name_error" class="text-danger"></small>
                                     </div>
@@ -53,12 +53,12 @@
                                 <!-- Price/Sale -->
                                 <div class="row d-flex justify-content-between">
                                     <div>
-                                        <label for="price">Price</label>
+                                        <label for="price">Đơn giá</label>
                                         <input type="text" class="form-control" name="price" id="price">
                                         <small id="price_error" class="text-danger"></small>
                                     </div>
                                     <div>
-                                        <label for="sale">Sale</label>
+                                        <label for="sale">Giảm giá</label>
                                         <input type="text" class="form-control" name="sale" id="sale">
                                         <small id="sale_error" class="text-danger"></small>
                                     </div>
@@ -68,7 +68,7 @@
                             <!-- Status -->
                             <div class="col-lg-4 col-md-4">
                                 <div>
-                                    <label for="kind">Status</label>
+                                    <label for="kind">Trạng thái</label>
                                     <select class="form-select" name="status_id" id="status_id" <?php echo isset($status_id) ? 'readonly' : ''; ?>>
                                         <?php
                                                 $selected = -1;
@@ -89,7 +89,7 @@
 
                                 <!-- Kind -->
                                 <div>
-                                    <label for="kind">Kind</label>
+                                    <label for="kind">Loại phòng</label>
                                     <select class="form-select" name="kind" id="kind" <?php echo isset($kind_id) ? 'readonly' : ''; ?>>
                                         <?php
                                                 $selected = -1;
@@ -109,7 +109,7 @@
                                 </div>
 
                                 <!-- Image -->
-                                <label for="img">Image</label>
+                                <label for="img">Ảnh</label>
                                 <input type="file" class="form-control" name="img" id="img">
                                 <?php if(isset($img)): ?>
                                     <img src="Content/images/<?php echo $img; ?>" alt="" width="130px" height="130px">

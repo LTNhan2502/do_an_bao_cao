@@ -158,7 +158,9 @@
         //Phương thức xác nhận nhận phòng
         function confirmReceive($booked_room_id){
             $db = new connect();
-            $query = "UPDATE booked_room as b SET b.booked_session = 1 WHERE b.booked_room_id = '$booked_room_id'";
+            $query = "UPDATE booked_room as b JOIN room as r ON r.id = b.room_id
+                      SET b.booked_session = 1, r.status_id = 2
+                      WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -166,7 +168,9 @@
         //Phương thức huỷ nhận phòng
         function undoReceive($booked_room_id){
             $db = new connect();
-            $query = "UPDATE booked_room as b SET b.booked_session = 0 WHERE b.booked_room_id = '$booked_room_id'";
+            $query = "UPDATE booked_room as b JOIN room as r ON r.id = b.room_id
+                      SET b.booked_session = 0, r.status_id = 1
+                      WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -174,7 +178,9 @@
         //Phương thức trả phòng
         function confirmLeave($booked_room_id){
             $db = new connect();
-            $query = "UPDATE booked_room as b SET b.booked_done_session = 1, b.booked_session = 0 WHERE b.booked_room_id = '$booked_room_id'";
+            $query = "UPDATE booked_room as b JOIN room as r ON r.id = b.room_id
+                      SET b.booked_done_session = 1, b.booked_session = 0, r.status_id = 1 
+                      WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -182,7 +188,9 @@
         //Phương thức huỷ trả phòng
         function undoLeave($booked_room_id){
             $db = new connect();
-            $query = "UPDATE booked_room as b SET b.booked_done_session = 0, b.booked_session = 1 WHERE b.booked_room_id = '$booked_room_id'";
+            $query = "UPDATE booked_room as b JOIN room as r ON r.id = b.room_id
+                      SET b.booked_done_session = 0, b.booked_session = 1, r.status_id = 2
+                      WHERE b.booked_room_id = '$booked_room_id'";
             $result = $db->exec($query);
             return $result;
         }
@@ -190,7 +198,10 @@
         //Phương thức thực hiện đăng kí nếu chưa có email_guest
         function signUp($name, $email, $password){
             $db = new connect();
-            $query = "INSERT INTO customers(customer_name, email, password) VALUES('$name', '$email', '$password')";
+            $str = "CTM_";
+            $random = rand(0, 99999999);
+            $str_rand = $str.$random;
+            $query = "INSERT INTO customers(customer_booked_id, customer_name, email, password) VALUES('$str_rand', '$name', '$email', '$password')";
             $result = $db->exec($query);
             return $result;
         }

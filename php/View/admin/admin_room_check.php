@@ -120,7 +120,7 @@
                             <button class="btn btn-outline-danger btn-same text-start button_cancel" id="button_cancel"><i class="fas fa-ban"></i> Huỷ đặt phòng</button> 
                             <?php }else if($result['booked_unbook'] == 1 && $result['booked_session'] == 0 && $result['booked_done_session'] == 0){ ?>
                                 <button class="btn btn-outline-danger btn-same text-start undo_cancel" id="undo_cancel"><i class="fas fa-ban"></i> Hoàn tác</button>
-                            <?php }else if($result['booked_done_session'] == 1 && $result['booked_session'] == 1){ ?>
+                            <?php }else if($result['booked_done_session'] == 0 && $result['booked_session'] == 1){ ?>
                                 <button class="btn btn-outline-danger btn-same text-start button_cancel" disabled id="button_cancel"><i class="fas fa-ban"></i> Huỷ đặt phòng</button>
                             <?php } ?>
                             </td>
@@ -137,7 +137,7 @@
                         echo '';
                     }else{
                 ?>
-                <div class="row mt-4">
+                <div class="row mt-4" id="div_nav">
                     <nav aria-label="Page navigation example mt-3">
                         <?php
                             $link = "admin_index.php?action=admin_room_check&act=pages&page=[i]";

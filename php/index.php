@@ -1,13 +1,21 @@
 <?php
   session_start();
+  include_once "auth/auth.php";
+  include_once "router/router.php";
+  // unset($_SESSION['customer_name']); 
+  // unset($_SESSION['customer_id']);
+  spl_autoload_register("myModelClass");
+  function myModelClass($classname){
+      $path = "Model/";
+      include $path.$classname.'.php';
+  }
 
-    // unset($_SESSION['customer_name']); 
-    // unset($_SESSION['customer_id']);
-    spl_autoload_register("myModelClass");
-    function myModelClass($classname){
-        $path = "Model/";
-        include $path.$classname.'.php';
+  // Kiểm tra xem người dùng đã đăng nhập hay chưa
+  if (isAuthenUser()) {
+    if (!isset($_GET['action']) || $_GET['action'] === 'login') {
+      redirectToUserHome();
     }
+  }
 ?>
 
 <!DOCTYPE HTML>

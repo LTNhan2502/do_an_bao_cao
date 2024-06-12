@@ -172,7 +172,7 @@
                     // $customer_sum = $customers->updateSum($stay_sum, $customer_id);
 
                     if($addBookedRoom && $booked_history){
-                        $setFull = $room->moveRoom($id);
+                        // $setFull = $room->moveRoom($id);
                         $res = array(
                             "status" => "success",
                             "message" => "Đặt phòng thành công!",

@@ -500,14 +500,8 @@
                     data: { email },
                     dataType: "JSON",
                     success: function(res) {
-                        console.log(res);
-                        // let isGuest =  ? true : false;
-                        // Đã tồn tại (email_guest) nhưng chưa đăng kí -> gợi ý đăng kí
-                        if ((res.countExist != 0 && res.countSignup == 0)) {
-                            $("#email_user_error").html('Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không? <p class=" badge badge-primary" id="exist_email_btn" style="cursor: pointer;">Đăng kí</p>');
-                            $(document).on("click", "#exist_email_btn", function(){
-                                window.location.href = "index.php?action=signup"
-                            })
+                        console.log(res);                        
+                        if ((res.countExist != 0 && res.countSignup == 0)) {                            
                             guestFlag = 1;
                             emailflag = false;
 

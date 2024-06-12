@@ -9,9 +9,9 @@
     <h3 class="text-center">Phân Quyền Thành Viên</h3>
     <div class="select-container">
         <div class="form-group">
-            <label for="selectEmployee">Chọn Nhân Viên:</label>
+            <label for="selectEmployee">Chọn Đối Tượng:</label>
             <select class="form-control" id="selectEmployee">
-                <option value="0" data-per_id="0">--- Chọn nhân viên ---</option>
+                <option value="0" data-per_id="0">--- Chọn đối tượng ---</option>
                 <?php while($set_member = $member->fetch()): ?>
                     <div class="d-none" id="user_type" data-user_type="<?php echo $set_member['user_type']; ?>"></div>
                     <div class="d-none" id="user_id" data-user_id="<?php echo $set_member['user_id']; ?>"></div>
@@ -22,7 +22,7 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="selectRole">Chọn Cấp Quyền:</label>
+            <label for="selectRole">Chọn Nhóm:</label>
             <select class="form-control" id="selectRole">
                 <option value="0">--- Chọn cấp quyền ---</option>
                 <?php while($set_per = $permission->fetch()): ?>
