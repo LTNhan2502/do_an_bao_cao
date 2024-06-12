@@ -3,6 +3,11 @@ $(document).ready(function(){
     let error_special = 'Không được có kí tự đặc biệt!';
     let error_number = 'Không được có kí tự số!';
     let error_length = 'Độ dài kí tự từ 2-45!';
+    let telflag = true;
+    let emailflag = true;
+    let bonusflag = true;
+    let fineflag = true;
+    let salaryflag = true;
     // //Lấy thời gian yyyy-mm-dd hh:ii:ss
     // function getLocalTimeString() {
     //     const now = new Date();
@@ -93,19 +98,10 @@ $(document).ready(function(){
                 },
                 dataType: "JSON",
                 success: function(res){
-                    if(res.status == 'success'){
-                        Swal.fire({
-                             
-                            title: "Thành công!",
-                            text: "Thay đổi thành công!",
-                            icon: "success",
-                            timer: 900,
-                            timerProgressBar: true
-                        });
+                    if(res.status == 'success'){                        
                         $(".detail_rec_name").html(name_value);
                     }else if(res.status == 'fail'){
-                        Swal.fire({
-                             
+                        Swal.fire({                             
                             title: "Thất bại!",
                             text: "Thay đổi thất bại! Kiểm tra lại!",
                             icon: "error",
@@ -113,8 +109,7 @@ $(document).ready(function(){
                             timerProgressBar: true
                         });
                     }else if(res.status == 'name'){
-                        Swal.fire({
-                             
+                        Swal.fire({                             
                             title: "Thất bại!",
                             text: res.message,
                             icon: "error",
@@ -123,8 +118,7 @@ $(document).ready(function(){
                         });
                         $input.val(prevName); //Quay lại giá trị cũ
                     }else{
-                        Swal.fire({
-                             
+                        Swal.fire({                             
                             title: "Thất bại!",
                             text: "Thay đổi thất bại!",
                             icon: "error",
@@ -134,8 +128,7 @@ $(document).ready(function(){
                     }
                 },
                 error: function(){
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Lỗi khác ở hệ thống, CSDL, connect, đường dẫn",
                         icon: "error",
@@ -158,18 +151,10 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){ 
                 console.log(res);
-                if(res.status == "success"){               
-                    Swal.fire({
-                         
-                        title: "Thành công",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });                
+                if(res.status == "success"){ 
+                    console.log(res.message);
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại",
                         text: "Thay đổi thất bại! Kiểm tra lại",
                         icon: "error",
@@ -179,8 +164,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL",
                     icon: "error",
@@ -204,13 +188,7 @@ $(document).ready(function(){
             success: function(res){ 
                 console.log(res);
                 if(res.status == "success"){               
-                    Swal.fire({                         
-                        title: "Thành công",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });                
+                    console.log(res.message);                
                 }else if(res.status == 'fail_timeWork'){
                     Swal.fire({                         
                         title: "Thất bại",
@@ -230,8 +208,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác không xác định",
                     icon: "error",
@@ -247,67 +224,86 @@ $(document).ready(function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('rec_id');
         let tel_value  =$(this).val();
+        let tel_id = "#rec_tel_error"+id
+        let tel_slice = tel_value.slice(0,1);
         let prev_tel = $input.data("rec_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
-        $.ajax({
-            url: 'Controller/admin/admin_rec_list.php?act=update_tel',
-            method: "POST",
-            data: {
-                id,
-                tel_value,
-            },
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                }else if(res.status == 'fail'){
-                    Swal.fire({
-                         
+
+        //Kiểm tra số
+        if(isNaN(tel_value)){
+            $(tel_id).html("Phải là số!");
+            telflag = true;
+            return false;
+        }
+
+        //Kiểm tra số hợp lệ
+        else if(tel_slice != 0 && tel_value.length == 10){
+            $(tel_id).html("Số điện thoại phải bắt đầu bằng số 0!");
+            telflag = true;
+            return false;
+        }   
+        else if(tel_slice == 0 && tel_value.length != 10){
+            $(tel_id).html("Số điện thoại phải có 10 số!");
+            telflag = true;
+            return false;
+        }     
+        else if(tel_slice != 0 && tel_value.length != 10){
+            $(tel_id).html("Số điện thoại không hợp lệ!");
+            telflag = true;
+            return false;
+        }
+        //Đều ổn
+        else{
+            $(tel_id).html("");
+            $.ajax({
+                url: 'Controller/admin/admin_rec_list.php?act=update_tel',
+                method: "POST",
+                data: {
+                    id,
+                    tel_value,
+                },
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 'success'){
+                        console.log(res.message);
+                    }else if(res.status == 'fail'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_tel);
+                    }else if(res.status == 'tel'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_tel); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire({                     
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác không xác định!",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                    $input.val(prev_tel);
-                }else if(res.status == 'tel'){
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: res.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prev_tel); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({
-                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác không xác định!",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     });
 
     //Chỉnh sửa rec_email
@@ -316,66 +312,70 @@ $(document).ready(function(){
         let id = $(this).data('rec_id');
         let email_value  =$(this).val();
         let prev_email = $input.data("rec_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
-        $.ajax({
-            url: 'Controller/admin/admin_rec_list.php?act=update_email',
-            method: "POST",
-            data: {
-                id,
-                email_value,
-            },
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                }else if(res.status == 'fail'){
-                    Swal.fire({
-                         
+        let regex_email = /^[a-zA-Z0-9._%+-]+@gmail+\.com$/;
+        let email_error = "#rec_email_error"+id
+        // let regex_email = /^[^\s@]+@gmail\.com$/;
+    
+        //Kiểm tra hợp lệ
+        if (!regex_email.test(email_value)) {
+            $(email_error).html("Email không hợp lệ!");
+            emailflag = true;
+            return false;
+        }
+
+        //Đều ổn
+        else{
+            $(email_error).html("");
+            $.ajax({
+                url: 'Controller/admin/admin_rec_list.php?act=update_email',
+                method: "POST",
+                data: {
+                    id,
+                    email_value,
+                },
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 'success'){
+                        console.log(res.message);
+                    }else if(res.status == 'fail'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_email);
+                    }else if(res.status == 'email'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_email); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire({                     
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác không xác định!",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                    $input.val(prev_email);
-                }else if(res.status == 'email'){
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: res.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prev_email); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({
-                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác không xác định!",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     }); 
 
     //Chỉnh sửa thưởng
@@ -385,63 +385,65 @@ $(document).ready(function(){
         let bonus_value  =$(this).val().replace(/[^0-9]/g, "");
         let prev_bonus = $input.data("rec_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let rec_receive = $input.closest("tr").find("#rec_receive");
-        $.ajax({
-            url: 'Controller/admin/admin_rec_list.php?act=update_bonus',
-            method: "POST",
-            data: {
-                id,
-                bonus_value,
-            },
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 'success'){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    rec_receive.val(formatCurrency((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus-res.rec_salary.rec_fine));
-                }else if(res.status == 'fail'){
-                    Swal.fire({
-                         
+        let bonus_error = "#rec_bonus_error"+id
+
+        //Kiểm tra số
+        if(isNaN(bonus_value)){
+            $(bonus_error).html("Phải là số!");
+            bonusflag = true;
+            return false;
+        }else{
+            $.ajax({
+                url: 'Controller/admin/admin_rec_list.php?act=update_bonus',
+                method: "POST",
+                data: {
+                    id,
+                    bonus_value,
+                },
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 'success'){
+                        console.log(res.message);
+                        rec_receive.val(formatCurrency(((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus)-res.rec_salary.rec_fine));
+                    }else if(res.status == 'fail'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_bonus);
+                    }else if(res.status == 'bonus'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_bonus); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire({                     
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác không xác định!",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                    $input.val(prev_bonus);
-                }else if(res.status == 'bonus'){
-                    Swal.fire({                         
-                        title: "Thất bại!",
-                        text: res.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prev_bonus); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác không xác định!",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     });
     
     //Chỉnh sửa phạt
@@ -461,14 +463,8 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){
                 if(res.status == 'success'){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    rec_receive.val(formatCurrency((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus-res.rec_salary.rec_fine));
+                    console.log(res.message);
+                    rec_receive.val(formatCurrency(((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus)-res.rec_salary.rec_fine));
                 }else if(res.status == 'fail'){
                     Swal.fire({                         
                         title: "Thất bại!",
@@ -479,8 +475,7 @@ $(document).ready(function(){
                     });
                     $input.val(prev_fine);
                 }else if(res.status == 'fine'){
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: res.message,
                         icon: "error",
@@ -489,8 +484,7 @@ $(document).ready(function(){
                     });
                     $input.val(prev_fine); //Quay lại giá trị cũ
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại!",
                         icon: "error",
@@ -500,8 +494,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác không xác định!",
                     icon: "error",
@@ -529,14 +522,8 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){
                 if(res.status == 'success'){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    rec_receive.val(formatCurrency((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus-res.rec_salary.rec_fine));
+                    console.log(res.message);
+                    rec_receive.val(formatCurrency(((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus)-res.rec_salary.rec_fine));
                 }else if(res.status == 'fail'){
                     Swal.fire({                         
                         title: "Thất bại!",
@@ -556,8 +543,7 @@ $(document).ready(function(){
                     });
                     $input.val(prev_salary); //Quay lại giá trị cũ
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại!",
                         icon: "error",
@@ -567,8 +553,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác không xác định!",
                     icon: "error",
@@ -586,67 +571,68 @@ $(document).ready(function(){
         let factor_value  =$(this).val();
         let prev_factor = $input.data("rec_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let rec_receive = $input.closest("tr").find("#rec_receive");
-        $.ajax({
-            url: 'Controller/admin/admin_rec_list.php?act=update_factor',
-            method: "POST",
-            data: {
-                id,
-                factor_value,
-            },
-            dataType: "JSON",
-            success: function(res){
-                if(res.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
-                    rec_receive.val(formatCurrency((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus-res.rec_salary.rec_fine));
-                }else if(res.status == 'fail'){
-                    Swal.fire({
-                         
+        if(factor_value < 1){
+            Swal.fire({                         
+                title: "Thất bại!",
+                text: "Hệ số phải lớn hơn 0",
+                icon: "error",
+                timer: 3000,
+                timerProgressBar: true
+            });
+            $input.val(prev_factor);
+        }
+        else{
+            $.ajax({
+                url: 'Controller/admin/admin_rec_list.php?act=update_factor',
+                method: "POST",
+                data: {
+                    id,
+                    factor_value,
+                },
+                dataType: "JSON",
+                success: function(res){
+                    if(res.status == 'success'){
+                        console.log(res.message);
+                        rec_receive.val(formatCurrency(((res.rec_salary.rec_salary*res.rec_salary.rec_factor)+res.rec_salary.rec_bonus)-res.rec_salary.rec_fine));
+                    }else if(res.status == 'fail'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại! Kiểm tra lại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_factor);
+                    }else if(res.status == 'factor'){
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: res.message,
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        $input.val(prev_factor); //Quay lại giá trị cũ
+                    }else{
+                        Swal.fire({                         
+                            title: "Thất bại!",
+                            text: "Thay đổi thất bại!",
+                            icon: "error",
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                    }
+                },
+                error: function(){
+                    Swal.fire({                     
                         title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
+                        text: "Lỗi khác không xác định!",
                         icon: "error",
-                        timer: 3000,
+                        timer: 3200,
                         timerProgressBar: true
-                    });
-                    $input.val(prev_factor);
-                }else if(res.status == 'factor'){
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: res.message,
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
-                    $input.val(prev_factor); //Quay lại giá trị cũ
-                }else{
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại!",
-                        icon: "error",
-                        timer: 3000,
-                        timerProgressBar: true
-                    });
+                    })
                 }
-            },
-            error: function(){
-                Swal.fire({
-                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác không xác định!",
-                    icon: "error",
-                    timer: 3200,
-                    timerProgressBar: true
-                })
-            }
-        })
+            })
+        }
     });
 
     //Xác nhận nhận lương
@@ -666,13 +652,7 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });                    
+                    console.log(res.message);                   
                                         
                     claim.addClass("d-none");
                     unClaim.removeClass("d-none");
@@ -691,8 +671,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -708,7 +687,7 @@ $(document).ready(function(){
         let $input = $(this).closest(".col");
         let rec_id = $(this).closest(".modal").find(".d-none").data("rec_id_raw");
         let claim = $input.find("#claimSalary");
-        let unClaim = $input.find("#unClaimSalary");
+        let     unClaim = $input.find("#unClaimSalary");
         let badge = $input.find("#badge");
         let input_timeSalary = $input.find("#rec_timeSalary");
 
@@ -719,7 +698,8 @@ $(document).ready(function(){
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!"
+            confirmButtonText: "Có",
+            cancelButtonText: "Không"
             }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -729,13 +709,6 @@ $(document).ready(function(){
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == "success"){
-                            Swal.fire({
-                                title: "Thành công!",
-                                text: res.message,
-                                icon: "success",
-                                timer: 900
-                            });                    
-                            
                             unClaim.addClass("d-none");
                             claim.removeClass("d-none");
                             badge.text("Chưa nhận");
@@ -778,13 +751,6 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(res){
                 if(res.status == "success"){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: res.message,
-                        icon: "success",
-                        timer: 900
-                    });                    
-                                        
                     claim.removeClass("btn-primary");
                     claim.addClass("btn-danger");
                     claim.text("Huỷ nhận");
@@ -801,8 +767,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Lỗi!",
                     text: "Có lỗi xảy ra!",
                     icon: "error",
@@ -837,13 +802,6 @@ $(document).ready(function(){
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == "success"){
-                            Swal.fire({
-                                title: "Thành công!",
-                                text: res.message,
-                                icon: "success",
-                                timer: 900
-                            });                    
-                            
                             unClaim.removeClass("btn-danger");
                             unClaim.addClass("btn-primary");
                             unClaim.text("Nhận lương");

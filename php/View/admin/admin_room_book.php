@@ -504,7 +504,7 @@
                         // let isGuest =  ? true : false;
                         // Đã tồn tại (email_guest) nhưng chưa đăng kí -> gợi ý đăng kí
                         if ((res.countExist != 0 && res.countSignup == 0)) {
-                            $("#email_user_error").html('Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không? <p class=" badge badge-primary" id="exist_email_btn">Đăng kí</p>');
+                            $("#email_user_error").html('Email này đã từng được sử dụng! Bạn có muốn đăng kí để nhận thêm nhiều ưu đãi không? <p class=" badge badge-primary" id="exist_email_btn" style="cursor: pointer;">Đăng kí</p>');
                             $(document).on("click", "#exist_email_btn", function(){
                                 window.location.href = "index.php?action=signup"
                             })
@@ -530,6 +530,10 @@
                         //Email chưa tồn tại
                         else if(res.countExist == 0 && res.countSignup == 0){
                             $("#email_user_error").html('');
+                            $("#name_user").val('')
+                            $('#tel_user').val('')
+                            $("#name_flag").val() != '' ? nameflag = false : nameflag = true
+                            $("#tel_user").val() != '' ? telflag = false : telflag = true
                             guestFlag = 0;
                             emailflag = false;
                         }

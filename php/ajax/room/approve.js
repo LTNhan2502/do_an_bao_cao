@@ -262,7 +262,8 @@ $(document).ready(function(){
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!"
+            confirmButtonText: "Có",
+            cancelButtonText: "Không"
             }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
@@ -280,17 +281,8 @@ $(document).ready(function(){
                                 dataType: "JSON",
                                 success: function(resp){
                                     console.log(resp);
-                                    if(resp.status == 'success'){
-                                        Swal.fire({                                 
-                                            title: "Thu hồi phòng thành công!",
-                                            text: resp.message,
-                                            icon: "success",
-                                            timer: 900,
-                                            timerProgressBar: true
-                                        }).then(() => {
-                                            window.location.reload();
-                                        })
-                                        
+                                    if(resp.status == 'success'){                                        
+                                        window.location.reload();                                        
                                     }else{
                                         Swal.fire({                             
                                             title: "Thất bại!",
@@ -364,13 +356,6 @@ $(document).ready(function(){
                     dataType: "JSON",
                     success: function(res){
                         if(res.status == "success"){
-                            Swal.fire({                         
-                                title: "Thành công!",
-                                text: res.message,
-                                icon: "success",
-                                timer: 900
-                            });
-
                             status.html("Đã huỷ");
                             status.removeClass('badge-warning');
                             status.addClass('badge-danger');

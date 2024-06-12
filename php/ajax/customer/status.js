@@ -69,13 +69,7 @@ $(document).ready(function(){
                 dataType: "JSON",
                 success: function(res){
                     if(res.status == 200){
-                        Swal.fire({                         
-                            title: "Thành công!",
-                            text: "Thay đổi thành công!",
-                            icon: "success",
-                            timer: 900,
-                            timerProgressBar: true
-                        });
+                        console.log(res.message);
                         $(".detail_customer_name").html(name_value);
                     }else{
                         Swal.fire({                             
@@ -104,19 +98,19 @@ $(document).ready(function(){
     $(document).on('change', '#email', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
-        let email_value  =$(this).val();
+        let email  =$(this).val();
         let prevEmail = $input.data("email_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
 
         let regex_email = /^[a-zA-Z0-9._%+-]+@gmail+\.com$/;
 
         //Kiểm tra trống
-        if(email_value == '' && name_value.trim() == ''){
+        if(email == '' && email.trim() == ''){
             SweetAlrt(error_empty);
             $input.val(prevEmail); //Quay lại giá trị cũ
             return;
         }        
         //Kiểm tra định dạng
-        else if(!regex_email.test(email_value)){
+        else if(!regex_email.test(email)){
             SweetAlrt(error_email);
             $input.val(prevEmail);
             return;
@@ -124,11 +118,12 @@ $(document).ready(function(){
         //Kiểm tra trùng
         else{
             $.ajax({
-                url: "Controller/admin/admin_room_book.php?act=check_email",
+                url: "Controller/user/booking.php?act=check_email",
                 method: "POST",
-                data: { email_value },
+                data: { email },
+                dataType: "JSON",
                 success: function(res) {
-                    let isExist = ((res.countExist == 0 && res.countSignup == 0)) ? false : true;
+                    let isExist = (res.countExist == 0 && res.countSignup == 0) ? false : true;
                     if (isExist) {
                         SweetAlrt(error_email_exist);
                         $input.val(prevEmail);
@@ -142,19 +137,13 @@ $(document).ready(function(){
                             method: "POST",
                             data: {
                                 id,
-                                email_value,  
+                                email,  
                                 act                  
                             },
                             dataType: "JSON",
                             success: function(res){
                                 if(res.status == 200){
-                                    Swal.fire({                         
-                                        title: "Thành công!",
-                                        text: "Thay đổi thành công!",
-                                        icon: "success",
-                                        timer: 900,
-                                        timerProgressBar: true
-                                    });
+                                    console.log(res.message);
                                 }else{
                                     Swal.fire({                             
                                         title: "Thất bại!",
@@ -185,19 +174,19 @@ $(document).ready(function(){
     $(document).on('change', '#email_guest', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
-        let email_value  =$(this).val();
-        let prevEmail = $input.data("email_value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
+        let email  =$(this).val();
+        let prevEmail = $input.data("email"); //Dùng $input để khi đem xuống AJAX không bị lỗi
 
         let regex_email = /^[a-zA-Z0-9._%+-]+@gmail+\.com$/;
 
         //Kiểm tra trống
-        if(email_value == '' && email_value.trim() == ''){
+        if(email == '' && email.trim() == ''){
             SweetAlrt(error_empty);
             $input.val(prevEmail); //Quay lại giá trị cũ
             return;
         }        
         //Kiểm tra định dạng
-        else if(!regex_email.test(email_value)){
+        else if(!regex_email.test(email)){
             SweetAlrt(error_email);
             $input.val(prevEmail);
             return;
@@ -207,7 +196,7 @@ $(document).ready(function(){
             $.ajax({
                 url: "Controller/admin/admin_room_book.php?act=check_email",
                 method: "POST",
-                data: { email_value },
+                data: { email },
                 success: function(res) {
                     let isExist = ((res.countExist == 0 && res.countSignup == 0)) ? false : true;
                     if (isExist) {
@@ -223,19 +212,13 @@ $(document).ready(function(){
                             method: "POST",
                             data: {
                                 id,
-                                email_value, 
+                                email, 
                                 act                   
                             },
                             dataType: "JSON",
                             success: function(res){
                                 if(res.status == 200){
-                                    Swal.fire({                         
-                                        title: "Thành công!",
-                                        text: "Thay đổi thành công!",
-                                        icon: "success",
-                                        timer: 900,
-                                        timerProgressBar: true
-                                    });
+                                    console.log(res.message);
                                 }else{
                                     Swal.fire({                             
                                         title: "Thất bại!",
@@ -311,13 +294,7 @@ $(document).ready(function(){
                 dataType: "JSON",
                 success: function(res){
                     if(res.status == 200){
-                        Swal.fire({                         
-                            title: "Thành công!",
-                            text: "Thay đổi thành công!",
-                            icon: "success",
-                            timer: 900,
-                            timerProgressBar: true
-                        });
+                        console.log(res.message);
                     }else{
                         Swal.fire({                             
                             title: "Thất bại!",

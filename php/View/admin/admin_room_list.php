@@ -130,8 +130,8 @@
                                     <option value="<?php echo $result['status_id']; ?>" 
                                             data-id="<?php echo $set['id']; ?>" 
                                             data-act=<?php echo $result['act']; ?>
-                                            <?php echo $result['status_id'] == $set['status_id'] ? 'selected' : '' ?>
-                                        ><?php echo $result['name']; ?>
+                                            <?php echo $result['status_id'] == $set['status_id'] ? 'selected' : '' ?>>
+                                        <?php echo $result['name']; ?>
                                     </option>
                                     <?php endwhile; ?>
                                 </select>

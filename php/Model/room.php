@@ -114,7 +114,7 @@
         //Phương thức lấy ra các room chưa đặt
         function getEmptyRoom(){
             $db = new connect();
-            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.kind_id = 1 AND room.deleted_at IS NULL AND room.status_id = 1";
+            $select = "SELECT * FROM room, detail_room WHERE room.id = detail_room.room_id AND room.deleted_at IS NULL AND room.status_id = 1";
             $result = $db->getList($select);
             return $result;
         }
@@ -325,7 +325,7 @@
         //Phương thức đưa room vào diện trống, có thể đặt room
         function setEmpty($id){
             $db = new connect();
-            $query = "UPDATE room as r SET r.status_id = 1, r.booked_room_id = null, r.arrive = null, r.quit = null WHERE r.id = '$id'";
+            $query = "UPDATE room as r SET r.status_id = 1, r.booked_room_id = null WHERE r.id = '$id'";
             $result = $db->execp($query);   //Hiển thị ra câu lệnh và đưa nó qua cho controller
             return $result;
         }

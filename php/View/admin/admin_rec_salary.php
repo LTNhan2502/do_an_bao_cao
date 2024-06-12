@@ -98,9 +98,9 @@
                             <!-- Thực nhận -->
                             <td>
                                 <input type="text" class="form-control" name="rec_receive" id="rec_receive" disabled
-                                    value="<?php echo $fmt->formatCurrency(($set['rec_salary']*$set['rec_factor'])+$set['rec_bonus']); ?>"
+                                    value="<?php echo $fmt->formatCurrency((($set['rec_salary']*$set['rec_factor'])+$set['rec_bonus'])-$set['rec_fine']); ?>"
                                     data-rec_id="<?php echo $set['rec_id']; ?>"
-                                    data-rec_value="<?php echo $fmt->formatCurrency(($set['rec_salary']*$set['rec_factor'])+$set['rec_bonus']); ?>">
+                                    data-rec_value="<?php echo $fmt->formatCurrency((($set['rec_salary']*$set['rec_factor'])+$set['rec_bonus'])-$set['rec_fine']); ?>">
                             </td>
                     
                             <td class="text-end" width="120px">   
@@ -161,7 +161,8 @@
                 showCancelButton: true,
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
-                confirmButtonText: "Yes!"
+                confirmButtonText: "Có",
+                cancelButtonText: "Không"
                 }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({
@@ -170,17 +171,8 @@
                         data: {delete_room_id},
                         dataType: "JSON",
                         success: function(res){
-                            if(res.status == 'success'){
-                                Swal.fire({                                    
-                                    title: "Xoá phòng thành công!",
-                                    text: res.message,
-                                    icon: "success",
-                                    timer: 900,
-                                    timerProgressBar: true
-                                });
-                                setTimeout(function(){
-                                    window.location.reload();
-                                }, 930)
+                            if(res.status == 'success'){                                
+                                window.location.reload();                                
                             }else{
                                 Swal.fire({                                    
                                     title: "Xoá phòng thất bại!",

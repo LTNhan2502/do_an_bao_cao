@@ -153,7 +153,8 @@
                                                         value="<?php echo $set['rec_tel']; ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_tel']; ?>">
-                                                </div>                                                
+                                                </div>    
+                                                <small class="text-danger" id="rec_tel_error<?php echo $set['rec_id']; ?>"></small>                                            
                                             </div>
 
                                             <!-- Email -->
@@ -165,7 +166,8 @@
                                                         value="<?php echo $set['rec_email']; ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_email']; ?>">
-                                                </div>                                                
+                                                </div>  
+                                                <small class="text-danger" id="rec_email_error<?php echo $set['rec_id']; ?>"></small>                                              
                                             </div>
 
                                             <!-- Ngày sinh -->
@@ -177,7 +179,8 @@
                                                         value="<?php echo $set['rec_birthday']; ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_birthday']; ?>">
-                                                </div>                                                
+                                                </div>  
+                                                <small class="text-danger" id="rec_birthday_error<?php echo $set['rec_id']; ?>"></small>                                              
                                             </div>
                                         </div>
                                         <div class="row mm mt-4">
@@ -192,6 +195,7 @@
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_startWork']; ?>">
                                                 </div>                                                
+                                                <small class="text-danger" id="rec_startWork_error<?php echo $set['rec_id']; ?>"></small>
                                             </div>
 
                                             <!-- Số ngày làm việc -->
@@ -216,7 +220,8 @@
                                                         value="<?php echo $fmt->formatCurrency($set['rec_bonus']); ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_bonus']; ?>">
-                                                </div>                                                
+                                                </div>  
+                                                <small class="text-danger" id="rec_bonus_error<?php echo $set['rec_id']; ?>"></small>
                                             </div>
 
                                             <!-- Phạt -->
@@ -228,7 +233,8 @@
                                                         value="<?php echo $fmt->formatCurrency($set['rec_fine']); ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_fine']; ?>">
-                                                </div>                                                
+                                                </div> 
+                                                <small class="text-danger" id="rec_fine_error<?php echo $set['rec_id']; ?>"></small>                                               
                                             </div>
                                         </div>
                                         <div class="row mt-4">
@@ -241,7 +247,8 @@
                                                         value="<?php echo $fmt->formatCurrency($set['rec_salary']); ?>"
                                                         data-rec_id="<?php echo $set['rec_id']; ?>"
                                                         data-rec_value="<?php echo $set['rec_salary']; ?>">
-                                                </div>                                                
+                                                </div>  
+                                                <small class="text-danger" id="rec_salary_error<?php echo $set['rec_id']; ?>"></small>                                              
                                             </div>
 
                                             <!-- Thời điểm nhận lương -->
@@ -451,7 +458,7 @@
                 if (!window.recTimeWorkInterval) {
                     window.recTimeWorkInterval = setInterval(function() {
                         updateRecTimeWork(rec_timeWork_getTime, $input_timeWork);
-                    }, 24 * 60 * 60 * 1000);
+                    }, 60 * 60 * 1000); // Cập nhật mỗi giờ
                 }
 
                 $.ajax({
@@ -469,13 +476,10 @@
                     success: function(res) {
                         if (res.status == 'success') {
                             $input_timeWork.val(res.rec.rec_timeWork);
-                            Swal.fire({
-                                title: "Thành công!",
-                                text: res.message,
-                                icon: "success",
-                                timer: 900,
-                                timerProgressBar: true
-                            });
+                            
+                            if(now < rec_timeWork_getTime){
+                                $input_timeWork.val('');
+                            }
                         }else if(res.status == 'startWork'){
                             Swal.fire({                                 
                                 title: "Nhắc nhở!",

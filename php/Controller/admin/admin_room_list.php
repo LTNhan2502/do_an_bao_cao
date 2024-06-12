@@ -52,7 +52,7 @@ switch ($act) {
         $empty = $room->setEmpty($id); //$empty trả về đoạn lệnh sql
         $result = $empty->execute(); //$result thực hiện đoạn lệnh sql trên
         // print_r($result);exit; 
-        if ($result !== false) { // Kiểm tra xem execute() đã trả về một giá trị object hay không                
+        if ($result) { // Kiểm tra xem execute() đã trả về một giá trị object hay không                
             $res = array(
                 "status" => "success",
                 "message" => "Changed"
@@ -86,7 +86,6 @@ switch ($act) {
         echo json_encode($res);
         break;
     case "maintain":
-
         $id = $_POST['id'];
         $room = new room();
         $maintain = $room->maintainRoom($id);

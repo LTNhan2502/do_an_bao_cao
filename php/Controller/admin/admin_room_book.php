@@ -66,6 +66,13 @@
                     'data_customer_name' => $customer['customer_name'],
                     'data_customer_tel' => $customer['tel']
                 );
+            }else{
+                $res = array(
+                    'countExist' => $countExist,
+                    'countSignup' => $countSignup,
+                    'data_customer_name' => '',
+                    'data_customer_tel' => ''
+                );
             }
             // echo json_encode($customer);
             echo json_encode($res);

@@ -60,14 +60,7 @@ $(document).ready(function(){
                 },
                 success: function(res){
                     let data = JSON.parse(res);
-                    if(data.status == 'success'){
-                        Swal.fire({                         
-                            title: "Thành công!",
-                            text: "Thay đổi thành công!",
-                            icon: "success",
-                            timer: 900,
-                            timerProgressBar: true
-                        });
+                    if(data.status == 'success'){                        
                         $(".detail_name").html(name_value);
                     }else if(data.status == 'fail'){
                         Swal.fire({                         
@@ -143,13 +136,7 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    Swal.fire({                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900,
-                        timerProgressBar: true
-                    });
+                    console.log(data.message);
                 }else if(data.status == 'price'){
                     Swal.fire({                         
                         title: "Thất bại!",
@@ -201,16 +188,9 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900
-                    });
+                    console.log(data.message);
                 }else if(data.status == 'sale'){
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: data.message,
                         icon: "error",
@@ -220,8 +200,7 @@ $(document).ready(function(){
                     $input.val(prevSale); //Quay lại giá trị cũ
                     console.log(prevSale);
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi thất bại! Kiểm tra lại!",
                         icon: "error",
@@ -231,8 +210,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
                     icon: "error",
@@ -256,30 +234,24 @@ $(document).ready(function(){
                 let data = JSON.parse(res) //Vì res đang ở dạng chuỗi JSON chứ không phải là JSON thật sự nên phải parse
                 console.log(data);
                 if(data.status == "success"){               
-                    Swal.fire({
-                         
-                        title: "Thành công",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900
-                    });                
+                    console.log(data.message);               
                 }else{
-                    Swal.fire({
-                         
+                    Swal.fire({                         
                         title: "Thất bại",
                         text: "Thay đổi thất bại! Kiểm tra lại",
                         icon: "error",
-                        timer: 2500
+                        timer: 2500,
+                        timerProgressBar: true
                     })
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Thất bại!",
                     text: "Lỗi khác ở hệ thống, connect, CSDL",
                     icon: "error",
-                    timer: 3000
+                    timer: 3000,
+                    timerProgressBar: true
                 });
             }
         })
@@ -302,16 +274,16 @@ $(document).ready(function(){
                 let data = JSON.parse(res);
                 console.log(data);
                 if(data.status == "success"){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900
+                    console.log(data.message);
+                }else if(data.status == 'price'){
+                    Swal.fire({                         
+                        title: "Thất bại!",
+                        text: data.message,
+                        icon: "error",
+                        timer: 2500
                     });
-                }else{
-                    Swal.fire({
-                         
+                }else if(data.message == 'fail'){
+                    Swal.fire({                         
                         title: "Thất bại!",
                         text: "Thay đổi không thành công! Kiểm tra lại!",
                         icon: "error",
@@ -320,8 +292,7 @@ $(document).ready(function(){
                 }
             },
             error: function(){
-                Swal.fire({
-                     
+                Swal.fire({                     
                     title: "Lỗi",
                     text: "Lỗi khác ở hệ thống, connect, CSDL!",
                     icon: "error",
@@ -329,67 +300,5 @@ $(document).ready(function(){
                 });
             }
         })
-   });
-
-   //Chỉnh sửa sale
-    $(document).on('change', '#sale', function(){
-        let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
-        let sale_value = $(this).val().replace(/[^0-9]/g, "");
-        let id = $(this).data('id');
-        let price_value = $(this).closest('tr').find("#price").val().replace(/[^0-9]/g, ""); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
-        let prevSale = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
-        $.ajax({
-            url: 'Controller/admin/admin_room_list.php?act=update_sale',
-            method: "POST",
-            data: {
-                sale_value,
-                id,
-                price_value
-            },
-            success: function(res){
-                let data = JSON.parse(res);
-                if(data.status == 'success'){
-                    Swal.fire({
-                         
-                        title: "Thành công!",
-                        text: "Thay đổi thành công!",
-                        icon: "success",
-                        timer: 900
-                    });
-                }else if(data.status == 'sale'){
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: data.message,
-                        icon: "error",
-                        timer: 3200,
-                        timerProgressBar: true
-                    });
-                    $input.val(prevSale); //Quay lại giá trị cũ
-                    console.log(prevSale);
-                }else{
-                    Swal.fire({
-                         
-                        title: "Thất bại!",
-                        text: "Thay đổi thất bại! Kiểm tra lại!",
-                        icon: "error",
-                        timer: 3200,
-                        timerProgressBar: true
-                    });
-                }
-            },
-            error: function(){
-                Swal.fire({
-                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác ở hệ thống, connect, CSDL, đường dẫn",
-                    icon: "error",
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-            }
-        })
-    });
-
-   
+   });   
 })

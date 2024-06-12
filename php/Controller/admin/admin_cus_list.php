@@ -78,9 +78,9 @@ switch ($act) {
         }
         break;
     case "update_email":
-        if (isset($_POST['email_value']) && isset($_POST['id']) && isset($_POST['act'])) {
+        if (isset($_POST['email']) && isset($_POST['id']) && isset($_POST['act'])) {
             $id = $_POST['id'];
-            $email_value = $_POST['email_value'];
+            $email_value = $_POST['email'];
             $act = $_POST['act'];
 
             $rec = new customers();

@@ -126,11 +126,7 @@
                                     }
                                     
                                     if(count($final_results) > 0){
-                                        foreach ($final_results as $rooms) {
-                                    // for($i = 0; $i < $history_count; $i++){
-                                    //     $result = $room->getHistoryRooms($history_arr[$i]);
-                                    //     if($result){  
-                                    //         $history_room = $result->fetch();                                                          
+                                        foreach ($final_results as $rooms) {                                                        
                                 ?>
                                         <div class="card mb-3 room_card_list">
                                             <div class="row g-0" style="width: 100%;">
