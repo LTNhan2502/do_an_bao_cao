@@ -3,11 +3,19 @@
         //Phương thức lấy ra tài khoản admin
         function getAdmin($username, $pass){
             $db = new connect();
-            $select = "SELECT id, username, pass FROM admin WHERE admin.username='$username' AND admin.pass=$pass";
+            $select = "SELECT id, username, pass FROM admin WHERE admin.username='$username' AND admin.pass='$pass'";
             $result = $db->getList($select);
             return $result;
         }
 
+        //Phương thức thay đổi mật khẩu admin
+        function changePassAdmin($username, $hashed_pass){
+            $db = new connect();
+            $query = "UPDATE admin as a SET a.pass = '$hashed_pass' WHERE a.username = '$username'";
+            $result = $db->exec($query);
+            return $result; 
+        }
+        
         //Phương thức lấy ra tất cả thông tin tài khoản trong web
         function getAllMember(){
             $db = new connect();

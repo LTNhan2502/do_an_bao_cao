@@ -260,7 +260,7 @@
                           <?php
                           echo "Khởi điểm từ <span style='color: rgb(255, 94, 31);'>" . $fmt->formatCurrency($detail['sale']) . "</span> đ/phòng/đêm";
                           ?>
-                          <a class="btn btn-primary" width="" 100% href="index.php?action=booking">Chọn phòng này</a>
+                          <a class="btn btn-primary"  href="index.php?action=booking&selected_room_id=<?php echo $set['id']; ?>">Chọn phòng này</a>
                         </div>
                       </div>
                     </div>

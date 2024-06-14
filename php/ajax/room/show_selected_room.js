@@ -1,12 +1,24 @@
 $(document).ready(function(){
     const selectRoom = $('#select_room');
+    const selectedRoomId = $("#selected_room_id").data("selected_room_id")
     const cardContainer = $('#room_cards');
     const overlay = $('#overlay');
     const showCardsBtn = $('#show_cards_btn');
 
+    //Hiển thị sẵn nếu đã có $_GET['selected_room_id']
+    if(selectedRoomId && selectedRoomId != 0){
+        $("#select_room").val(selectedRoomId).trigger("change", [{ roomId: selectedRoomId }]);
+        //Loại bỏ các selected trước đó
+        $("#room_cards .card").removeClass('selected');
+        // Thêm lớp 'selected' vào card hiện tại
+        $("#room_cards .card[data-room_select_id='" + selectedRoomId + "']").addClass('selected');
+        getDetail(selectRoom, selectedRoomId)
+    }
+
     //Hiển thị các card khi nhấn vào button
     showCardsBtn.on('click', function(event) {
         event.stopPropagation();
+        console.log(selectedRoomId);
         cardContainer.toggle();
         overlay.show();
         $('body').css('overflow', 'hidden'); //Chặn scroll
@@ -84,6 +96,19 @@ $(document).ready(function(){
         $("#stay-time").empty();
         $("#selected_sum").empty();
         $("#from, #to").val('');
+        
+        getDetail($input, value_id)
+    });    
+
+    //Kiểm tra nếu AJAX vẫn chưa gửi request thì ẩn các div
+    if(isRequested == false){
+        $("#selected_info").hide(300);
+        $("#selected_detail_price").hide(300);
+        $("#selected_message").hide(300);
+    };
+
+    //Function gọi ajax để hiển thị thông tin
+    function getDetail(input, value_id){
         $.ajax({
             url: "Controller/user/booking.php?act=show_detail",
             method: "GET",
@@ -93,7 +118,7 @@ $(document).ready(function(){
                 //Nếu đối tượng được chọn có thông tin đầy đủ
                 if(res.id > 0 && res.id != undefined){
                     isRequested = true; 
-                    $input.val(value_id);
+                    input.val(value_id);
                     $("#selected_info").show(300);
                     $("#selected_detail_price").show(300);
                     $("#selected_message").hide(300);
@@ -161,12 +186,5 @@ $(document).ready(function(){
                  }
             }
         })
-    });    
-
-    //Kiểm tra nếu AJAX vẫn chưa gửi request thì ẩn các div
-    if(isRequested == false){
-        $("#selected_info").hide(300);
-        $("#selected_detail_price").hide(300);
-        $("#selected_message").hide(300);
-    };
+    }
 })

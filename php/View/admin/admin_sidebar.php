@@ -36,9 +36,20 @@
         </a>
         <div id="collapseRoom" class="collapse" aria-labelledby="headingRoom" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_room_check">Hồ sơ đặt phòng</a>
+                <?php
+                    if(checkAuthority('admin_index.php?action=admin_room_list')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_room_list">Thông tin sơ bộ</a>';
+                    }
+                    if(checkAuthority('admin_index.php?action=admin_room_book')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_room_book">Đặt phòng</a>';
+                    }
+                    if(checkAuthority('admin_index.php?action=admin_room_check')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_room_check">Hồ sơ đặt phòng</a>';
+                    }
+                ?>
+                
+                
+                
                 <!-- <a class="collapse-item" href="admin_index.php?action=admin_room_undo_list">Hồ sơ thanh toán</a> -->
             </div>
         </div>
@@ -53,7 +64,11 @@
         </a>
         <div id="collapseBill" class="collapse" aria-labelledby="headingBill" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="admin_index.php?action=admin_bill_list">Danh sách hóa đơn</a>
+                <?php
+                    if(checkAuthority('admin_index.php?action=admin_bill_list')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_bill_list">Danh sách hóa đơn</a>';
+                    }
+                ?>                
             </div>
         </div>
     </li>
@@ -67,8 +82,14 @@
         </a>
         <div id="collapseKH" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="admin_index.php?action=admin_rec_list">Thông tin sơ bộ</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_rec_salary">Lương</a>
+                <?php
+                    if(checkAuthority('admin_index.php?action=admin_rec_list')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_rec_list">Thông tin sơ bộ</a>';
+                    }
+                    if(checkAuthority('admin_index.php?action=admin_rec_salary')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_rec_salary">Lương</a>';
+                    }
+                ?>
             </div>
         </div>
     </li>
@@ -82,7 +103,11 @@
         </a>
         <div id="collapseNV" class="collapse" aria-labelledby="headingNV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="admin_index.php?action=admin_cus_list">Thông tin sơ bộ</a>
+                <?php
+                    if(checkAuthority('admin_index.php?action=admin_cus_list')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_cus_list">Thông tin sơ bộ</a>';
+                    }
+                ?>                
             </div>
         </div>
     </li>
@@ -96,8 +121,14 @@
         </a>
         <div id="collapseSV" class="collapse" aria-labelledby="headingSV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_authority">Cấp bậc</a>
+                <?php
+                    if(checkAuthority('admin_index.php?action=admin_authority')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>';
+                    }
+                    if(checkAuthority('admin_index.php?action=admin_authorize')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authority">Cấp bậc</a>';
+                    }
+                ?>
             </div>
         </div>
     </li>
@@ -119,6 +150,7 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
+
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=admin_room_restore">Phòng</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_rec_list&act=admin_rec_restore">Nhân viên</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_cus_list&act=admin_cus_restore">Khách hàng</a>

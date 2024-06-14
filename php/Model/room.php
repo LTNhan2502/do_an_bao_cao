@@ -23,6 +23,22 @@
             return $result;
         }
 
+        //Phương thức lấy ra các img trong detail_room
+        function getImgName(){
+            $db = new connect();
+            $select = "SELECT d.img_name FROM detail_room as d";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức kiểm tra image đã tồn tại trong room chưa
+        function checkImage($file){
+            $db = new connect();
+            $select = "SELECT COUNT(*) FROM room WHERE room.img = '$file'";
+            $result = $db->execp($select);
+            return $result;
+        }
+
         //Phương thức thêm thông tin chi tiết cho phòng
         function insertDetailRoom($id, $img_main, $img_sub_1, $img_sub_2, $img_sub_3, $sm, $quantity, $sv, $req, $des){
             $db = new connect();

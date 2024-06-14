@@ -14,6 +14,55 @@ switch ($act) {
     case "create_room":
         include_once "View/admin/admin_room_insert.php";
         break;
+    case 'check_image':
+        if(isset($_POST['file_name'])){
+            $file_name = $_POST['file_name'];
+            $room = new room();
+            $getFile = $room->checkImage($file_name);
+            $getImgName = $room->getImgName();
+
+            //Kiểm tra trong table detail_room, nếu trong table có dữ liệu thì thực hiện if
+            if($getImgName){
+                while($set = $getImgName->fetch()){
+                    $img_name_arr = explode(' - ', $set['img_name']);
+                    $is_in_arr = in_array($file_name, $img_name_arr);
+
+                    if($is_in_arr){
+                        $res = array(
+                            'status' => 'is in array',
+                            'message' => 'Ảnh đã tồn tại!',
+                        );
+                        echo json_encode($res);
+                        exit;
+                    }else{
+                        $res = array(
+                            'status' => 'is not in array',
+                            'message' => 'Cho phép upload ảnh này!',
+                        );
+                    }
+                }
+            }
+            //Nếu table detail_room không có dữ liệu thì thực hiện else
+            else{
+                $getFile->execute();
+                $countFileImg = $getFile->fetchColumn();
+                
+                if($getFile){
+                    $res = array(
+                        'status' => 200,
+                        'message' => 'Kiểm tra thành công',
+                        'data' => $countFileImg
+                    );
+                }else{
+                    $res = array(
+                        'status' => 403,
+                        'message' => 'Kiểm tra thất bại',
+                    );
+                }
+            }
+            echo json_encode($res);
+        }
+        break;
     case "create_action":
         if (
             isset($_POST['name']) || isset($_POST['kind']) || isset($_POST['price']) || isset($_POST['sale'])

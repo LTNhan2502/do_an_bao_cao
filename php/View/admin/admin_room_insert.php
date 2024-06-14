@@ -31,13 +31,12 @@
             <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list"><i class="fas fa-long-arrow-alt-left"></i></a>
         </div>
         <div class="card-body d-flex justify-content-center">
-            <div class="card" style="width: 70%;">
+            <div class="card" style="width: 75%;">
                 <div class="card-body">
-                    <form enctype='multipart/form-data' id='roomForm' method='post'>
-                        
+                    <form enctype='multipart/form-data' id='roomForm' method='post'>                        
                         <div id="success_message"></div>
                         <div class="row">
-                            <div class="col-lg-8 col-md-8">
+                            <div class="col-lg-6 col-md-6">
                                 <label for="id">ID</label>
                                 <input type="number" class="form-control" name="id" id="id" readonly>
 
@@ -66,7 +65,7 @@
                             </div>
 
                             <!-- Status -->
-                            <div class="col-lg-4 col-md-4">
+                            <div class="col-lg-3 col-md-3">
                                 <div>
                                     <label for="kind">Trạng thái</label>
                                     <select class="form-select" name="status_id" id="status_id" <?php echo isset($status_id) ? 'readonly' : ''; ?>>
@@ -116,6 +115,13 @@
                                 <?php endif; ?>
                                 <small id="img_error" class="text-danger"></small>
                             </div>
+                            <div class="col-lg-3 col-md-3">
+                                <label for=""></label>
+                                <div class="col custom-column d-flex flex-column align-items-center">
+                                    <img src="" class="image-small-2 imgs" id="preview_img" width="150px"
+                                        height="125px">
+                                </div>
+                            </div>
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <small id="all_error" class="text-danger mt-4 me-md-2"></small>
@@ -128,14 +134,18 @@
             </div>
         </div>
     </div>
-
 </div>
-<!-- /.container-fluid -->
-<script>
-    function del() {
-        return confirm("Do you want to delete this room");
-    }
 
+<style>
+    .imgs{
+        border-radius: 10px;
+        width: 170px;
+        height: 145px;
+        padding: 0 !important;
+    }
+</style>
+
+<script>
     $(document).ready(function(){
         var imgValid = false;
         var nameValid = false;
@@ -160,6 +170,9 @@
         //Kiểm tra file
         $("#img").on("change", function() {
             var file = this.files[0];
+            var file_name = file.name;
+            var $file_url = "Content/images/"+file_name;
+            console.log(file.name);
             var fileType = file.type;
             var match = ['image/jpeg', 'image/jpg', 'image/png'];
             if (match.indexOf(fileType) < 0) {
@@ -168,8 +181,54 @@
                 imgValid = false; // cập nhật trạng thái của hình ảnh
                 return false;
             } else {
-                $("#img_error").html("");
-                imgValid = true; // cập nhật trạng thái của hình ảnh
+                //Kiểm tra đã có ảnh trong database chưa
+                $.ajax({
+                    url: "Controller/admin/admin_room_list.php?act=check_image",
+                    method: "POST",
+                    data: {file_name},
+                    dataType: "JSON",
+                    success: function(res){
+                        //Đã trùng
+                        if(res.status == 'is in array'){
+                            $("#img_error").html(res.message);
+                            $("#img").replaceWith($("#img").val('').clone(true));
+                            imgValid = false;
+                            $("#preview_img").attr('src', '');
+                            return false;
+                        }
+                        //Cho phép upload
+                        else if(res.status == 'is not in array'){
+                            $("#img_error").html("");
+                            $("#preview_img").attr('src', $file_url);
+                            imgValid = true; // cập nhật trạng thái của hình ảnh
+                        }
+                        //Cho phép upload
+                        else if(res.data && res.data == 0 && res.status == 200){
+                            $("#img_error").html("");
+                            $("#preview_img").attr('src', $file_url);
+                            imgValid = true;
+                        }
+                        //Đã trùng
+                        else if(res.data && res.data != 0 && res.status == 200){
+                            $("#img_error").html('Ảnh đã tồn tại!');
+                            $("#img").replaceWith($("#img").val('').clone(true));
+                            imgValid = false;
+                            $("#preview_img").attr('src', '');
+                            return false;
+                        }
+                        //Lỗi truy vấn
+                        else{
+                            $("#img_error").html('Lỗi trong lúc kiểm tra ảnh!');
+                            $("#img").replaceWith($("#img").val('').clone(true));
+                            imgValid = false;
+                            $("#preview_img").attr('src', '');
+                            return false;
+                        }
+                    },
+                    errro: function(){
+                        console.log("Lỗi");
+                    }
+                })
             }
         });
 
@@ -324,7 +383,7 @@
                                 timer: 900,
                                 timerProgressBar: true
                             }).then(function() {
-                                window.location.hre = 'admin_index.php?action=admin_room_list';
+                                window.location.href = 'admin_index.php?action=admin_room_list';
                             });                            
                         }else{
                             Swal.fire({

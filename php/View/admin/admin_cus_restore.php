@@ -95,37 +95,6 @@
                                 </td>
                             </tr>
 
-                            <!-- Modal tạo mới-->
-                            <div class="modal fade create_rec" id="modalCreate" tabindex="-1"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">Table Customers - Tạo mới</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <form enctype='multipart/form-data' id="createRecForm" method="post">
-                                            <div class="modal-body">
-                                                <div class="form-group">
-                                                    <label for="new_cus">Họ và tên</label>
-                                                    <input type="text" class="form-control" name="new_cus" id="new_cus">
-                                                    <small class="text-danger" id="new_cus_error"></small>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <small class="text-danger" id="new_all_error"></small>
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Đóng</button>
-                                                <button type="submit" name="submitRec" id="submitRec"
-                                                    class="btn btn-primary">Tạo</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
                             <!-- Modal xem chi tiết-->
                             <div class="modal fade" id="exampleModal<?php echo $set['customer_id']; ?>" tabindex="-1"
                                 aria-labelledby="exampleModalLabel" aria-hidden="true">

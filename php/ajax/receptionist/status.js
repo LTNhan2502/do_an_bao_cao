@@ -753,7 +753,7 @@ $(document).ready(function(){
                 if(res.status == "success"){
                     claim.removeClass("btn-primary");
                     claim.addClass("btn-danger");
-                    claim.text("Huỷ nhận");
+                    claim.html("<i class='fas fa-ban'></i> Huỷ nhận");
                     claim.attr("id", new_id)
                     
                 }else{
@@ -804,7 +804,7 @@ $(document).ready(function(){
                         if(res.status == "success"){
                             unClaim.removeClass("btn-danger");
                             unClaim.addClass("btn-primary");
-                            unClaim.text("Nhận lương");
+                            unClaim.html("<i class='fas fa-dollar-sign'></i> Nhận");
                             unClaim.attr("id", new_id)                          
                         }else{
                             Swal.fire({                                 

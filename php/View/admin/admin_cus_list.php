@@ -17,9 +17,13 @@
         <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Customers - Danh sách</span>
+            <?php
+                if(checkAuthority('admin_cus_list.*act=create_action')){
+            ?>
             <button class="btn m-0 font-weight-bold btn-primary" data-toggle="modal" data-target="#modalCreate">
                 <i class="fas fa-plus-circle"></i>
             </button>
+            <?php } ?>
             <!-- Modal tạo mới-->
             <div class="modal fade create_rec" id="modalCreate" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -124,10 +128,13 @@
                                         data-target="#exampleModal<?php echo $set['customer_id']; ?>">
                                         <i class="far fa-eye"></i>
                                     </button>
+                                    <?php
+                                        if(checkAuthority('admin_cus_list?act=soft_delete')){
+                                    ?>
                                     <button type="button" class="btn btn-danger" id="soft_delete_btn">
                                         <i class="fas fa-trash"></i>
                                     </button>
-
+                                    <?php } ?>
                                 </td>
                             </tr>
 

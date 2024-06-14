@@ -116,7 +116,7 @@
         max-height: 650px;
     }
 
-.upload-row .custom-column {
+    .upload-row .custom-column {
         display: flex;
         flex-direction: column;
         align-items: center;

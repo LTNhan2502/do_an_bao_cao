@@ -24,6 +24,14 @@
             $result = $db->getInstance($select);
             return $result;
         }
+
+        //Phương thức kiểm tra password có đúng không (admin)
+        function checkExistAdmin($username){
+            $db = new connect();
+            $select = "SELECT * FROM admin as a WHERE a.username = '$username'";
+            $result = $db->getInstance($select);
+            return $result;
+        }
     }
     
 ?>

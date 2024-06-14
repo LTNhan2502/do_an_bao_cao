@@ -106,9 +106,9 @@
                             <td class="text-end" width="120px">   
                                 <?php 
                                     if(!$set['rec_timeSalary']){                                                            
-                                        echo '<button type="button" class="btn btn-primary btn-sm" id="claimSalary_">Nhận lương</button>';                                
+                                        echo '<button type="button" class="btn btn-primary btn-sm" id="claimSalary_"><i class="fas fa-dollar-sign"></i> Nhận</button>';                                
                                     }else{
-                                        echo '<button type="button" class="btn btn-danger btn-sm" id="unClaimSalary_">Huỷ nhận</button>';
+                                        echo '<button type="button" class="btn btn-danger btn-sm" id="unClaimSalary_"><i class="fas fa-ban"></i> Huỷ nhận</button>';
                                     }
                                 ?>
                             </td>
@@ -138,15 +138,6 @@
         </div>
     </div>
 </div>
-
-
-<!-- /.container-fluid -->
-
-<script>
-    function del(){
-        return 
-    }
-</script>
 
 <script src="ajax/receptionist/status.js"></script>
 <script src="ajax/receptionist/salary_page.js"></script>
@@ -253,6 +244,6 @@
     }
 
     .btn-sm{
-        width: 91px !important;
+        width: 100px !important;
     }
 </style>

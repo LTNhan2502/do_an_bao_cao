@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="Content/admin/css/room_list.css">
 <div class="container-fluid">
     <?php
+        if(!checkAuthority('admin_index.php?action=admin_room_list')){
+            echo 'Không có quyền truy cập!';exit;
+        }
         $room = new room();
         $fmt = new formatter();
         $checkout = new checkout();
@@ -36,7 +39,12 @@
     <div class="card shadow mb-4 mt-4">
         <div class="card-header py-3 d-flex justify-content-between">
             <span class="m-0 font-weight-bold text-primary">Table Room</span>
-            <a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list&act=create_room"><i class="fas fa-plus-circle"></i></a>
+            <?php
+                if(checkAuthority('admin_room_list?act=create_room')){
+                    echo '<a class="btn m-0 font-weight-bold btn-primary" href="admin_index.php?action=admin_room_list&act=create_room"><i class="fas fa-plus-circle"></i></a>';
+                }
+            ?>
+            
         </div>
         <div class="card-body">
             <div class="d-none" id="limit" data-limit="<?php echo $limit; ?>"></div>
@@ -140,9 +148,13 @@
                                 <button type="button" class="btn btn-primary mr-1 modal_btn" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
                                     <i class="far fa-eye"></i>
                                 </button>
+                                <?php
+                                    if(checkAuthority('admin_room_list?act=delete_room')){
+                                ?>
                                 <button type="button" data-delete_room_id="<?php echo $set['id']; ?>" id="delete_room_id" class="btn btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
+                                <?php } ?>
 
                             </td>
                         </tr>
@@ -162,7 +174,11 @@
                                             Xem chi tiết phòng <span class="detail_name"><?php echo $set['name']; ?></span>
                                         </h5>
                                         <div class="header-buttons ml-auto">
+                                            <?php
+                                                if(checkAuthority('admin_room_list?act=edit_detail&id')){
+                                            ?>
                                             <a href="admin_index.php?action=admin_room_list&act=edit_detail&id=<?php echo $set['id']; ?>" class="btn btn-edit"><i class="far fa-edit"></i></a>
+                                            <?php } ?>
                                             <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">
                                                 <!-- <span aria-hidden="true">&times;</span> -->
                                             </button>
