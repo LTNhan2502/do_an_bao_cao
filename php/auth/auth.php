@@ -3,7 +3,7 @@
 
     //Auth cho admin
     function isAuthenticated() {
-        return isset($_SESSION['admin']);
+        return isset($_SESSION['current_user']);
     }
     function redirectToLogin() {
         header("Location: admin_index.php?action=admin_login");

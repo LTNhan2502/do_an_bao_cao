@@ -170,10 +170,10 @@
                         Activity Log
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="admin_index.php?action=logout" data-toggle="modal" data-target="#logoutModal">
+                    <button id="logout_button" class="dropdown-item">
                         <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
-                    </a>
+                        Đăng xuất
+                    </button>
                 </div>
             </li>
 
@@ -182,3 +182,5 @@
     </nav>
     <!-- End of Topbar -->
 </div>
+
+<script src="ajax/account/admin.js"></script>

@@ -53,12 +53,12 @@
 
 .btn-edit i,
 .btn-close span {
-    font-size: 1.5em; /* Tăng kích thước font */
+    font-size: 1.5em;
 }
 
 .btn-edit,
 .btn-close {
-    padding: 0.5em; /* Thêm padding để làm cho nút lớn hơn */
+    padding: 0.5em; 
 }
 
 .btn-edit:hover{

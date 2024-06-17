@@ -1,10 +1,34 @@
 <?php
     class admin{
+        //Phương thức lấy ra tất cả tài khoản admin
+        function getAllAdmin(){
+            $db = new connect();
+            $select = "SELECT * FROM admin";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //PHương thức tạo admin mới
+        function createNewAdmin($fullname, $username, $pass){
+            $db = new connect();
+            $query = "INSERT INTO admin VALUES (NULL, '$fullname', '$username', '$pass', 5)";
+            $result = $db->exec($query);
+            return $result;
+        }
+
         //Phương thức lấy ra tài khoản admin
         function getAdmin($username, $pass){
             $db = new connect();
-            $select = "SELECT id, username, pass FROM admin WHERE admin.username='$username' AND admin.pass='$pass'";
+            $select = "SELECT * FROM admin WHERE admin.username='$username' AND admin.pass='$pass'";
             $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức kiểm tra mật khẩu admin
+        function getAdminNotUsingPass($username){
+            $db = new connect();
+            $select = "SELECT * FROM admin WHERE admin.username = '$username'";
+            $result = $db->getInstance($select);
             return $result;
         }
 
@@ -14,6 +38,54 @@
             $query = "UPDATE admin as a SET a.pass = '$hashed_pass' WHERE a.username = '$username'";
             $result = $db->exec($query);
             return $result; 
+        }
+
+        //Phương thức lấy ra thông tin của tài khoản admin được phân quyền
+        function getAccountAuth($id){
+            $db = new connect();
+            $select = "SELECT * FROM user_authority AS ua INNER JOIN authority as a ON ua.user_auth_auth_id = a.auth_id WHERE ua.user_auth_admin_id = $id";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra authority_group chứa các danh mục cha 
+        function getAuthGroup(){
+            $db = new connect();
+            $select = "SELECT * FROM authority_group";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức lấy ra authority chức các chức năng con của authority_group
+        function getAuth(){
+            $db = new connect();
+            $select = "SELECT * FROM authority";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức xoá tất cả quyền đã có của đối tượng chỉ định
+        function deleteOldAuth($id){
+            $db = new connect();
+            $query = "DELETE FROM user_authority WHERE user_auth_admin_id = $id ";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức thêm quyền mới cho đối tượng chỉ định
+        function addNewAuth($insertAuth){
+            $db = new connect();
+            $query = "INSERT INTO user_authority VALUES $insertAuth";
+            $result = $db->exec($query);
+            return $result;
+        }
+
+        //Phương thức lấy ra priority của người dùng chỉ định
+        function getCurrentPriority($user_id){
+            $db = new connect();
+            $select = "SELECT * FROM admin WHERE admin.id = $user_id";
+            $result = $db->getInstance($select);
+            return $result;
         }
         
         //Phương thức lấy ra tất cả thông tin tài khoản trong web

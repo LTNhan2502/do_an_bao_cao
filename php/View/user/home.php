@@ -32,7 +32,7 @@
                 <div class="icon"><span class="icon-calendar"></span></div>
                 <input type="text" class="input-box" placeholder="" id="searchInput">
                 <div class="dropdown" id="dropdownMenu">
-                  <?php
+                  <?php                  
                   $room = new room();
                   $rooms = $room->getEmptyRoom();
                   while ($sets = $rooms->fetch()):
@@ -76,7 +76,7 @@
 
     <div class="row justify-content-center text-center mb-5">
       <div class="col-md-7">
-        <h2 class="heading" data-aos="fade-up">Loại phòng</h2>
+        <h2 class="heading" data-aos="fade-up">Loại phòng <?php var_dump($_SESSION['admin_id']); ?></h2>
         <p data-aos="fade-up" data-aos-delay="100">Tại đây, bạn có thể chọn loại phòng muốn đặt.</p>
         <p class="mt" data-aos="fade-up" data-aos-delay="100">Single Room sẽ có từ 1-2 người. </p>
         <p class="mt" data-aos="fade-up" data-aos-delay="100">Family Room sẽ có từ 2 người trở lên. </p>

@@ -1,4 +1,5 @@
 <?php
+
     set_include_path(get_include_path() . PATH_SEPARATOR . '../../Model/');
     spl_autoload_extensions('.php');
     spl_autoload_register();
@@ -14,78 +15,172 @@
         case 'admin_change_password':
             include_once "View/admin/admin_login.php";
             break;
+        case 'create_anew':
+            include_once "View/admin/admin_login.php";
+            break;
+        case 'login_act':
+            if($_SERVER['REQUEST_METHOD'] == "POST"){
+                $username = $_POST['username_admin'];
+                $pass = $_POST['pass_admin'];               
+                $admin = new admin();
+                $validate = new validate();
+
+                $isExist = $validate->checkExistAdmin($username);
+                $hashed_password = $isExist['pass'];
+
+                $check = $admin->getAdmin($username, $pass);
+                $user = $check->fetch();
+
+                if($check){
+                    $_SESSION['admin'] = $user['id'];
+                    $_SESSION['tenadmin'] = $user['username'];
+                    $res = array(
+                        'status' => 200,
+                        'message' => 'Đăng nhập thành công!'
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case 'check_username':
+            if(isset($_POST['username'])){
+                $username = $_POST['username'];
+                $admin = new admin();
+                $getAdmin = $admin->getAdminNotUsingPass($username);                
+                if($getAdmin){
+                    $res = array(
+                        'status' => 200,
+                        'message' => 'Passed!'
+                    );
+                }else{
+                    $res = array(
+                        'status' => 403,
+                        'message' => 'Username không tồn tại'
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case 'check_username_create':
+            if(isset($_POST['username'])){
+                $username = $_POST['username'];
+                $admin = new admin();
+                $getAdmin = $admin->getAdminNotUsingPass($username);                
+                if(!$getAdmin){
+                    $res = array(
+                        'status' => 200,
+                        'message' => 'Passed!'
+                    );
+                }else{
+                    $res = array(
+                        'status' => 403,
+                        'message' => 'Username đã tồn tại!'
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case 'check_pass':
+            if(isset($_POST['password_user_old']) && isset($_POST['username'])){
+                $password = $_POST['password_user_old'];
+                $username = $_POST['username'];
+                $admin = new admin();
+                $getAdmin = $admin->getAdminNotUsingPass($username);                
+                $result = password_verify($password, $getAdmin['pass']);
+
+                if($result){
+                    $res = array(
+                        'status' => 200,
+                        'message' => 'Passed'
+                    );
+                }else{
+                    $res = array(
+                        'status' => 403,
+                        'message' => 'Mật khẩu không đúng!'
+                    );
+                }
+                echo json_encode($res);
+            }
+            break;
+        case 'create_anew_admin':
+            $fullname = $_POST['fullname_create'];
+            $password = $_POST['new_pass_create'];
+            $username = $_POST['username_create'];
+            $hashed_pass = password_hash($password, PASSWORD_DEFAULT);
+            $admin = new admin();
+            $result = $admin->createNewAdmin($fullname, $username, $hashed_password);
+
+            if($result){
+                $res = array(
+                    'status' => 200,
+                    'message' => 'Tạo tài khoản mới thành công!'
+                );
+            }else{
+                $res = array(
+                    'status' => 403,
+                    'message' => 'Mật khẩu không đúng!'
+                );
+            }
+            echo json_encode($res);
+            
+            break;
         case "login_action":
-            if(isset($_POST['txtusername']) && isset($_POST['txtpass'])){
-                $user = $_POST['txtusername'];
-                $pass = $_POST['txtpass'];
+            session_start();
+            if($_SERVER['REQUEST_METHOD'] == "POST"){
+                $username = $_POST['username_admin'];
+                $pass = $_POST['pass_admin'];
                 //Đem so sánh trong dbs xem có hay không
                 $admin = new admin();
                 $validate = new validate();
-                $isExist = $validate->checkExistAdmin($user);
-                //Nếu không có
+                $isExist = $validate->checkExistAdmin($username);
+                //Không tồn tại
                 if(!$isExist){
                     $res = array(
                         'status' => 404,
                         'message' => 'Tài khoản không tồn tại!'
                     );
                 }
-                //Nếu có
+                //Đã tồn tại
                 else{
                     $hashed_password = $isExist['pass'];
                     $isTruePass = password_verify($pass, $hashed_password);
-                    //Mật khẩu đúng
-                    if($isTruePass){
-                        //Nếu đã có session admin
-                        if(isset($_SESSION['admin'])){
-                            $res = array(
-                                //Yêu cầu không thành công do thất bại của yêu cầu trước đó - Failed Dependency.
-                                'status' => 424,
-                                'message' => "Phiên của bạn vẫn chưa hết hạn!"
-                            );
-                        }else{
-                            $check = $admin->getAdmin($user, $hashed_password);
-                            $user = $check->fetch();
-                            if($check !== false){
-                                $_SESSION['admin'] = $user['id'];
-                                $_SESSION['tenadmin'] = $user['username'];
-                                
-                                $user['authorities'] = array(
-                                    'admin_index\.php\?action=admin_home',
-                                    'admin_index\.php\?action=admin_room_list',
-                                    'admin_room_list.*act=create_room',
-                                    'admin_room_list.*act=edit_detail&id',
-                                    'admin_room_list.*act=delete_room',
-                                    'admin_index\.php\?action=admin_room_book',
-                                    'admin_index\.php\?action=admin_bill_list$',
-                                    'admin_index\.php\?action=admin_rec_list$',
-                                    'admin_rec_list.*act=create_action',
-                                    'admin_rec_list.*act=edit_rec&id',
-                                    'admin_rec_list.*act=soft_delete',
-                                    'admin_index\.php\?action=admin_rec_salary',
-                                    'admin_index\.php\?action=admin_cus_list$',
-                                    'admin_cus_list.*act=create_action',
-                                    'admin_cus_list.*act=soft_delete',
-                                    'admin_index\.php\?action=admin_authority',
-                                    'admin_index\.php\?action=admin_authorize',
-                                );
-                                
-                                $_SESSION['current_user'] = $user;
+                    //Pass nhập là đúng
+                    if($isTruePass){                        
+                        $check = $admin->getAdmin($username, $hashed_password);
+                        $user = $check->fetch();
+                        if($check){
+                            $_SESSION['admin']  = $user['id'];
+                            $_SESSION['tenadmin'] = $user['username'];
 
-                                $res = array(
-                                    'status' => 200,
-                                    'message' => 'Đăng nhập thành công!',
-                                );                                
-                                // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_home"/>';
+                            //Phân quyền
+                            $user_authority = $admin->getAccountAuth($_SESSION['admin'])->fetchAll(PDO::FETCH_ASSOC);
+                            $user['authorities'] = array(
+                                'admin_home',
+                                'admin_room_book',
+                                'page'
+                            );
+                            if(!empty($user_authority)){
+                                foreach($user_authority as $authority){
+                                    $user['authorities'][] = $authority['url_match'];
+                                }
                             }
-                        }
+                            // echo json_encode($user);exit;
+                            $_SESSION['current_user'] = $user;
+                            $res = array(
+                                'status' => 200,
+                                'message' => 'Đăng nhập thành công!',
+                                'data' => $_SESSION['current_user']
+                            );                            
+                            // echo '<meta http-equiv="refresh" content="0;url=./admin_index.php?action=admin_home"/>';
+                        }                       
                     }
                     //Sai mật khẩu
                     else{
                         $res = array(
                             'status' => 403,
-                            'message' => "Sai mật khẩu!"
+                            'message' => 'Sai mật khẩu!'
                         );
-                        // include_once "View/admin/admin_login.php";
+                        // include_once "./View/admin/admin_login.php";
                     }
                 }
                 echo json_encode($res);
@@ -106,15 +201,23 @@
             echo json_encode($res);
             break;
         case "logout":
-            unset($_SESSION["admin"]);
-            unset($_SESSION["tenadmin"]);
-            echo "<script> 
-                    Swal.fire({
-                        title: 'Đăng xuất thành công!',
-                        icon: 'success'
-                    });
-                </script>";
-            include_once "View/admin/admin_login.php";
-            break;
+            session_start();
+            unset($_SESSION['admin']);
+            unset($_SESSION['tenadmin']);
+            unset($_SESSION['current_user']);
+            if(!isset($_SESSION['admin'])){
+                $res = array(
+                    'status' => 200,
+                    'message' => 'Đăng xuất thành công!'
+                );
+            }else{
+                $res = array(
+                    'status' => 403,
+                    'message' => 'Đăng xuất thất bại!'
+                );
+            }
+            
+           echo json_encode($res);  
+           break;
     }
 ?>

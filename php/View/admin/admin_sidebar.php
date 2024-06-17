@@ -126,7 +126,7 @@
                         echo '<a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>';
                     }
                     if(checkAuthority('admin_index.php?action=admin_authorize')){
-                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authority">Cấp bậc</a>';
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authorize">Cấp bậc</a>';
                     }
                 ?>
             </div>

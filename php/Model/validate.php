@@ -1,4 +1,5 @@
 <?php
+    // session_start();
     class validate{
         //Phương thức check email_guest đã tồn tại hay chưa
         function checkEmail($email){

@@ -145,8 +145,11 @@
                                 </select>
                             </td>
                             <td class="text-end">
+                                <button type="button" class="btn btn-secondary mr-1">
+                                    <i class="fas fa-edit"></i>
+                                </button>
                                 <button type="button" class="btn btn-primary mr-1 modal_btn" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
-                                    <i class="far fa-eye"></i>
+                                    <i class="fas fa-eye"></i>
                                 </button>
                                 <?php
                                     if(checkAuthority('admin_room_list?act=delete_room')){
