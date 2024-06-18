@@ -24,7 +24,7 @@ $(document).ready(function(){
     }
 
     //Chỉnh sửa cus_name
-    $(document).on('change', '#customer_name', function(){
+    $(document).on('change', 'input[name="customer_name"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
         let name_value  =$(this).val();
@@ -69,8 +69,9 @@ $(document).ready(function(){
                 dataType: "JSON",
                 success: function(res){
                     if(res.status == 200){
-                        console.log(res.message);
                         $(".detail_customer_name").html(name_value);
+                        $("#customer_name_text_"+id).html(name_value)
+                        $input.data("customer_value", name_value)
                     }else{
                         Swal.fire({                             
                             title: "Thất bại!",
@@ -95,7 +96,7 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa email thành viên
-    $(document).on('change', '#email', function(){
+    $(document).on('change', 'input[name="email"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
         let email  =$(this).val();
@@ -143,7 +144,8 @@ $(document).ready(function(){
                             dataType: "JSON",
                             success: function(res){
                                 if(res.status == 200){
-                                    console.log(res.message);
+                                    $("#email_text_"+id).html(email)
+                                    $input.data("email_value", email)
                                 }else{
                                     Swal.fire({                             
                                         title: "Thất bại!",
@@ -171,7 +173,7 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa email khách
-    $(document).on('change', '#email_guest', function(){
+    $(document).on('change', 'input[name="email_guest"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
         let email  =$(this).val();
@@ -218,7 +220,8 @@ $(document).ready(function(){
                             dataType: "JSON",
                             success: function(res){
                                 if(res.status == 200){
-                                    console.log(res.message);
+                                    $("#email_guest_text_"+id).html(email)
+                                    $input.data("email", email)
                                 }else{
                                     Swal.fire({                             
                                         title: "Thất bại!",
@@ -246,7 +249,7 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa số điện thoại
-    $(document).on('change', '#tel', function(){
+    $(document).on('change', 'input[name="tel"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('customer_id');
         let tel_value  =$(this).val();
@@ -294,7 +297,8 @@ $(document).ready(function(){
                 dataType: "JSON",
                 success: function(res){
                     if(res.status == 200){
-                        console.log(res.message);
+                        $("#tel_text_"+id).html(tel_value)
+                        $input.data("tel_value", tel_value)
                     }else{
                         Swal.fire({                             
                             title: "Thất bại!",

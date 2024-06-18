@@ -83,7 +83,7 @@
                             $count = 1;
                             while ($set = $c->fetch()):
                         ?>
-                            <tr id="currency">
+                            <tr id="currency-<?php echo $set['customer_id']; ?>">
                                 <!-- STT/ID -->
                                 <td>
                                     <div id="customer_id" data-id="<?php echo $set['customer_id']; ?>"><?php echo $count; ?></div>
@@ -91,52 +91,61 @@
                                 </td>
 
                                 <!-- Tên khách hàng -->
-                                <td>
-                                    <input type="text" class="form-control" name="customer_name" id="customer_name"
-                                        value="<?php echo $set['customer_name']; ?>"
-                                        data-customer_id="<?php echo $set['customer_id']; ?>"
+                                <td style="width: 250px;">
+                                    <span class="text" id="customer_name_text_<?php echo $set['customer_id']; ?>"><?php echo $set['customer_name']; ?></span>
+                                    <input type="text" class="form-control d-none" name="customer_name" id="customer_name_input_<?php echo $set['customer_id']; ?>"
+                                        value="<?php echo $set['customer_name']; ?>" data-customer_id="<?php echo $set['customer_id']; ?>"
                                         data-customer_value="<?php echo $set['customer_name']; ?>">
                                 </td>
 
                                 <!-- Email thành viên -->
-                                <td>
-                                    <input type="text" class="form-control" name="email" id="email"
-                                        value="<?php echo $set['email']; ?>"
-                                        data-customer_id="<?php echo $set['customer_id']; ?>"
-                                        data-email_value="<?php echo $set['email']; ?>">
+                                <td style="width: 270px;">
+                                    <span class="text" id="email_text_<?php echo $set['customer_id']; ?>"><?php echo $set['email']; ?></span>
+                                    <input type="text" class="form-control d-none" name="email" id="email_input_<?php echo $set['customer_id']; ?>"
+                                        value="<?php echo $set['email']; ?>" data-customer_id="<?php echo $set['customer_id']; ?>"
+                                        data-email_value="<?php echo $set['email'];  ?>">
                                 </td>
 
                                 <!-- Email khách -->
-                                <td>
-                                    <input type="text" class="form-control" name="email_guest" id="email_guest"
-                                        value="<?php echo $set['email_guest']; ?>"
-                                        data-customer_id="<?php echo $set['customer_id']; ?>"
-                                        data-email_value="<?php echo $set['email_guest']; ?>">
+                                <td style="width: 270px;">
+                                    <span class="text" id="email_guest_text_<?php echo $set['customer_id']; ?>"><?php echo $set['email_guest']; ?></span>
+                                    <input type="text" class="form-control d-none" name="email_guest" id="email_guest_input_<?php echo $set['customer_id']; ?>"
+                                        value="<?php echo $set['email_guest']; ?>" data-customer_id="<?php echo $set['customer_id']; ?>"
+                                        data-email="<?php echo $set['email_guest']; ?>">
                                 </td>
 
                                 <!-- Tel -->
-                                <td>
-                                    <input type="text" class="form-control" name="tel" id="tel"
-                                        value="<?php echo $set['tel']; ?>"
-                                        data-customer_id="<?php echo $set['customer_id']; ?>"
+                                <td style="width: 180px;"> 
+                                    <span class="text" id="tel_text_<?php echo $set['customer_id']; ?>"><?php echo $set['tel']; ?></span>
+                                    <input type="text" class="form-control d-none" name="tel" id="tel_input_<?php echo $set['customer_id']; ?>"
+                                        value="<?php echo $set['tel']; ?>" data-customer_id="<?php echo $set['customer_id']; ?>"
                                         data-tel_value="<?php echo $set['tel']; ?>">
                                 </td>
 
                                 <!-- Button -->
                                 <td class="text-end">
+                                    <?php
+                                        if(checkAuthority('admin_cus_list.*act=edit_customer&id')){
+                                    ?>
+                                    <button type="button" class="btn btn-self btn-secondary mr-1 edit-btn" data-id="<?php echo $set['customer_id']; ?>">
+                                        <i class="fas fa-edit"></i>
+                                    </button>   
+                                    <button type="button" class="btn btn-self btn-warning mr-1 cancel-btn d-none" data-id="<?php echo $set['customer_id']; ?>">
+                                        <i class="fas fa-times"></i>
+                                    </button> 
+                                    <?php } ?>  
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#exampleModal<?php echo $set['customer_id']; ?>">
+                                            data-target="#exampleModal<?php echo $set['customer_id']; ?>">
                                         <i class="far fa-eye"></i>
                                     </button>
-                                    <?php
-                                        if(checkAuthority('admin_cus_list?act=soft_delete')){
-                                    ?>
+                                    <?php if(checkAuthority('admin_cus_list?act=soft_delete')) { ?>
                                     <button type="button" class="btn btn-danger" id="soft_delete_btn">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <?php } ?>
                                 </td>
                             </tr>
+
 
                             <!-- Modal xem chi tiết-->
                             <div class="modal fade" id="exampleModal<?php echo $set['customer_id']; ?>" tabindex="-1"
@@ -247,7 +256,74 @@
     </div>
 </div>
 
+<style>
+    .btn{
+        width: 43.6px;
+        height: 37.6px;
+    }
+</style>
+
 <script src="ajax/customer/status.js"></script>
 <script src="ajax/customer/restore.js"></script>
 <script src="ajax/customer/cus_page.js"></script>
 <script src="ajax/customer/create.js"></script>
+<script>
+    $(document).ready(function() {
+        // Edit button click handler
+        $(document).on('click', '.edit-btn', function() {
+            var id = $(this).data('id');
+
+            // Hide all input fields and show text spans in other rows
+            $('tr[id^="currency-"]').each(function() {
+                var otherId = $(this).attr('id').split('-')[1];
+                if (otherId != id) {
+                    $(this).find('.form-control').addClass('d-none'); // hide inputs
+                    $(this).find('.text').removeClass('d-none'); // show spans
+
+                    $(this).find('.edit-btn').removeClass('d-none'); // show edit button
+                    $(this).find('.cancel-btn').addClass('d-none'); // hide cancel button
+                }
+            });
+
+            // Toggle visibility of input fields and text spans in the current row
+            $('#customer_name_input_' + id).toggleClass('d-none');
+            $('#customer_name_text_' + id).toggleClass('d-none');
+
+            $('#email_input_' + id).toggleClass('d-none');
+            $('#email_text_' + id).toggleClass('d-none');
+
+            $('#email_guest_input_' + id).toggleClass('d-none');
+            $('#email_guest_text_' + id).toggleClass('d-none');
+
+            $('#tel_input_' + id).toggleClass('d-none');
+            $('#tel_text_' + id).toggleClass('d-none');
+
+            // Toggle edit and cancel buttons in the current row
+            $(this).addClass('d-none'); // hide edit button
+            $(this).siblings('.cancel-btn').removeClass('d-none'); // show cancel button
+        });
+
+        // Cancel button click handler
+        $(document).on('click', '.cancel-btn', function() {
+            var id = $(this).data('id');
+
+            // Hide input fields and show text spans in the current row
+            $('#customer_name_input_' + id).addClass('d-none');
+            $('#customer_name_text_' + id).removeClass('d-none');
+
+            $('#email_input_' + id).addClass('d-none');
+            $('#email_text_' + id).removeClass('d-none');
+
+            $('#email_guest_input_' + id).addClass('d-none');
+            $('#email_guest_text_' + id).removeClass('d-none');
+
+            $('#tel_input_' + id).addClass('d-none');
+            $('#tel_text_' + id).removeClass('d-none');
+
+            // Toggle edit and cancel buttons in the current row
+            $(this).addClass('d-none'); // hide cancel button
+            $(this).siblings('.edit-btn').removeClass('d-none'); // show edit button
+        });
+    });
+
+</script>

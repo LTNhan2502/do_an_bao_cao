@@ -154,7 +154,7 @@ switch ($act) {
         break;
     case "Single":
         $id = $_POST['id'];
-        $Kind_id = $_POST['kind_id'];
+        $Kind_id = $_POST['kind_id_'];
         $room = new room();
         $result = $room->changeKind($id, $Kind_id);
         // print_r($result);exit;
@@ -173,7 +173,7 @@ switch ($act) {
         break;
     case "Family":
         $id = $_POST['id'];
-        $kind_id = $_POST['kind_id'];
+        $kind_id = $_POST['kind_id_'];
         $room = new room();
         $result = $room->changeKind($id, $kind_id);
         if ($result) {
@@ -191,7 +191,7 @@ switch ($act) {
         break;
     case "Presidential":
         $id = $_POST['id'];
-        $kind_id = $_POST['kind_id'];
+        $kind_id = $_POST['kind_id_'];
         $room = new room();
         $result = $room->changeKind($id, $kind_id);
         if ($result) {

@@ -64,3 +64,8 @@
 .btn-edit:hover{
     color: rgb(64, 64, 64);
 }
+
+.btn-self{
+    width: 43.6px;
+    height: 37.6px;
+}

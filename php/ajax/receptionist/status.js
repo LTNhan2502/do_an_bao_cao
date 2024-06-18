@@ -53,7 +53,7 @@ $(document).ready(function(){
         });
     }
     //Chỉnh sửa rec_name
-    $(document).on('change', '#rec_name', function(){
+    $(document).on('change', 'input[name="rec_name"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('rec_id');
         let name_value  =$(this).val();
@@ -100,6 +100,8 @@ $(document).ready(function(){
                 success: function(res){
                     if(res.status == 'success'){                        
                         $(".detail_rec_name").html(name_value);
+                        $("#rec_name_text_"+id).html(name_value)
+                        $input.data("rec_value", name_value)
                     }else if(res.status == 'fail'){
                         Swal.fire({                             
                             title: "Thất bại!",
@@ -140,9 +142,9 @@ $(document).ready(function(){
         }
     });
     //Chỉnh sửa chức vụ
-    $(document).on('change', '#part', function() {
+    $(document).on('change', 'select[name="part"]', function() {
         let rec_part = $(this).val();
-        let rec_id = $(this).find(":selected").data('rec_id'); //Lấy ra data-id của option đang chọn thuộc rec_id của nv nào
+        let rec_id = $(this).data('rec_id'); //Lấy ra data-id của option đang chọn thuộc rec_id của nv nào
         let act = $(this).find(":selected").data('part_act');
         $.ajax({
             url: 'Controller/admin/admin_rec_list.php?act='+act,
@@ -152,7 +154,32 @@ $(document).ready(function(){
             success: function(res){ 
                 console.log(res);
                 if(res.status == "success"){ 
-                    console.log(res.message);
+                    switch (parseInt(rec_part)) {
+                        case 1:
+                            $("#part_text_" + rec_id).text("Lễ tân");
+                            break;
+                        case 2:
+                            $("#part_text_" + rec_id).text("Quản lí lễ tân");
+                            break;
+                        case 3:
+                            $("#part_text_" + rec_id).text("Lao công");
+                            break;
+                        case 4:
+                            $("#part_text_" + rec_id).text("Bếp trưởng");
+                            break;
+                        case 5:
+                            $("#part_text_" + rec_id).text("Đầu bếp");
+                            break;
+                        case 6:
+                            $("#part_text_" + rec_id).text("Phục vụ");
+                            break;
+                        case 7:
+                            $("#part_text_" + rec_id).text("Pha chế");
+                            break;
+                        case 8:
+                            $("#part_text_" + rec_id).text("Nhân viên giám sát buồng phòng");
+                            break;
+                    }                    
                 }else{
                     Swal.fire({                         
                         title: "Thất bại",
@@ -165,8 +192,8 @@ $(document).ready(function(){
             },
             error: function(){
                 Swal.fire({                     
-                    title: "Thất bại!",
-                    text: "Lỗi khác ở hệ thống, connect, CSDL",
+                    title: "Lỗi!",
+                    text: "Lỗi không xác định!",
                     icon: "error",
                     timer: 3000,
                     timerProgressBar: true
@@ -176,9 +203,9 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa ca làm việc
-    $(document).on('change', '#shift', function() {
+    $(document).on('change', 'select[name="shift"]', function() {
         let rec_shift = $(this).val();
-        let rec_id = $(this).find(":selected").data('rec_id'); //Lấy ra data-id của option đang chọn thuộc rec_id của nv nào
+        let rec_id = $(this).data('rec_id'); //Lấy ra data-id của option đang chọn thuộc rec_id của nv nào
         let act = $(this).find(":selected").data('shift_act');
         $.ajax({
             url: 'Controller/admin/admin_rec_list.php?act='+act,
@@ -188,7 +215,13 @@ $(document).ready(function(){
             success: function(res){ 
                 console.log(res);
                 if(res.status == "success"){               
-                    console.log(res.message);                
+                    if(rec_shift == 1){
+                        $("#shift_text_"+rec_id).html("Ca 1 - 06:00 tới 14:00")
+                    }else if(rec_shift == 2){
+                        $("#shift_text_"+rec_id).html("Ca 2 - 14:00 tới 22:00")
+                    }else{
+                        $("#shift_text_"+rec_id).html("Ca 3 - 22:00 tới 06:00")
+                    }
                 }else if(res.status == 'fail_timeWork'){
                     Swal.fire({                         
                         title: "Thất bại",

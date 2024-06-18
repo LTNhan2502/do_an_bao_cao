@@ -79,28 +79,48 @@
                             $count = 1;
                             while($set = $r->fetch()):
                         ?>
-                        <tr>
+                        <tr id="row-<?php echo $set['rec_id']; ?>">
                             <!-- STT -->
                             <td><div id="rec_id" data-id="<?php echo $set['rec_id']; ?>"><?php echo $count; ?></div></td>
                             <!-- Mã nhân viên -->
                             <td><h3><span class="badge badge-primary fs-6" id="rec_code" data-rec_code="<?php echo $set['rec_code']; ?>"><?php echo $set['rec_code']; ?></span></h3></td>
                             <!-- Tên nhân viên -->
-                            <td>
-                                <input type="text" class="form-control" name="rec_name" id="rec_name" 
-                                        value="<?php echo $set['rec_name']; ?>"
-                                        data-rec_id="<?php echo $set['rec_id']; ?>"
-                                        data-rec_value="<?php echo $set['rec_name']; ?>">
+                            <td style="width: 253px;">
+                                <span class="text" id="rec_name_text_<?php echo $set['rec_id']; ?>"><?php echo $set['rec_name']; ?></span>
+                                <input type="text" class="form-control d-none" name="rec_name" id="rec_name_input_<?php echo $set['rec_id']; ?>" 
+                                    value="<?php echo $set['rec_name']; ?>" data-rec_id="<?php echo $set['rec_id']; ?>"
+                                    data-rec_value="<?php echo $set['rec_name']; ?>">
                             </td>
                             <!-- Chức vụ -->
-                            <td>
-                                <select name="part" class="form-control" id="part">
+                            <td style="width: 292px;">
+                                <span class="text" id="part_text_<?php echo $set['rec_id']; ?>">
+                                    <?php 
+                                        if($set['rec_part'] == 1){
+                                            echo "Lễ tân";
+                                        }else if($set['rec_part'] == 2){
+                                            echo "Quản lí lễ tân";
+                                        }else if($set['rec_part'] == 3){
+                                            echo "Lao công";
+                                        }else if($set['rec_part'] == 4){
+                                            echo "Bếp trưởng";
+                                        }else if($set['rec_part'] == 5){
+                                            echo "Đầu bếp";
+                                        }else if($set['rec_part'] == 6){
+                                            echo "Phục vụ";
+                                        }else if($set['rec_part'] == 7){
+                                            echo "Pha chế";
+                                        }else{
+                                            echo "Nhân viên giám sát buồng phòng";
+                                        }
+                                    ?>
+                                </span>
+                                <select name="part" class="form-control d-none" id="part_input_<?php echo $set['rec_id']; ?>" data-rec_id="<?php echo $set['rec_id']; ?>">
                                     <?php 
                                         $part = $rec->getAllPart();
                                         while($set_part = $part->fetch()):
                                     ?>
                                     <option value="<?php echo $set_part['part_id']; ?>" 
                                             <?php echo $set['rec_part'] == $set_part['part_id'] ? 'selected' : ''; ?>
-                                            data-rec_id="<?php echo $set['rec_id']; ?>"
                                             data-part_act="<?php echo $set_part['part_id']; ?>"
                                         ><?php echo $set_part['part_name'] ?>
                                     </option>
@@ -108,30 +128,50 @@
                                 </select>
                             </td>
                             <!-- Ca làm việc -->
-                            <td>
-                                <select name="shift" class="form-control" id="shift">
+                            <td style="width: 265px;">
+                                <span class="text" id="shift_text_<?php echo $set['rec_id']; ?>">
+                                    <?php 
+                                        if($set['rec_shift'] == 1){
+                                            echo "Ca 1 - 06:00 tới 14:00";
+                                        }else if($set['rec_shift'] == 2){
+                                            echo "Ca 2 - 14:00 tới 22:00";
+                                        }else{
+                                            echo "Ca 3 - 22:00 tới 06:00";
+                                        }
+                                    ?>
+                                </span>
+                                <select name="shift" class="form-control d-none" id="shift_input_<?php echo $set['rec_id']; ?>" data-rec_id="<?php echo $set['rec_id']; ?>">
                                     <?php 
                                         $shift = $rec->getAllShift();
                                         while($set_shift = $shift->fetch()):
                                     ?>
                                     <option value="<?php echo $set_shift['shift_id']; ?>" 
                                             <?php echo $set['rec_shift'] == $set_shift['shift_id'] ? 'selected' : ''; ?>
-                                            data-rec_id="<?php echo $set['rec_id']; ?>"
                                             data-shift_act="<?php echo $set_shift['shift_name']; ?>"
                                         ><?php echo $set_shift['shift_name'] ?>
                                     </option>
                                     <?php endwhile; ?>
                                 </select>
-                            </td>
+                            </td>   
                     
                             <td class="text-end">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal<?php echo $set['rec_id']; ?>">
+                                <?php
+                                    if(checkAuthority('admin_rec_list.*act=edit_rec&id')){
+                                ?>
+                                <button type="button" class="btn btn-self btn-secondary mr-1 edit-btn" data-id="<?php echo $set['rec_id']; ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>   
+                                <button type="button" class="btn btn-self btn-warning mr-1 cancel-btn d-none" data-id="<?php echo $set['rec_id']; ?>">
+                                    <i class="fas fa-times"></i>
+                                </button>                              
+                                <button type="button" class="btn btn-self btn-primary" data-toggle="modal" data-target="#exampleModal<?php echo $set['rec_id']; ?>">
                                     <i class="far fa-eye"></i>
                                 </button>
-                                <?php  
+                                <?php 
+                                    } 
                                     if(checkAuthority('admin_rec_list?act=soft_delete')){
                                 ?>
-                                <button type="button" class="btn btn-danger" id="soft_delete_btn">
+                                <button type="button" class="btn btn-self btn-danger" id="soft_delete_btn">
                                     <i class="fas fa-trash"></i>
                                 </button>
                                 <?php } ?>
@@ -322,6 +362,11 @@
     .btn-sm{
         border-radius: 10px !important;
         font-weight: bold;
+    }
+
+    .btn-self{
+        width: 43.6px;
+        height: 37.6px;
     }
 </style>
 <script src="ajax/receptionist/status.js"></script>
@@ -523,5 +568,55 @@
             });
         });
         $.datetimepicker.setLocale('vi');
+
+        //Thay đổi trạng thái của các input
+        $(document).on('click', '.edit-btn', function() {
+            var id = $(this).data('id');
+
+            // Hide all input fields and show text spans in other rows
+            $('tr[id^="row-"]').each(function() {
+                var otherId = $(this).attr('id').split('-')[1];
+                if (otherId != id) {
+                    $(this).find('.form-control').addClass('d-none'); // hide inputs
+                    $(this).find('.text').removeClass('d-none'); // show spans
+
+                    $(this).find('.edit-btn').removeClass('d-none'); // show edit button
+                    $(this).find('.cancel-btn').addClass('d-none'); // hide cancel button
+                }
+            });
+
+            // Toggle visibility of input fields and text spans in the current row
+            $('#rec_name_input_' + id).toggleClass('d-none');
+            $('#rec_name_text_' + id).toggleClass('d-none');
+
+            $('#part_input_' + id).toggleClass('d-none');
+            $('#part_text_' + id).toggleClass('d-none');
+
+            $('#shift_input_' + id).toggleClass('d-none');
+            $('#shift_text_' + id).toggleClass('d-none');
+
+            // Toggle edit and cancel buttons in the current row
+            $(this).addClass('d-none'); // hide edit button
+            $(this).siblings('.cancel-btn').removeClass('d-none'); // show cancel button
+        });
+
+        // Cancel button click handler
+        $(document).on('click', '.cancel-btn', function() {
+            var id = $(this).data('id');
+
+            // Hide input fields and show text spans in the current row
+            $('#rec_name_input_' + id).addClass('d-none');
+            $('#rec_name_text_' + id).removeClass('d-none');
+
+            $('#part_input_' + id).addClass('d-none');
+            $('#part_text_' + id).removeClass('d-none');
+
+            $('#shift_input_' + id).addClass('d-none');
+            $('#shift_text_' + id).removeClass('d-none');
+
+            // Toggle edit and cancel buttons in the current row
+            $(this).addClass('d-none'); // hide cancel button
+            $(this).siblings('.edit-btn').removeClass('d-none'); // show edit button
+        });
     });
 </script>

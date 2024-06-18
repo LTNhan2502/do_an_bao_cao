@@ -3,6 +3,7 @@ $(document).ready(function(){
     let error_special = 'Không được có kí tự đặc biệt!';
     let error_number = 'Không được có kí tự số!';
     let error_length = 'Độ dài kí tự từ 2-45!';
+
     //Function chứa sweetalert để hiện thông báo khi thay đổi giá trị của input
     function SweetAlrt(name_error){
         return Swal.fire({                         
@@ -15,7 +16,7 @@ $(document).ready(function(){
     }
     
     //Chỉnh sửa name
-    $(document).on('change', '#name', function(){
+    $(document).on('change', 'input[name="name"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let id = $(this).data('id');
         let name_value  =$(this).val();
@@ -60,8 +61,10 @@ $(document).ready(function(){
                 },
                 success: function(res){
                     let data = JSON.parse(res);
-                    if(data.status == 'success'){                        
+                    if(data.status == 'success'){                                     
                         $(".detail_name").html(name_value);
+                        $("#name-text-"+id).html(name_value)
+                        $input.data("value", name_value); // Cập nhật giá trị prevName sau khi thành công
                     }else if(data.status == 'fail'){
                         Swal.fire({                         
                             title: "Thất bại!",
@@ -103,7 +106,7 @@ $(document).ready(function(){
     });
 
     //Vừa nhập vừa định dạng
-    let value = ['#price', '#sale'];
+    let value = ['input[name="price"]', 'input[name="sale"]'];
     for(let i = 0; i < value.length; i++ ){
         $(document).on('input',value[i], function() {
             let number_input = $(this).val().replace(/[^0-9]/g, ""); // Lấy giá trị hiện tại của ô input và loại bỏ các ký tự không phải số
@@ -118,10 +121,11 @@ $(document).ready(function(){
     }
     
     //Chỉnh sửa price
-    $(document).on('change', '#price', function(){
+    $(document).on('change', 'input[name="price"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let price_value = $(this).val().replace(/[^0-9]/g, "");
-        let sale_value = $(this).closest("tr").find("#sale").val().replace(/[^0-9]/g, "");
+        let price_value_format = $(this).val()
+        let sale_value = $(this).closest("tr").find('input[name="sale"]').val().replace(/[^0-9]/g, "");
         let prevPrice = $input.data('value'); //Dùng $input để khi đem xuống AJAX không bị lỗi
         let id = $(this).data('id');
         
@@ -136,7 +140,8 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    console.log(data.message);
+                    $("#price-text-"+id).html(price_value_format)
+                    $input.data("value", price_value_format); // Cập nhật giá trị prevPrice sau khi thành công
                 }else if(data.status == 'price'){
                     Swal.fire({                         
                         title: "Thất bại!",
@@ -145,7 +150,7 @@ $(document).ready(function(){
                         timer: 3200,
                         timerProgressBar: true
                     });
-                    $input.val(prevPrice); //Quay lại giá trị cũ
+                    $input.val(prevPrice); //Quay lại giá trị cũ                    
                     // $(this).val(); //Sai vì this sẽ trỏ tới AJAX chứ không còn trỏ tới bên input html, log sẽ ra undefined
                     console.log(prevPrice);
                 }else{
@@ -171,11 +176,12 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa sale
-    $(document).on('change', '#sale', function(){
+    $(document).on('change', 'input[name="sale"]', function(){
         let $input = $(this); // Lưu trữ tham chiếu đến phần tử input
         let sale_value = $(this).val().replace(/[^0-9]/g, "");
+        let sale_value_format = $(this).val()
         let id = $(this).data('id');
-        let price_value = $(this).closest('tr').find("#price").val().replace(/[^0-9]/g, ""); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
+        let price_value = $(this).closest('tr').find('input[name="price"]').val().replace(/[^0-9]/g, ""); //Tìm tới chỗ có id là price gần nhất trong thẻ tr
         let prevSale = $input.data("value"); //Dùng $input để khi đem xuống AJAX không bị lỗi
         $.ajax({
             url: 'Controller/admin/admin_room_list.php?act=update_sale',
@@ -188,7 +194,8 @@ $(document).ready(function(){
             success: function(res){
                 let data = JSON.parse(res);
                 if(data.status == 'success'){
-                    console.log(data.message);
+                    $('#sale-text-'+id).html(sale_value_format)
+                    $input.data("value", sale_value_format); // Cập nhật giá trị prevSale sau khi thành công
                 }else if(data.status == 'sale'){
                     Swal.fire({                         
                         title: "Thất bại!",
@@ -222,7 +229,7 @@ $(document).ready(function(){
     });
 
     //Chỉnh sửa status
-   $(document).on('change', '#status', function() {
+   $(document).on('change', 'select[name="status"]', function() {
         let status_id = $(this).val();
         let id = $(this).find(":selected").data('id'); //Lấy ra data-id của option đang chọn
         let act = $(this).find(":selected").data('act');
@@ -233,8 +240,14 @@ $(document).ready(function(){
             success: function(res){ 
                 let data = JSON.parse(res) //Vì res đang ở dạng chuỗi JSON chứ không phải là JSON thật sự nên phải parse
                 console.log(data);
-                if(data.status == "success"){               
-                    console.log(data.message);               
+                if(data.status == "success"){  
+                    if(status_id == 1){
+                        $("#status-text-"+id).html("Empty")
+                    }else if(status_id == 2){
+                        $("#status-text-"+id).html("Full")
+                    }else{
+                        $("#status-text-"+id).html("Maintained")
+                    }
                 }else{
                     Swal.fire({                         
                         title: "Thất bại",
@@ -258,15 +271,15 @@ $(document).ready(function(){
    });
 
    //Chỉnh sửa kind
-   $(document).on('change', '#kind', function(){
-        let kind_id = $(this).val();
+   $(document).on('change', 'select[name="kind"]', function(){
+        let kind_id_ = $(this).val();
         let id = $(this).find(":selected").data("id");
         let kind_name = $(this).find(":selected").data("act");    
         $.ajax({
             url: "Controller/admin/admin_room_list.php?act="+kind_name,
             method: "POST",
             data: {
-                kind_id,
+                kind_id_,
                 id,
                 kind_name
             },
@@ -274,7 +287,7 @@ $(document).ready(function(){
                 let data = JSON.parse(res);
                 console.log(data);
                 if(data.status == "success"){
-                    console.log(data.message);
+                    $("#kind-text-"+id).html(kind_name)
                 }else if(data.status == 'price'){
                     Swal.fire({                         
                         title: "Thất bại!",

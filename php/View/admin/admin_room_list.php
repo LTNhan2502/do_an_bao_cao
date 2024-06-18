@@ -84,16 +84,29 @@
                             $count = 1;
                             while($set = $results->fetch()):
                         ?>
-                        <tr id="currency">
+                        <tr id="currency-<?php echo $set['id']; ?>">
                             <!-- ID -->
-                            <td><div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $set['id']; ?></div></td>
+                            <td width="51px">
+                                <div id="id" data-id="<?php echo $set['id']; ?>"><?php echo $set['id']; ?></div>
+                            </td>
                             <!-- Image -->
-                            <td>
+                            <td width="97px">
                                 <img src="Content/images/<?php echo $set['img']; ?>" width="60px" height="60px" alt="">
                             </td>
                             <!-- Kind of room -->
-                            <td>
-                                <select name="kind" class="form-control" id="kind">
+                            <td width="156px">
+                                <span class="kind-text" id="kind-text-<?php echo $set['id']; ?>">
+                                    <?php 
+                                        if($set['kind_id'] == 1){
+                                            echo "Single";
+                                        }else if($set['kind_id'] == 2){
+                                            echo "Family";
+                                        }else{
+                                            echo "Presidential";
+                                        }
+                                    ?>
+                                </span>
+                                <select name="kind" class="form-control d-none" id="kind-<?php echo $set['id']; ?>">
                                     <?php 
                                         $kind = $room->getKind();
                                         while($set_kind = $kind->fetch()):
@@ -108,29 +121,43 @@
                                 </select>
                             </td>
                             <!-- Name of room -->
-                            <td>  
-                                <input type="text" class="form-control" name="name" id="name" 
+                            <td width="281px">  
+                                <span class="name-text" id="name-text-<?php echo $set['id']; ?>"><?php echo $set['name']; ?></span>
+                                <input type="text" class="form-control d-none" name="name" id="name-<?php echo $set['id']; ?>" 
                                         value="<?php echo $set['name']; ?>"
                                         data-id="<?php echo $set['id']; ?>"
                                         data-value="<?php echo $set['name']; ?>">
                             </td>
                             <!-- Price -->
-                            <td style="max-width: 120px;">
-                                <input type="text" class="form-control" name="price" id="price"
+                            <td style="width: 138px;">
+                                <span class="price-text" id="price-text-<?php echo $set['id']; ?>"><?php echo $fmt->formatCurrency($set['price']); ?></span>
+                                <input type="text" class="form-control d-none" name="price" id="price-<?php echo $set['id']; ?>"
                                     value="<?php echo $fmt->formatCurrency($set['price']); ?>"
                                     data-id="<?php echo $set['id']; ?>"
                                     data-value="<?php echo $fmt->formatCurrency($set['price']); ?>">
                             </td>
                             <!-- Sale -->
-                            <td style="max-width: 120px;">
-                                <input type="text" class="form-control" name="sale" id="sale"
+                            <td style="width: 138px;">
+                                <span class="sale-text" id="sale-text-<?php echo $set['id']; ?>"><?php echo $fmt->formatCurrency($set['sale']); ?></span>
+                                <input type="text" class="form-control d-none" name="sale" id="sale-<?php echo $set['id']; ?>"
                                     value="<?php echo $fmt->formatCurrency($set['sale']); ?>"
                                     data-id="<?php echo $set['id']; ?>"
                                     data-value="<?php echo $fmt->formatCurrency($set['sale']); ?>">
                             </td>
                             <!-- Status of room -->
-                            <td>
-                                <select name="status" class="form-control" id="status">
+                            <td width="150px">
+                                <span class="status-text" id="status-text-<?php echo $set['id']; ?>">
+                                    <?php 
+                                        if($set['status_id'] == 1){
+                                            echo "Empty";
+                                        }else if($set['status_id'] == 2){
+                                            echo "Full";
+                                        }else{
+                                            echo "Maintained";
+                                        }
+                                    ?>
+                                </span>
+                                <select name="status" class="form-control d-none" id="status-<?php echo $set['id']; ?>">
                                     <?php 
                                         $status = $room->getStatus();
                                         while($result = $status->fetch()):
@@ -145,20 +172,26 @@
                                 </select>
                             </td>
                             <td class="text-end">
-                                <button type="button" class="btn btn-secondary mr-1">
+                                <?php
+                                    if(checkAuthority('admin_room_list?act=edit_detail&id')){
+                                ?>
+                                <button type="button" class="btn btn-self btn-secondary mr-1 edit-btn" data-id="<?php echo $set['id']; ?>">
                                     <i class="fas fa-edit"></i>
+                                </button>  
+                                <?php } ?>                              
+                                <button type="button" class="btn btn-self btn-warning mr-1 cancel-btn d-none" data-id="<?php echo $set['id']; ?>">
+                                    <i class="fas fa-times"></i>
                                 </button>
-                                <button type="button" class="btn btn-primary mr-1 modal_btn" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
+                                <button type="button" class="btn btn-self btn-primary mr-1 modal_btn" data-toggle="modal" data-target="#exampleModal<?php echo $set['id']; ?>">
                                     <i class="fas fa-eye"></i>
                                 </button>
                                 <?php
                                     if(checkAuthority('admin_room_list?act=delete_room')){
                                 ?>
-                                <button type="button" data-delete_room_id="<?php echo $set['id']; ?>" id="delete_room_id" class="btn btn-danger">
+                                <button type="button" data-delete_room_id="<?php echo $set['id']; ?>" id="delete_room_id" class="btn btn-self btn-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
                                 <?php } ?>
-
                             </td>
                         </tr>
                         
@@ -346,4 +379,70 @@
         //Cập nhật lại đường link của image-big
         image_big.attr("src", newSrc);
     });
+
+    //Thay đổi trạng thái của các input
+    $(document).on('click', '.edit-btn', function() {
+        var id = $(this).data('id');
+
+        // Ẩn tất cả input và chỉ hiện text
+        $('tr[id^="currency-"]').each(function() {
+            var otherId = $(this).attr('id').split('-')[1];
+            if (otherId != id) {
+                $('#kind-' + otherId).addClass('d-none');
+                $('#name-' + otherId).addClass('d-none');
+                $('#price-' + otherId).addClass('d-none');
+                $('#sale-' + otherId).addClass('d-none');
+                $('#status-' + otherId).addClass('d-none');
+
+                $('#kind-text-' + otherId).removeClass('d-none');
+                $('#name-text-' + otherId).removeClass('d-none');
+                $('#price-text-' + otherId).removeClass('d-none');
+                $('#sale-text-' + otherId).removeClass('d-none');
+                $('#status-text-' + otherId).removeClass('d-none');
+
+                $(this).find('.edit-btn').removeClass('d-none');
+                $(this).find('.cancel-btn').addClass('d-none');
+            }
+        });
+
+        // Ẩn/Hiện giữa input và text
+        $('#kind-' + id).toggleClass('d-none');
+        $('#name-' + id).toggleClass('d-none');
+        $('#price-' + id).toggleClass('d-none');
+        $('#sale-' + id).toggleClass('d-none');
+        $('#status-' + id).toggleClass('d-none');
+
+        $('#kind-text-' + id).toggleClass('d-none');
+        $('#name-text-' + id).toggleClass('d-none');
+        $('#price-text-' + id).toggleClass('d-none');
+        $('#sale-text-' + id).toggleClass('d-none');
+        $('#status-text-' + id).toggleClass('d-none');
+
+        // Ẩn nút edit và hiển thị nút cancel edit
+        $(this).addClass('d-none');
+        $(this).siblings('.cancel-btn').removeClass('d-none');
+    });
+
+    $(document).on('click', '.cancel-btn', function() {
+        var id = $(this).data('id');
+
+        // Ẩn input và hiển thị text
+        $('#kind-' + id).addClass('d-none');
+        $('#name-' + id).addClass('d-none');
+        $('#price-' + id).addClass('d-none');
+        $('#sale-' + id).addClass('d-none');
+        $('#status-' + id).addClass('d-none');
+
+        $('#kind-text-' + id).removeClass('d-none');
+        $('#name-text-' + id).removeClass('d-none');
+        $('#price-text-' + id).removeClass('d-none');
+        $('#sale-text-' + id).removeClass('d-none');
+        $('#status-text-' + id).removeClass('d-none');
+
+        // Hiển thị nút edit và ẩn cancel edit
+        $(this).addClass('d-none');
+        $(this).siblings('.edit-btn').removeClass('d-none');
+    });
+
+
 </script>
