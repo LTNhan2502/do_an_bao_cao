@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 17, 2024 at 05:14 PM
+-- Generation Time: Jun 18, 2024 at 10:09 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -77,10 +77,10 @@ INSERT INTO `authority` (`auth_id`, `auth_gr_id`, `auth_name`, `url_match`) VALU
 (11, 4, 'Xem thông tin sơ bộ khách hàng', 'admin_index\\.php\\?action=admin_cus_list$'),
 (12, 4, 'Thêm khách hàng', 'admin_cus_list.*act=create_action'),
 (13, 4, 'Xoá khách hàng', 'admin_cus_list.*act=soft_delete'),
-(14, 5, 'Phân quyền', 'admin_index\\.php\\?action=admin_authority'),
-(15, 5, 'Thay đổi quyền theo cấp', 'admin_index\\.php\\?action=admin_authorize'),
+(15, 5, 'Phân quyền', 'admin_index\\.php\\?action=admin_authorize'),
 (16, 3, 'Chỉnh sửa nhân viên', 'admin_rec_list.*act=edit_rec&id'),
-(17, 1, 'Xem thông tin đặt phòng', 'admin_index\\.php\\?action=admin_room_check');
+(17, 1, 'Xem thông tin đặt phòng', 'admin_index\\.php\\?action=admin_room_check'),
+(18, 4, 'Chỉnh sửa khách hàng', 'admin_cus_list.*act=edit_customer&id');
 
 -- --------------------------------------------------------
 
@@ -336,7 +336,7 @@ INSERT INTO `customers` (`customer_id`, `room_id`, `customer_booked_id`, `custom
 (109, 0, 'CTM_12160918', 'le trong nhan', NULL, NULL, NULL, 'tronggnhan@gmail.com', NULL, '0901231234', NULL, '18'),
 (110, 0, NULL, 'Lê Trọng Nhân', NULL, NULL, 'trongnhan722@gmail.com', NULL, '$2y$10$pKeFRVANMv8VximZhTZQ/.jxSPO7iiXE8R91lmOQF04.GRLxsKiG6', '0123123123', NULL, '1'),
 (111, 0, NULL, 'Trọng Nhân', 1, '16/06/2024', 'trongnhan000@gmail.com', NULL, '$2y$10$u.byKc06nYluw7OcnhWvLO2voaSc7RW6644eMadwGXSb8xvKIQ7o6', '0123123123', NULL, '1'),
-(112, 0, 'CTM_54751258', 'Trọng Nhân', NULL, NULL, NULL, 'ltn001@gmail.com', NULL, '0123123123', NULL, '2'),
+(112, 0, 'CTM_54751258', 'Trọng Nhânn', NULL, NULL, NULL, 'ltn001@gmail.com', NULL, '0132165458', NULL, '2'),
 (113, 0, 'CTM_82538510', 'Trọng Nhân', NULL, NULL, 'ltn001@gmail.com', NULL, '$2y$10$Yx3LRj0z0Ur0Zcci8zRrXeDz/96gWWupv8nN4CMAEkF6rhjsuUr7e', NULL, NULL, '2');
 
 -- --------------------------------------------------------
@@ -443,67 +443,6 @@ INSERT INTO `part` (`part_id`, `part_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `permission`
---
-
-CREATE TABLE `permission` (
-  `per_id` int(11) NOT NULL,
-  `per_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `permission`
---
-
-INSERT INTO `permission` (`per_id`, `per_name`) VALUES
-(1, 'Full'),
-(2, 'Admin'),
-(3, 'Read only'),
-(4, 'Edit'),
-(5, 'Create');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `per_detail`
---
-
-CREATE TABLE `per_detail` (
-  `per_detail_id` int(11) NOT NULL,
-  `per_id` int(11) NOT NULL,
-  `action_code` varchar(255) NOT NULL,
-  `check_action` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `per_detail`
---
-
-INSERT INTO `per_detail` (`per_detail_id`, `per_id`, `action_code`, `check_action`) VALUES
-(1, 1, 'create', 1),
-(2, 1, 'edit', 1),
-(3, 1, 'delete', 1),
-(4, 1, 'view', 1),
-(5, 2, 'create', 1),
-(6, 2, 'edit', 1),
-(7, 2, 'delete', 0),
-(8, 2, 'view', 1),
-(9, 3, 'create', 0),
-(10, 3, 'edit', 0),
-(11, 3, 'delete', 0),
-(12, 3, 'view', 1),
-(13, 4, 'create', 0),
-(14, 4, 'edit', 1),
-(15, 4, 'delete', 0),
-(16, 4, 'view', 1),
-(17, 5, 'create', 1),
-(18, 5, 'edit', 0),
-(19, 5, 'delete', 0),
-(20, 5, 'view', 1);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `receptionist`
 --
 
@@ -533,7 +472,7 @@ CREATE TABLE `receptionist` (
 INSERT INTO `receptionist` (`rec_id`, `rec_code`, `rec_name`, `rec_part`, `rec_shift`, `rec_tel`, `rec_email`, `rec_birthday`, `rec_salary`, `rec_factor`, `rec_bonus`, `rec_fine`, `rec_startWork`, `rec_timeWork`, `rec_timeSalary`, `deleted_at`) VALUES
 (1, 'REC_71682903', 'Lê Trọng Nhân', 8, 1, '0394374868', 'letrongnhan@gmail.com', '21/03/2002', 8000000, 2, 10000, 1000000, '05/05/2024', 36, NULL, NULL),
 (2, 'REC_58855826', 'Hoàng Hoa Thám', 6, 3, '0392756873', 'hoanghoatham@gmail.com', '22/02/2004', 5000000, 2, 0, 0, '20/05/2024', 18, NULL, NULL),
-(3, 'REC_87257983', 'Phan Đăng Lưu', 6, 2, NULL, NULL, NULL, 10000000, 1, 0, 0, '11/05/2024', 27, NULL, NULL),
+(3, 'REC_87257983', 'Phan Đăng Lưu', 6, 3, NULL, NULL, NULL, 10000000, 1, 0, 0, '11/05/2024', 27, NULL, NULL),
 (4, 'REC_44981250', 'Hoàng Văn Thụ', 6, 3, '0123876765', 'trongnhan@gmail.com', NULL, 10000000, 1, 10000000, 1000000, '11/06/2024', 1, NULL, NULL),
 (5, 'REC_42289105', 'Trọng Nhân', 3, 1, NULL, NULL, '13/11/2004', 8000000, 1, 0, 0, '14/08/2023', 295, NULL, '2024-06-12 09:32:47'),
 (6, 'REC_64083254', 'Nhânnnnss', 3, 2, '0392756873', 'hoanghoatham@gmail.com', '12/06/2024', 10000000, 1, 10000000, 10000, '13/06/2024', -1, '2024-06-12 09:31:43', '2024-06-12 09:32:40');
@@ -573,7 +512,7 @@ INSERT INTO `room` (`id`, `kind_id`, `name`, `price`, `sale`, `img`, `status_id`
 (19, 3, 'Double Balcony', 12110000, 730000, 'double_balcony.jpg', 1, NULL, NULL),
 (20, 2, 'Premier Family Seaview', 3343000, 2449000, 'premier_family_seaview.jpg', 1, NULL, NULL),
 (21, 1, 'Le Studio Suite', 1087000, 598000, 'le_studio_suite.jpg', 1, NULL, NULL),
-(22, 3, 'Premium Deluxe Double Garden View', 19900000, 890000, 'premium_deluxe_double_garden_view.jpg', 1, NULL, NULL);
+(22, 2, 'Premium Deluxe Double Garden View', 19900000, 8900000, 'premium_deluxe_double_garden_view.jpg', 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -668,11 +607,6 @@ CREATE TABLE `user_authority` (
 --
 
 INSERT INTO `user_authority` (`user_auth_id`, `user_auth_admin_id`, `user_auth_auth_id`) VALUES
-(59, 3, 6),
-(60, 3, 7),
-(61, 3, 11),
-(62, 3, 14),
-(63, 3, 15),
 (158, 1, 1),
 (159, 1, 2),
 (160, 1, 3),
@@ -688,49 +622,16 @@ INSERT INTO `user_authority` (`user_auth_id`, `user_auth_admin_id`, `user_auth_a
 (170, 1, 11),
 (171, 1, 12),
 (172, 1, 13),
-(173, 1, 14),
 (174, 1, 15),
-(175, 1, 1),
-(176, 1, 2),
-(177, 1, 3),
-(178, 1, 4),
-(179, 1, 5),
-(180, 1, 17),
-(181, 1, 6),
-(182, 1, 7),
-(183, 1, 8),
-(184, 1, 9),
-(185, 1, 10),
-(186, 1, 16),
-(187, 1, 11),
-(188, 1, 12),
-(189, 1, 13),
-(190, 1, 14),
-(191, 1, 15),
-(196, 2, 14),
-(197, 2, 15);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `user_per`
---
-
-CREATE TABLE `user_per` (
-  `user_per_id` int(11) NOT NULL,
-  `per_id` int(11) NOT NULL,
-  `admin_id` int(11) NOT NULL,
-  `rec_id` int(11) NOT NULL,
-  `licensed` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
---
--- Dumping data for table `user_per`
---
-
-INSERT INTO `user_per` (`user_per_id`, `per_id`, `admin_id`, `rec_id`, `licensed`) VALUES
-(2, 1, 1, 0, 1),
-(3, 2, 0, 1, 1);
+(208, 2, 1),
+(209, 2, 4),
+(211, 2, 15),
+(218, 3, 1),
+(219, 3, 6),
+(220, 3, 7),
+(221, 3, 11),
+(223, 3, 15),
+(224, 1, 18);
 
 --
 -- Indexes for dumped tables
@@ -798,19 +699,6 @@ ALTER TABLE `part`
   ADD PRIMARY KEY (`part_id`);
 
 --
--- Indexes for table `permission`
---
-ALTER TABLE `permission`
-  ADD PRIMARY KEY (`per_id`);
-
---
--- Indexes for table `per_detail`
---
-ALTER TABLE `per_detail`
-  ADD PRIMARY KEY (`per_detail_id`),
-  ADD KEY `FK_per_id` (`per_id`);
-
---
 -- Indexes for table `receptionist`
 --
 ALTER TABLE `receptionist`
@@ -851,12 +739,6 @@ ALTER TABLE `user_authority`
   ADD PRIMARY KEY (`user_auth_id`);
 
 --
--- Indexes for table `user_per`
---
-ALTER TABLE `user_per`
-  ADD PRIMARY KEY (`user_per_id`);
-
---
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -870,7 +752,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `authority`
 --
 ALTER TABLE `authority`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `authority_group`
@@ -921,18 +803,6 @@ ALTER TABLE `part`
   MODIFY `part_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT for table `permission`
---
-ALTER TABLE `permission`
-  MODIFY `per_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `per_detail`
---
-ALTER TABLE `per_detail`
-  MODIFY `per_detail_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
-
---
 -- AUTO_INCREMENT for table `receptionist`
 --
 ALTER TABLE `receptionist`
@@ -966,13 +836,7 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `user_authority`
 --
 ALTER TABLE `user_authority`
-  MODIFY `user_auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=198;
-
---
--- AUTO_INCREMENT for table `user_per`
---
-ALTER TABLE `user_per`
-  MODIFY `user_per_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `user_auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
 
 --
 -- Constraints for dumped tables
@@ -983,12 +847,6 @@ ALTER TABLE `user_per`
 --
 ALTER TABLE `detail_room`
   ADD CONSTRAINT `FK_detail_id` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `per_detail`
---
-ALTER TABLE `per_detail`
-  ADD CONSTRAINT `FK_per_id` FOREIGN KEY (`per_id`) REFERENCES `permission` (`per_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `receptionist`

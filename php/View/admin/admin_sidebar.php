@@ -121,12 +121,9 @@
         </a>
         <div id="collapseSV" class="collapse" aria-labelledby="headingSV" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <?php
-                    if(checkAuthority('admin_index.php?action=admin_authority')){
-                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authority">Phân quyền</a>';
-                    }
+                <?php                    
                     if(checkAuthority('admin_index.php?action=admin_authorize')){
-                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authorize">Cấp bậc</a>';
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_authorize">Phân quyền</a>';
                     }
                 ?>
             </div>
