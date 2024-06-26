@@ -1,3 +1,7 @@
+<link rel="stylesheet" href="Content/user/css/user-kind.css">
+<link rel="stylesheet" href="Content/user/css/user-search.css">
+
+
 <?php
   $room = new room();
   $fmt = new formatter();
@@ -40,62 +44,36 @@
 </section>
 <!-- END section Carousel -->
 
-<section class="section pb-4">
-  <div class="container">
-
+<section class="section bg-light pb-0">
+  <div class="overlayy" id="overlayy"></div>
+  <div class="container" id="container">
     <div class="row check-availabilty" id="next">
-      <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-
-        <form action="#">
+      <div class="block-32" data-aos="fade-up" data-aos-offset="-200">        
           <div class="row">
-            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-              <label for="checkin_date" class="font-weight-bold text-black">Check In</label>
+            <div class="col-md-12 mb-6 mb-lg-0 col-lg-9">
+              <label for="checkin_date" class="font-weight-bold text-black">Tên phòng</label>
               <div class="field-icon-wrap">
                 <div class="icon"><span class="icon-calendar"></span></div>
-                <input type="text" id="checkin_date" class="form-control">
-              </div>
-            </div>
-            <div class="col-md-6 mb-3 mb-lg-0 col-lg-3">
-              <label for="checkout_date" class="font-weight-bold text-black">Check Out</label>
-              <div class="field-icon-wrap">
-                <div class="icon"><span class="icon-calendar"></span></div>
-                <input type="text" id="checkout_date" class="form-control">
-              </div>
-            </div>
-            <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
-              <div class="row">
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <label for="adults" class="font-weight-bold text-black">Adults</label>
-                  <div class="field-icon-wrap">
-                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="adults" class="form-control">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4+</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <label for="children" class="font-weight-bold text-black">Children</label>
-                  <div class="field-icon-wrap">
-                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="children" class="form-control">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4+</option>
-                    </select>
-                  </div>
+                <input type="text" class="input-box" placeholder="" id="searchInput" readonly>
+                <div class="dropdown" id="dropdownMenu">
+                  <?php                  
+                  $room = new room();
+                  $rooms = $room->getEmptyRoom();
+                  while ($sets = $rooms->fetch()):
+                    ?>
+                    <div class="item" data-selected_room_id="<?php echo $sets['id']; ?>"><?php echo $sets['name']; ?></div>
+                  <?php endwhile; ?>
                 </div>
               </div>
-            </div>
+            </div>            
             <div class="col-md-6 col-lg-3 align-self-end">
-              <button class="btn btn-primary btn-block text-white">Tìm kiếm</button>
+              <button class="btn btn-primary btn-block text-white" id="redirectToBooking">Chọn phòng nhanh</button>
             </div>
           </div>
-        </form>
+        
       </div>
+
+
     </div>
   </div>
 </section>
@@ -183,7 +161,7 @@
         <!-- Modal -->
       <div class="modal fade" id="exampleModal<?php echo $set['id']; ?>" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered ">
+        <div class="modal-dialog modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="exampleModalLabel">
@@ -202,8 +180,10 @@
               <div class="row">
                 <!-- Ảnh -->
                 <?php if (isset($detail['id'])) { ?>
-                  <div class="col-lg-8 bg-dark card image-container">
-                    <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big m-4" width="90%">
+                  <div class="col-lg-8 bg-dark card image-container col-custom">
+                    <div class="image-wrapper">
+                        <img src="Content/images/<?php echo $detail['img']; ?>" class="image-big m-4">
+                    </div>
                     <div class="image-row">
                       <?php
                         $item_img = $detail['img_name'];
@@ -218,7 +198,7 @@
                     </div>
                   </div>
                   <!-- Mét vuông và số lượng người/phòng -->
-                  <div class="col-lg-4 pl-4">
+                  <div class="col-lg-4 pl-4 scrollable-column">
                     <div class="row">
                       <h4>Thông tin chung</h4>
                       <div>
@@ -350,82 +330,81 @@
       // Cập nhật lại đường link của image-big
       image_big.attr("src", newSrc);
     });
+
+    $(document).on("click", "#redirectToBooking", function() {
+        let selected_room_id = $('#searchInput').data("transfered_room_id");
+        if (selected_room_id) {
+            window.location.href = `index.php?action=booking&selected_room_id=${selected_room_id}`;
+        } else {
+            Swal.fire({
+              text: "Hãy chọn phòng trước!",
+              icon: "info",
+              timer: 3200,
+              timerProgressBar: true
+            });
+        }
+    });
+  });
+
+  const inputBox = document.getElementById('searchInput');
+  const dropdownMenu = document.getElementById('dropdownMenu');
+  const overlay = document.getElementById('overlayy');
+  const searchCard = document.querySelector('.block-32');
+  const dropdownItems = document.querySelectorAll('.dropdown .item');
+
+  inputBox.addEventListener('focus', () => {
+    dropdownMenu.style.display = 'block';  //Hiển thị dropdownMenu
+    setTimeout(() => dropdownMenu.classList.add('show'), 10); //Delay 10ms rồi mới thực hiện
+    overlay.style.display = 'block';
+  });
+
+  //Click vào overlay thì thoát overlay và chuyển thành trạng thái bình thường
+  overlay.addEventListener('click', () => {
+    dropdownMenu.classList.remove('show');
+    overlay.style.display = 'none';
+  });
+
+  // Khi chọn giá trị trong dropdown
+  dropdownMenu.addEventListener("click", function(event) {
+    // Kiểm tra xem phần tử được nhấp có phải là một mục trong dropdown không
+    if (event.target.classList.contains("item")) {
+        // Lấy giá trị của mục đã chọn
+        var selectedValue = event.target.textContent;
+        // Gán giá trị đã chọn vào ô input
+        inputBox.value = selectedValue; // Thay đổi tại đây từ searchInput thành inputBox
+        
+        // Chuyển giá trị data-selected_room_id sang data-transfered_room_id
+        var selectedRoomId = $(event.target).data('selected_room_id');
+        $(inputBox).attr('data-transfered_room_id', selectedRoomId);
+        
+        // Ẩn dropdown sau khi chọn
+        dropdownMenu.classList.remove('show');
+        overlay.style.display = 'none';
+    }
+});
+
+
+  //
+  document.addEventListener('click', (event) => {
+    if (!searchCard.contains(event.target) && !dropdownMenu.contains(event.target) && !inputBox.contains(event.target)) {
+      dropdownMenu.classList.remove('show');
+      overlay.style.display = 'none';
+    }
+  });
+
+  // Thay đổi trạng thái khi dropdown đã được nhấn
+  dropdownMenu.addEventListener('transitionend', () => {
+    if (!dropdownMenu.classList.contains('show')) {
+      dropdownMenu.style.display = 'none';
+    }
+  });
+
+  inputBox.addEventListener('blur', () => {
+    setTimeout(() => {
+      if (!document.activeElement.classList.contains('item')) {
+        dropdownMenu.classList.remove('show');
+        overlay.style.display = 'none';
+      }
+    }, 100);
   });
 </script>
-
-<style>
-  .rounded-table {
-    border-radius: 10px;
-    overflow: hidden;
-    /* Đảm bảo các góc của nội dung bên trong cũng được bo tròn */
-  }
-
-  .width{
-    min-width: 280px;
-    max-width: 280px;
-  }
-
-  .rounded-img {
-    border-radius: 10px;
-  }
-
-  .card {
-    border-radius: 10px;
-    box-shadow: 3px 4px 8px rgba(255, 0, 0, 0.155);
-  }
-
-  .text-line-through {
-    text-decoration: line-through;
-    font-size: small;
-  }
-
-  .image-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .image-row {
-    display: flex;
-    justify-content: space-around;
-    width: 100%; /*Cho fix với cái khung của thẻ cha*/
-  }
-
-  .image-big{
-    border-radius: 10px;
-    max-height: 650px;
-  }
-
-  .image-small {
-    width: 150px; 
-    height: 125px;
-    border-radius: 10px;
-    opacity: 0.4;
-  }
-
-  .shadow-inset-md{
-    border-radius: 9px;
-    background-color: #f2f2f2;
-    box-shadow: inset 1px 2px 4px rgba(255, 0, 0, 0.155) !important;
-  }
-
-  .selected{
-    border: 2px solid #0d6efd;
-    opacity: 1.2;
-  }
-
-  /* Đảm bảo modal có thể mở rộng ra toàn màn hình */
-  .modal-dialog.modal-xl {
-    max-width: 90vw;
-  }
-
-  .modal-content {
-    border-radius: 10px;
-  }
-
-  .modal-body {
-    max-height: 80vh;
-    overflow-y: auto;
-  }
-
-</style>

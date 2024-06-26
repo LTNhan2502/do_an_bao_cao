@@ -1,5 +1,12 @@
 <?php
     class room{
+        //Phương thức thống kê booked_sum 
+        function getThongKeAdmin(){
+            $db = new connect();
+            $select = "SELECT room.name, SUM(booked_room.booked_sum) as tongtien FROM room, booked_room WHERE room.id = booked_room.room_id GROUP BY room.id";
+            $result = $db->getList($select);
+            return $result;
+        }
         //Phương thức tìm kiếm
         function searchRoom($value){
             $db = new connect();
@@ -436,6 +443,22 @@
         function getBookedRoomsPage($start, $limit){
             $db = new connect();
             $select = "SELECT * FROM booked_room as b WHERE b.booked_left_at IS NULL LIMIT ".$start.", ".$limit;
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức hiển thi thông tin tất cả phòng đã huỷ
+        function getCanceledRooms(){
+            $db = new connect();
+            $select = "SELECT * FROM booked_room as b WHERE b.booked_unbook = 1";
+            $result = $db->getList($select);
+            return $result;
+        }
+
+        //Phương thức hiển thị tất cả các phòng đã huỷ có phân trang
+        function getCanceledRoomsPage($start, $limit){
+            $db = new connect();
+            $select = "SELECT * FROM booked_room as b WHERE b.booked_unbook = 1 LIMIT ".$start.", ".$limit;
             $result = $db->getList($select);
             return $result;
         }

@@ -12,13 +12,20 @@
     }
 
     // Kiểm tra xem người dùng đã đăng nhập hay chưa
-    // if (!isAuthenticated()) {
-    //     if (!isset($_GET['action']) || $_GET['action'] !== 'admin_login') {
-    //         redirectToLogin();
-    //     }
-    // } else {
-    //     redirectToAdminHome();        
-    // }
+    if (!isAuthenticated()) {
+        // Người dùng chưa xác thực
+        if (!isset($_GET['action']) || $_GET['action'] !== 'admin_login') {
+            // Chuyển hướng đến trang đăng nhập nếu không phải là trang đăng nhập
+            redirectToLogin();
+        }
+    } else {
+        // Người dùng đã xác thực
+        if (!isset($_GET['action']) || $_GET['action'] === 'admin_login') {
+            // Chuyển hướng đến trang chủ quản trị nếu đã đăng nhập và truy cập trang đăng nhập
+            redirectToAdminHome();
+            return;
+        }
+    }
     //https://www.traveloka.com/vi-vn/hotel/vietnam/the-malibu-hotel-1000000592992?spec=12-06-2024.13-06-2024..1.HOTEL.1000000592992..1&currency=VND&contexts=%7B%22sourceHotelDetail%22%3A%22VNMCHHYGIENE2%20Desktop%22%2C%22accessCode%22%3A%22%22%7D
     
 ?>

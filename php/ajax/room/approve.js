@@ -341,6 +341,7 @@ $(document).ready(function(){
 
         Swal.fire({
             title: "Huỷ đặt phòng này?",
+            text: "Hành động này sẽ không thể hoàn tác!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",

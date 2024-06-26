@@ -58,7 +58,7 @@
         //Phương thức xoá account khách hàng (delete)
         function cplDeleteCus($customer_booked_id){
             $db = new connect();
-            $query = "DELETE FROM customers as c WHERE c.customer_booked_id = '$customer_booked_id'";
+            $query = "DELETE c, b FROM customers as c JOIN booked_room as b ON c.customer_id = b.customer_id WHERE c.customer_booked_id = '$customer_booked_id'";
             $result = $db->exec($query);
             return $result;
         }

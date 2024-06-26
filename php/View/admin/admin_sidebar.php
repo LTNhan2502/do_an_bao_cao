@@ -46,6 +46,9 @@
                     if(checkAuthority('admin_index.php?action=admin_room_check')){
                         echo '<a class="collapse-item" href="admin_index.php?action=admin_room_check">Hồ sơ đặt phòng</a>';
                     }
+                    if(checkAuthority('admin_index.php?action=admin_room_cancel')){
+                        echo '<a class="collapse-item" href="admin_index.php?action=admin_room_cancel">Phòng đã huỷ</a>';
+                    }
                 ?>
                 
                 
@@ -139,6 +142,9 @@
     </div>
 
     <!-- Nav Item - Pages Collapse Menu -->
+     <?php
+        if(checkAuthority('restore')){
+     ?>
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true"
             aria-controls="collapsePages">
@@ -147,17 +153,13 @@
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-
                 <a class="collapse-item" href="admin_index.php?action=admin_room_list&act=admin_room_restore">Phòng</a>
                 <a class="collapse-item" href="admin_index.php?action=admin_rec_list&act=admin_rec_restore">Nhân viên</a>
-                <a class="collapse-item" href="admin_index.php?action=admin_cus_list&act=admin_cus_restore">Khách hàng</a>
-                <!-- <div class="collapse-divider"></div>
-                <h6 class="collapse-header">Other Pages:</h6>
-                <a class="collapse-item" href="404.html">404 Page</a>
-                <a class="collapse-item" href="blank.html">Blank Page</a> -->
+                <a class="collapse-item" href="admin_index.php?action=admin_cus_list&act=admin_cus_restore">Khách hàng</a>                
             </div>
         </div>
     </li>
+    <?php } ?>
 
     <!-- Nav Item - Charts -->
     <li class="nav-item">

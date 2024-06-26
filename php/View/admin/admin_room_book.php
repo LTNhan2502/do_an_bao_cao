@@ -18,7 +18,7 @@
                         </div>                     
                         <div class="row mt-3">
                             <div class="col-lg-6">
-                                <label for="name">Họ và tên (Nhập không dấu)</label>
+                                <label for="name">Họ và tên</label>
                                 <input type="text" class="form-control" 
                                     name="name" id="name_user">
                                 <small class="text-danger" name="name_error" id="name_user_error"></small>
@@ -120,6 +120,7 @@
                         while ($sets = $rooms->fetch()):
                     ?>
                         <div class="card mb-3 room_card_list" data-room_select_id="<?php echo $sets['id']; ?>">
+                        <div class="d-none" id="selected_room_id" data-selected_room_id="<?php echo isset($_GET['selected_room_id']) ? $_GET['selected_room_id'] : 0; ?>"></div>
                             <div class="row g-0">
                             <div class="col-md-4">
                                 <img src="Content/images/<?php echo $sets['img']; ?>" class="img-fluid rounded-start" alt="...">

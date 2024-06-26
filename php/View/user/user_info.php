@@ -19,6 +19,7 @@
             <div class="profile-info">
                 <h3><?php echo $_SESSION['customer_name']; ?></h3>
                 <p id="customer_email" data-customer_email="<?php echo $_SESSION['customer_email']; ?>"><?php echo $_SESSION['customer_email']; ?></p>
+                <div class="d-none" id="customer_booked_id" data-customer_booked_id="<?php echo $_SESSION['customer_booked_id']; ?>"></div>
             </div>
         </div>
         <div class="d-flex align-items-start sidebar-menu">
@@ -74,7 +75,10 @@
                                                 </div>
                                                 <div class="col-md-9">
                                                     <div class="card-body">
-                                                        <h6 class="card-title pt-2"><?php echo $history_room['name']; ?></h6>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <h6 class="card-title pt-2"><?php echo $history_room['name']; ?></h6>
+                                                            <span class="badge badge-pill badge-danger" id="button_cancel" style="padding: 4px 6px; font-size: 1em; margin-left: 10px;">Huỷ phòng</span>
+                                                        </div>
                                                         <table>
                                                             <tr>
                                                                 <td><p><?php echo $history_room['square_meter']; ?>m²</p></td>
@@ -147,7 +151,17 @@
                                                                 <td><p>Lúc ra: <?php echo $rooms['booked_quit']; ?></p></td>
                                                             </tr>
                                                             <tr>
-                                                                <td><p>Thanh toán: <?php echo $rooms['booked_left_at']; ?></p></td>
+                                                                <td>
+                                                                    <?php
+                                                                        if(isset($rooms['booked_left_at'])){
+                                                                    ?>
+                                                                    <p>Thanh toán: <?php echo $rooms['booked_left_at']; ?></p>
+                                                                    <?php
+                                                                        }else{
+                                                                            echo "<p style='text-decoration: underline; font-weight: bold;'>Chưa thanh toán</p>";
+                                                                        }
+                                                                    ?>
+                                                                </td>
                                                                 <td><p><strong>Tổng: <?php echo $fmt->formatCurrency($rooms['booked_sum']); ?>VND</strong></p></td>
                                                             </tr>
                                                         </table>                                                            
@@ -369,7 +383,7 @@
     </div>
 </div>
 <?php }else{ ?>
-<div class="card text-center m-5">
+<div class="card text-center" style="margin: 9rem 4rem 3rem 4rem;">
     <div class="card-header">
         Yêu cầu đăng nhập
     </div>
@@ -383,6 +397,7 @@
 <?php } ?>
 
 <script src="ajax/account/user_info.js"></script>
+<script src="ajax/room/approve.js"></script>
 <script>
     $(document).ready(function () {
         let isShow = false;

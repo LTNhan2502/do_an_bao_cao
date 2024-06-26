@@ -21,7 +21,15 @@
         //Phương thức kiểm tra password có đúng không
         function checkExist($email){
             $db = new connect();
-            $select = "SELECT * FROM customers as c WHERE c.email = '$email' AND c.deleted_at IS NULL";
+            $select = "SELECT * FROM customers as c WHERE c.email = '$email'";
+            $result = $db->getInstance($select);
+            return $result;
+        }
+
+        //Phương thức kiểm tra tài khoản có đang bị vô hiệu hoá hay không
+        function checkBan($email){
+            $db = new connect();
+            $select = "SELECT * FROM customers as c WHERE c.email = '$email' AND c.deleted_at IS NOT NULL";
             $result = $db->getInstance($select);
             return $result;
         }

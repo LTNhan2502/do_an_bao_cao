@@ -23,46 +23,29 @@
   <div class="overlayy" id="overlayy"></div>
   <div class="container" id="container">
     <div class="row check-availabilty" id="next">
-      <div class="block-32" data-aos="fade-up" data-aos-offset="-200">
-        <form action="#">
+      <div class="block-32" data-aos="fade-up" data-aos-offset="-200">        
           <div class="row">
             <div class="col-md-12 mb-6 mb-lg-0 col-lg-9">
               <label for="checkin_date" class="font-weight-bold text-black">Tên phòng</label>
               <div class="field-icon-wrap">
                 <div class="icon"><span class="icon-calendar"></span></div>
-                <input type="text" class="input-box" placeholder="" id="searchInput">
+                <input type="text" class="input-box" placeholder="" id="searchInput" readonly>
                 <div class="dropdown" id="dropdownMenu">
                   <?php                  
                   $room = new room();
                   $rooms = $room->getEmptyRoom();
                   while ($sets = $rooms->fetch()):
                     ?>
-                    <div class="item"><?php echo $sets['name']; ?></div>
+                    <div class="item" data-selected_room_id="<?php echo $sets['id']; ?>"><?php echo $sets['name']; ?></div>
                   <?php endwhile; ?>
                 </div>
               </div>
-            </div>
-            <!-- <div class="col-md-6 mb-3 mb-md-0 col-lg-3">
-              <div class="row">
-                <div class="col-md-6 mb-3 mb-md-0">
-                  <label for="adults" class="font-weight-bold text-black">Số người ở</label>
-                  <div class="field-icon-wrap">
-                    <div class="icon"><span class="ion-ios-arrow-down"></span></div>
-                    <select name="" id="adults" class="form-control">
-                      <option value="">1</option>
-                      <option value="">2</option>
-                      <option value="">3</option>
-                      <option value="">4+</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div> -->
+            </div>            
             <div class="col-md-6 col-lg-3 align-self-end">
-              <button class="btn btn-primary btn-block text-white">Tìm kiếm</button>
+              <button class="btn btn-primary btn-block text-white" id="redirectToBooking">Chọn phòng nhanh</button>
             </div>
           </div>
-        </form>
+        
       </div>
 
 
@@ -76,7 +59,7 @@
 
     <div class="row justify-content-center text-center mb-5">
       <div class="col-md-7">
-        <h2 class="heading" data-aos="fade-up">Loại phòng <?php var_dump($_SESSION['admin_id']); ?></h2>
+        <h2 class="heading" data-aos="fade-up">Loại phòng</h2>
         <p data-aos="fade-up" data-aos-delay="100">Tại đây, bạn có thể chọn loại phòng muốn đặt.</p>
         <p class="mt" data-aos="fade-up" data-aos-delay="100">Single Room sẽ có từ 1-2 người. </p>
         <p class="mt" data-aos="fade-up" data-aos-delay="100">Family Room sẽ có từ 2 người trở lên. </p>
@@ -147,18 +130,23 @@
   });
 
   // Khi chọn giá trị trong dropdown
-  dropdownMenu.addEventListener("click", function (event) {
+  dropdownMenu.addEventListener("click", function(event) {
     // Kiểm tra xem phần tử được nhấp có phải là một mục trong dropdown không
     if (event.target.classList.contains("item")) {
-      // Lấy giá trị của mục đã chọn
-      var selectedValue = event.target.textContent;
-      // Gán giá trị đã chọn vào ô input
-      inputBox.value = selectedValue; // Thay đổi tại đây từ searchInput thành inputBox
-      // Ẩn dropdown sau khi chọn
-      dropdownMenu.classList.remove('show');
-      overlay.style.display = 'none';
+        // Lấy giá trị của mục đã chọn
+        var selectedValue = event.target.textContent;
+        // Gán giá trị đã chọn vào ô input
+        inputBox.value = selectedValue; // Thay đổi tại đây từ searchInput thành inputBox
+        
+        // Chuyển giá trị data-selected_room_id sang data-transfered_room_id
+        var selectedRoomId = $(event.target).data('selected_room_id');
+        $(inputBox).attr('data-transfered_room_id', selectedRoomId);
+        
+        // Ẩn dropdown sau khi chọn
+        dropdownMenu.classList.remove('show');
+        overlay.style.display = 'none';
     }
-  });
+});
 
 
   //
@@ -169,7 +157,7 @@
     }
   });
 
-  // Adjust the display property when dropdown is shown or hidden
+  // Thay đổi trạng thái khi dropdown đã được nhấn
   dropdownMenu.addEventListener('transitionend', () => {
     if (!dropdownMenu.classList.contains('show')) {
       dropdownMenu.style.display = 'none';
@@ -177,13 +165,30 @@
   });
 
   inputBox.addEventListener('blur', () => {
-    setTimeout(() => { // Delay to allow click event to register on dropdown items
+    setTimeout(() => {
       if (!document.activeElement.classList.contains('item')) {
         dropdownMenu.classList.remove('show');
         overlay.style.display = 'none';
       }
     }, 100);
   });
+
+  $(document).ready(function() {
+    $(document).on("click", "#redirectToBooking", function() {
+        let selected_room_id = $('#searchInput').data("transfered_room_id");
+        if (selected_room_id) {
+            window.location.href = `index.php?action=booking&selected_room_id=${selected_room_id}`;
+        } else {
+            Swal.fire({
+              text: "Hãy chọn phòng trước!",
+              icon: "info",
+              timer: 3200,
+              timerProgressBar: true
+            });
+        }
+    });
+});
+
 
 </script>
 

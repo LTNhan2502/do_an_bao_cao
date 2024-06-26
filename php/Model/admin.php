@@ -87,6 +87,14 @@
             $result = $db->getInstance($select);
             return $result;
         }
+
+        //Phương thức thay đổi priority cho người dùng chỉ địng
+        function changePriority($user_id, $priority){
+            $db = new connect();
+            $query = "UPDATE admin SET admin.priority = $priority WHERE admin.id = $user_id";
+            $result = $db->exec($query);
+            return $result;
+        }
         
         //Phương thức lấy ra tất cả thông tin tài khoản trong web
         function getAllMember(){

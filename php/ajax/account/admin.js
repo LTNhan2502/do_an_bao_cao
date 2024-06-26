@@ -519,6 +519,24 @@ $(document).ready(function(){
                 });
             }
         });
+
+        $.ajax({
+            url: "Controller/admin/admin_authorize.php?act=get_priority",
+            method: "POST",
+            data: {user_id},
+            success: function(res){
+                $("#priority").val(res)
+            },
+            error: function(){
+                Swal.fire({
+                    title: "Lỗi!",
+                    text: 'Không thể lấy dữ liệu quyền!',
+                    icon: "error",
+                    timer: 3200,
+                    timerProgressBar: true
+                });
+            }
+        })
     });
     
 

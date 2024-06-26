@@ -1,5 +1,4 @@
 <?php
-    session_start();
     set_include_path(get_include_path() . PATH_SEPARATOR . '../../Model/');
     spl_autoload_extensions('.php');    
     spl_autoload_register();
@@ -14,14 +13,16 @@
             include_once "View/user/user_info.php";
             break;
         case "delete_action":
-            if($_POST['customer_email']){
-                $email = $_POST['customer_email'];
+            session_start();
+            if($_POST['customer_booked_id']){
+                $customer_booked_id = $_POST['customer_booked_id'];
                 $customers = new customers();
-                $result = $customers->deleteCus($email);
-
+                $result = $customers->deleteCus($customer_booked_id);
+                
                 if($result){
                     unset($_SESSION['customer_id']);
                     unset($_SESSION['customer_email']);
+                    unset($_SESSION['customer_booked_id']);
                     unset($_SESSION['customer_name']);
                     unset($_SESSION['customer_tel']);
                     $res = array(
@@ -93,6 +94,7 @@
                 if($result){
                     unset($_SESSION['customer_id']);
                     unset($_SESSION['customer_email']);
+                    unset($_SESSION['customer_booked_id']);
                     unset($_SESSION['customer_name']);
                     unset($_SESSION['customer_tel']);
                     $res = array(

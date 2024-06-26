@@ -56,9 +56,10 @@ $(document).ready(function () {
             $("#login_error").html("");
             let form = $("#loginForm1")[0];
             let form_data = new FormData(form); 
-            for (var pair of form_data.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
+            // //console log formdata
+            // for (var pair of form_data.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
             $.ajax({
                 url: "Controller/user/login.php?act=login_action",
                 method: "POST",
@@ -78,12 +79,12 @@ $(document).ready(function () {
                         }).then(function() {
                             window.location.href = "index.php";
                         });
-                    }else if(res.status = 403){
+                    }else if(res.status == 403){
                         Swal.fire({                         
                             title: "Thất bại!",
                             text: res.message,
                             icon: "error",
-                            timer: 3200,
+                            timer: 5500,
                             timerProgressBar: true
                         })
                     }else if(res.status == 404){
@@ -104,7 +105,7 @@ $(document).ready(function () {
                         })
                     }
                 },
-                error: function(error){
+                error: function(){
                     Swal.fire({                         
                         title: "Lỗi!",
                         text: "Lỗi không xác định!",

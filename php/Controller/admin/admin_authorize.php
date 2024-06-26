@@ -51,12 +51,21 @@ spl_autoload_register();
                 echo    '</div>';
                 echo '</div>';
             }
-            break;            
+            break;  
+        case 'get_priority':
+            if(isset($_POST['user_id'])){
+                $user_id = $_POST['user_id'];
+                $admin = new admin();
+                $getCurrentPriority = $admin->getCurrentPriority($user_id);
+                echo json_encode($getCurrentPriority['priority']);
+            }
+            break;          
         case 'authorize':
             session_start();
             if(isset($_POST['user_id'])){
                 $data = isset($_POST['authorities']) ? $_POST['authorities'] : [];
                 $user_id = $_POST['user_id'];
+                $target_priority = $_POST['priority'];
                 $admin = new admin();
                 $insertString = "";
 
@@ -69,6 +78,7 @@ spl_autoload_register();
                     );
                 }else{
                     foreach($data as $insertAuthority){
+                        //Nếu insertString rỗng thì khi nối chuỗi sẽ không có dấu phẩy, ngược lại
                         $insertString .= !empty($insertString) ? ', ' : '';
                         $insertString .= "(NULL, $user_id, $insertAuthority)";
                     }
@@ -82,21 +92,22 @@ spl_autoload_register();
                     }else{
                         // Xóa quyền cũ và thêm quyền mới
                         $deleteOldAuth = $admin->deleteOldAuth($user_id);
-                        if(!empty($data)){
-                            if($deleteOldAuth || !$deleteOldAuth){
-                                $insertAuth = $admin->addNewAuth($insertString);
-                                if($insertAuth){
-                                    $res = array(
-                                        'status' => 200,
-                                        'message' => "Thay đổi quyền thành công!"
-                                    );
-                                }else{
-                                    $res = array(
-                                        'status' => 403,
-                                        'message' => "Thay đổi quyền thất bại!"
-                                    );
-                                }
-                            }
+                        if(!empty($data)){                            
+                            $insertAuth = $admin->addNewAuth($insertString);
+                            //Thay đổi độ ưu tiên (priority)
+                            $changePriority = $admin->changePriority($user_id, $target_priority);
+                        
+                            if($insertAuth && $changePriority){
+                                $res = array(
+                                    'status' => 200,
+                                    'message' => "Thay đổi quyền thành công!"
+                                );
+                            }else{
+                                $res = array(
+                                    'status' => 403,
+                                    'message' => "Thay đổi quyền thất bại!"
+                                );
+                            }                            
                         }else{
                             // Nếu không có quyền nào được chọn và user_id không phải là 1
                             $res = array(

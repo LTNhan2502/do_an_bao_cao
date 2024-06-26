@@ -140,7 +140,7 @@
                         </div>                     
                         <div class="row mt-3">
                             <div class="col-lg-6">
-                                <label for="name">Họ và tên (Nhập không dấu)</label>
+                                <label for="name">Họ và tên</label>
                                 <input type="text" class="form-control" 
                                     value="<?php echo isset($_SESSION['customer_id']) ? $_SESSION['customer_name'] : '' ?>"
                                     name="name" id="name_user">

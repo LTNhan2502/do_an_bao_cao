@@ -58,21 +58,22 @@ $(document).ready(function(){
 
     //Xoá tài khoản
     $(document).on("click", "#delete_account", function () {
-        let customer_email = $("#customer_email").data("customer_email")
+        let customer_booked_id = $("#customer_booked_id").data("customer_booked_id")
         Swal.fire({
             title: "Xoá tài khoản?",
-            text: "Tài khoản sẽ không thể khôi phục!",
+            text: "Tài khoản sẽ bất hoạt trong 7 ngày trước khi bị xoá hoàn toàn!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Yes!"
+            confirmButtonText: "Có",
+            cancelButtonText: "Không"
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
                     url: "Controller/user/user_info.php?act=delete_action",
                     method: "POST",
-                    data: {customer_email},
+                    data: {customer_booked_id},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status == 200) {

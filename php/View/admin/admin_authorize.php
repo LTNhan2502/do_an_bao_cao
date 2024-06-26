@@ -14,6 +14,17 @@
                     <option value="<?php echo $set_admin['id'] ?>"><?php echo $set_admin['name']; ?></option>
                 <?php endwhile; ?>
             </select>
+            <?php
+                if(isset($_SESSION["tenadmin"]) && $_SESSION["tenadmin"] == 'admin'):
+            ?>
+                <h1>Mức Độ Ưu Tiên</h1>
+                <select name="priority" id="priority" class="form-control"
+                style="max-width: 300px; margin-right: auto; margin-left: 10px;">
+                    <option value="1">Admin</option>
+                    <option value="2">Quản lí</option>
+                    <option value="3">Nhân viên</option>
+                </select>
+            <?php endif; ?>
             <button type="submit" class="save-button" id="changeAuth"><i class="fas fa-save"></i> Lưu</button>
         </div>
         <div class="section" style="margin-top: -15px;">

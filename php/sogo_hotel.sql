@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2024 at 10:09 AM
+-- Generation Time: Jun 20, 2024 at 12:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -300,7 +300,8 @@ INSERT INTO `booked_room` (`booked_id`, `room_id`, `customer_id`, `booked_room_i
 (31, 22, 96, 'ORD_64562873', 'CTM_7851689', 'Trong Nhan', '0123123123', 'ltn@gmail.com', 'Premier Deluxe', 19900000, 39800000, '2024-06-12 15:14:16', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:53', 0, 1, 0),
 (32, 21, 107, 'ORD_19387464', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Premier Deluxe', 1087000, 2174000, '2024-06-12 15:14:57', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:56', 0, 1, 0),
 (33, 21, 107, 'ORD_58010910', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 1087000, 2174000, '2024-06-12 17:25:35', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-13 09:11:12', 0, 1, 0),
-(34, 19, 107, 'ORD_6633028', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 12110000, 24220000, '2024-06-16 17:40:08', NULL, '2024-06-16 12:00:00', '2024-06-18 14:00:00', '2024-06-16 17:40:24', 0, 1, 0);
+(34, 19, 107, 'ORD_6633028', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 12110000, 24220000, '2024-06-16 17:40:08', NULL, '2024-06-16 12:00:00', '2024-06-18 14:00:00', '2024-06-16 17:40:24', 0, 1, 0),
+(35, 2, 107, 'ORD_96831221', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 572000, 1144000, '2024-06-19 17:28:46', NULL, '2024-06-19 12:00:00', '2024-06-21 14:00:00', NULL, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -331,7 +332,7 @@ INSERT INTO `customers` (`customer_id`, `room_id`, `customer_booked_id`, `custom
 (94, 0, 'CTM_74809762', 'trọng nhân', NULL, NULL, 'trongnhan@gmail.com', NULL, '$2y$10$5Z8abpsgxSHvPTWyZIl2e.ZzaPqpxqzoUqKGHMEg4Q4OAf/3KYrrO', '', NULL, NULL),
 (95, 0, 'CTM_53915268', 'Trọng Nhân', NULL, NULL, NULL, 'letrongnhan@gmail.com', NULL, '0123123123', NULL, NULL),
 (96, 0, 'CTM_7851689', 'Trong Nhan', NULL, NULL, NULL, 'ltn@gmail.com', NULL, '0123123123', NULL, '22'),
-(107, 0, 'CTM_10284927', 'Lê Trọng Nhân', 1, '05/06/2024', 'letrongnhan722@gmail.com', NULL, '$2y$10$6rltEPFnBqCTPrcKArLNheTtkvCxRJBYdGBa2sDlNZ3aA0/ft2Kku', '0394374864', NULL, '1 - 2 - 20 - 19 - 4 - 6 - 22 - 22 - 22 - 22 - 21 - 21 - 2 - 21 - 22 - 6 - 2 - 21 - 21 - 19'),
+(107, 0, 'CTM_10284927', 'Lê Trọng Nhân', 1, '05/06/2024', 'letrongnhan722@gmail.com', NULL, '$2y$10$6rltEPFnBqCTPrcKArLNheTtkvCxRJBYdGBa2sDlNZ3aA0/ft2Kku', '0394374864', NULL, '1 - 2 - 20 - 19 - 4 - 6 - 22 - 22 - 22 - 22 - 21 - 21 - 2 - 21 - 22 - 6 - 2 - 21 - 21 - 19 - 2'),
 (108, 0, 'CTM_33652587', 'Nhân', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (109, 0, 'CTM_12160918', 'le trong nhan', NULL, NULL, NULL, 'tronggnhan@gmail.com', NULL, '0901231234', NULL, '18'),
 (110, 0, NULL, 'Lê Trọng Nhân', NULL, NULL, 'trongnhan722@gmail.com', NULL, '$2y$10$pKeFRVANMv8VximZhTZQ/.jxSPO7iiXE8R91lmOQF04.GRLxsKiG6', '0123123123', NULL, '1'),
@@ -770,7 +771,7 @@ ALTER TABLE `bill`
 -- AUTO_INCREMENT for table `booked_room`
 --
 ALTER TABLE `booked_room`
-  MODIFY `booked_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `booked_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `customers`
