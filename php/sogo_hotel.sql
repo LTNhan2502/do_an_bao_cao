@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 20, 2024 at 12:01 PM
+-- Generation Time: Jul 05, 2024 at 09:15 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -42,9 +42,9 @@ CREATE TABLE `admin` (
 INSERT INTO `admin` (`id`, `name`, `username`, `pass`, `priority`) VALUES
 (1, 'Trọng Nhân', 'admin', '$2y$10$V8m0U5.ezZgipHca6Pe7JeKm7VjBBEXjMUkIhTmtuN3xAz.rps4be', 0),
 (2, 'Lê Trọng Nhân', 'admin001', '$2y$10$WG75gYqOvA/IamrloDe5DuhzjZWZUbJ9d01/O08j5dd7wxTdCSrvy', 1),
-(3, 'LTN', 'admin002', '$2y$10$QI8qKjnjgrvKjGRDkjoCD.sO8cKa1JTIzCa6t4wklFBBtwEv1xGpG', 1),
+(3, 'LTN', 'admin002', '$2y$10$QI8qKjnjgrvKjGRDkjoCD.sO8cKa1JTIzCa6t4wklFBBtwEv1xGpG', 2),
 (4, 'ltn', 'trong nhan', '$2y$10$QI8qKjnjgrvKjGRDkjoCD.sO8cKa1JTIzCa6t4wklFBBtwEv1xGpG', 2),
-(5, 'Trọng Nhânn', 'admin003', '$2y$10$ROx6i/ickDGNcT5iuaDlHurMeOED/7/yq/6GUGOX/GNzypRnnvzO2', 5);
+(5, 'Trọng Nhânn', 'admin003', '$2y$10$ROx6i/ickDGNcT5iuaDlHurMeOED/7/yq/6GUGOX/GNzypRnnvzO2', 3);
 
 -- --------------------------------------------------------
 
@@ -80,7 +80,9 @@ INSERT INTO `authority` (`auth_id`, `auth_gr_id`, `auth_name`, `url_match`) VALU
 (15, 5, 'Phân quyền', 'admin_index\\.php\\?action=admin_authorize'),
 (16, 3, 'Chỉnh sửa nhân viên', 'admin_rec_list.*act=edit_rec&id'),
 (17, 1, 'Xem thông tin đặt phòng', 'admin_index\\.php\\?action=admin_room_check'),
-(18, 4, 'Chỉnh sửa khách hàng', 'admin_cus_list.*act=edit_customer&id');
+(18, 4, 'Chỉnh sửa khách hàng', 'admin_cus_list.*act=edit_customer&id'),
+(19, 6, 'Toàn quyền trang Khôi phục', 'restore'),
+(20, 1, 'Xem phòng đã huỷ', 'admin_index\\.php\\?action=admin_room_cancel');
 
 -- --------------------------------------------------------
 
@@ -103,7 +105,8 @@ INSERT INTO `authority_group` (`auth_gr_id`, `auth_gr_name`, `auth_gr_created_at
 (2, 'Quản lí hoá đơn', '2024-06-15 11:00:42'),
 (3, 'Quản lí nhân viên', '2024-06-15 11:00:42'),
 (4, 'Quản lí khách hàng', '2024-06-15 11:00:42'),
-(5, 'Quản lí quyền hạn', '2024-06-15 11:03:58');
+(5, 'Quản lí quyền hạn', '2024-06-15 11:03:58'),
+(6, 'Quản lí khôi phục', '2024-06-21 17:41:54');
 
 -- --------------------------------------------------------
 
@@ -130,12 +133,6 @@ CREATE TABLE `bill` (
 --
 
 INSERT INTO `bill` (`bill_id`, `booked_room_id`, `customer_booked_id`, `customer_email`, `bill_price`, `bill_arrive`, `bill_leave`, `bill_checkout_at`, `room_name`, `customer_name`, `customer_tel`) VALUES
-(1, '0', '', 'dd@gmail.com', 2645, '2024-04-02 14:00:00', '2024-04-06 12:00:00', '2024-04-24 15:34:42', 'Deluxe Window', 'LTN', '0123321123'),
-(2, '0', '', 'bbb@gmail.com', 2645, '2024-04-25 14:00:00', '2024-04-27 12:00:00', '2024-04-25 14:58:16', 'Deluxe Window', 'Trong Nhan', '0394374864'),
-(3, '0', '', 'bbb@gmail.com', 2645, '2024-04-25 14:00:00', '2024-04-27 12:00:00', '2024-04-25 14:58:16', 'Deluxe Window', 'Trong Nhan', '0394374864'),
-(4, '0', '', 'bbb@gmail.com', 2645, '2024-04-25 14:00:00', '2024-04-27 12:00:00', '2024-04-25 14:58:16', 'Deluxe Window', 'Trong Nhan', '0394374864'),
-(5, '0', '', 'ccc@gmail.com', 572, '2024-04-26 14:00:00', '2024-04-27 12:00:00', '2024-04-25 15:03:40', 'Superior Double', 'Le Trong Nhan', '0123456789'),
-(6, '0', '', 'ddd@gmail.com', 2744, '2024-04-26 14:00:00', '2024-04-28 12:00:00', '2024-04-25 15:12:23', 'Premier Deluxe', 'LTNhan', '0321654987'),
 (7, 'ORD_57290744', '', 'ddd@gmail.com', 2744, '2024-04-28 14:00:00', '2024-04-30 12:00:00', '2024-04-25 15:18:54', 'Premier Deluxe', 'LTNhan', '0321654987'),
 (8, 'ORD_86047493', '', 'ccc@gmail.com', 572, '2024-04-25 14:00:00', '2024-04-28 12:00:00', '2024-04-25 15:24:08', 'Superior Double', 'Le Trong Nhan', '0123456789'),
 (9, 'ORD_79017621', '', 'a@gmail.com', 2645, '2024-04-28 14:00:00', '2024-04-30 12:00:00', '2024-04-25 15:38:15', 'Deluxe Window', 'trongnhan', '0123456987'),
@@ -244,7 +241,10 @@ INSERT INTO `bill` (`bill_id`, `booked_room_id`, `customer_booked_id`, `customer
 (112, 'ORD_64562873', 'CTM_7851689', 'ltn@gmail.com', 39800000, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:52', 'Premier Deluxe', 'Trong Nhan', '0123123123'),
 (113, 'ORD_19387464', 'CTM_10284927', 'letrongnhan722@gmail.com', 2174000, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:56', 'Premier Deluxe', 'Lê Trọng Nhân', '0394374864'),
 (114, 'ORD_58010910', 'CTM_10284927', 'letrongnhan722@gmail.com', 2174000, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-13 09:11:11', 'Deluxe Window', 'Lê Trọng Nhân', '0394374864'),
-(115, 'ORD_6633028', 'CTM_10284927', 'letrongnhan722@gmail.com', 24220000, '2024-06-16 12:00:00', '2024-06-18 14:00:00', '2024-06-16 17:40:23', 'Deluxe Window', 'Lê Trọng Nhân', '0394374864');
+(115, 'ORD_6633028', 'CTM_10284927', 'letrongnhan722@gmail.com', 24220000, '2024-06-16 12:00:00', '2024-06-18 14:00:00', '2024-06-16 17:40:23', 'Deluxe Window', 'Lê Trọng Nhân', '0394374864'),
+(116, 'ORD_96831221', 'CTM_10284927', 'letrongnhan722@gmail.com', 1144000, '2024-06-19 12:00:00', '2024-06-21 14:00:00', '2024-06-24 17:09:14', 'Deluxe Window', 'Lê Trọng Nhân', '0394374864'),
+(117, 'ORD_96549111', '', 'trongnhan000@gmail.com', 2174000, '2024-06-24 12:00:00', '2024-06-26 14:00:00', '2024-06-24 17:09:22', 'Deluxe Window', 'Trọng Nhân', '0123123123'),
+(118, 'ORD_29373766', 'CTM_46290938', 'trongnhan000@gmail.com', 2174000, '2024-06-24 12:00:00', '2024-06-26 14:00:00', '2024-06-24 17:31:33', 'Deluxe Window', 'abc', '0321456987');
 
 -- --------------------------------------------------------
 
@@ -279,9 +279,6 @@ CREATE TABLE `booked_room` (
 --
 
 INSERT INTO `booked_room` (`booked_id`, `room_id`, `customer_id`, `booked_room_id`, `booked_customer_id`, `booked_customer_name`, `booked_tel`, `booked_email`, `booked_room_name`, `booked_price`, `booked_sum`, `booked_time_book`, `booked_cancel_time`, `booked_arrive`, `booked_quit`, `booked_left_at`, `booked_session`, `booked_done_session`, `booked_unbook`) VALUES
-(6, 2, 106, 'ORD_26669109', 'CTM_78513463', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 572000, 1144000, NULL, NULL, '2024-05-28 12:00:00', '2024-05-30 14:00:00', '2024-05-29 09:27:39', 0, 1, 0),
-(7, 1, 106, 'ORD_13247234', 'CTM_78513463', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 2600000, 5200000, NULL, NULL, '2024-05-29 12:00:00', '2024-05-31 14:00:00', '2024-05-31 13:49:26', 0, 1, 0),
-(8, 4, 106, 'ORD_34311183', 'CTM_78513463', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 499000, 998000, NULL, NULL, '2024-05-28 12:00:00', '2024-05-30 14:00:00', '2024-05-31 13:49:34', 0, 1, 0),
 (15, 22, 107, 'ORD_72479182', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 0, 5998000, NULL, NULL, '2024-06-06 12:00:00', '2024-06-08 14:00:00', '2024-06-06 14:12:35', 0, 1, 0),
 (16, 22, 107, 'ORD_45368486', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 0, 5998000, NULL, NULL, '2024-06-06 12:00:00', '2024-06-08 14:00:00', '2024-06-06 14:12:43', 0, 1, 0),
 (17, 22, 107, 'ORD_93789746', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 0, 5998000, NULL, NULL, '2024-06-06 12:00:00', '2024-06-08 14:00:00', '2024-06-06 14:18:01', 0, 1, 0),
@@ -294,14 +291,14 @@ INSERT INTO `booked_room` (`booked_id`, `room_id`, `customer_id`, `booked_room_i
 (24, 6, 107, 'ORD_19906222', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 954000, 1908000, '2024-06-07 10:16:12', '2024-06-12 09:27:13', '2024-06-07 12:00:00', '2024-06-09 14:00:00', '2024-06-12 11:48:02', 0, 0, 1),
 (25, 18, 109, 'ORD_99799131', 'CTM_12160918', 'le trong nhan', '0901231234', 'tronggnhan@gmail.com', 'Deluxe Window', 2190000, 4380000, '2024-06-12 09:38:23', NULL, '2024-06-12 12:00:00', '2024-06-14 14:00:00', '2024-06-12 12:26:04', 0, 1, 0),
 (27, 2, 107, 'ORD_38097117', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Superior Double', 572000, 1144000, '2024-06-12 11:40:03', NULL, '2024-06-13 12:00:00', '2024-06-15 14:00:00', '2024-06-12 12:26:11', 0, 1, 0),
-(28, 1, 111, 'ORD_77878848', '', 'Trọng Nhân', '0394374864', 'trongnhan000@gmail.com', 'Deluxe Window', 2600000, 5200000, '2024-06-12 13:50:23', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 15:16:31', 0, 1, 0),
 (29, 2, 112, 'ORD_84856468', 'CTM_54751258', 'Trọng Nhân', '0123123123', 'ltn001@gmail.com', 'Superior Double', 572000, 1144000, '2024-06-12 15:00:32', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:44', 0, 1, 0),
 (30, 2, 113, 'ORD_10005256', 'CTM_82538510', 'Trọng Nhân', '0321456987', 'ltn001@gmail.com', 'Superior Double', 572000, 1144000, '2024-06-12 15:06:28', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:49', 0, 1, 0),
 (31, 22, 96, 'ORD_64562873', 'CTM_7851689', 'Trong Nhan', '0123123123', 'ltn@gmail.com', 'Premier Deluxe', 19900000, 39800000, '2024-06-12 15:14:16', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:53', 0, 1, 0),
 (32, 21, 107, 'ORD_19387464', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Premier Deluxe', 1087000, 2174000, '2024-06-12 15:14:57', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-12 17:18:56', 0, 1, 0),
 (33, 21, 107, 'ORD_58010910', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 1087000, 2174000, '2024-06-12 17:25:35', NULL, '2024-06-14 12:00:00', '2024-06-16 14:00:00', '2024-06-13 09:11:12', 0, 1, 0),
 (34, 19, 107, 'ORD_6633028', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 12110000, 24220000, '2024-06-16 17:40:08', NULL, '2024-06-16 12:00:00', '2024-06-18 14:00:00', '2024-06-16 17:40:24', 0, 1, 0),
-(35, 2, 107, 'ORD_96831221', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 572000, 1144000, '2024-06-19 17:28:46', NULL, '2024-06-19 12:00:00', '2024-06-21 14:00:00', NULL, 0, 0, 0);
+(35, 2, 107, 'ORD_96831221', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 572000, 1144000, '2024-06-19 17:28:46', NULL, '2024-06-19 12:00:00', '2024-06-21 14:00:00', '2024-06-24 17:09:15', 0, 1, 0),
+(38, 20, 107, 'ORD_59769754', 'CTM_10284927', 'Lê Trọng Nhân', '0394374864', 'letrongnhan722@gmail.com', 'Deluxe Window', 3343000, 6686000, '2024-06-25 09:32:39', NULL, '2024-06-25 12:00:00', '2024-06-27 14:00:00', NULL, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -332,11 +329,9 @@ INSERT INTO `customers` (`customer_id`, `room_id`, `customer_booked_id`, `custom
 (94, 0, 'CTM_74809762', 'trọng nhân', NULL, NULL, 'trongnhan@gmail.com', NULL, '$2y$10$5Z8abpsgxSHvPTWyZIl2e.ZzaPqpxqzoUqKGHMEg4Q4OAf/3KYrrO', '', NULL, NULL),
 (95, 0, 'CTM_53915268', 'Trọng Nhân', NULL, NULL, NULL, 'letrongnhan@gmail.com', NULL, '0123123123', NULL, NULL),
 (96, 0, 'CTM_7851689', 'Trong Nhan', NULL, NULL, NULL, 'ltn@gmail.com', NULL, '0123123123', NULL, '22'),
-(107, 0, 'CTM_10284927', 'Lê Trọng Nhân', 1, '05/06/2024', 'letrongnhan722@gmail.com', NULL, '$2y$10$6rltEPFnBqCTPrcKArLNheTtkvCxRJBYdGBa2sDlNZ3aA0/ft2Kku', '0394374864', NULL, '1 - 2 - 20 - 19 - 4 - 6 - 22 - 22 - 22 - 22 - 21 - 21 - 2 - 21 - 22 - 6 - 2 - 21 - 21 - 19 - 2'),
+(107, 0, 'CTM_10284927', 'Lê Trọng Nhân', 1, '05/06/2024', 'letrongnhan722@gmail.com', NULL, '$2y$10$6rltEPFnBqCTPrcKArLNheTtkvCxRJBYdGBa2sDlNZ3aA0/ft2Kku', '0394374864', NULL, '1 - 2 - 20 - 19 - 4 - 6 - 22 - 22 - 22 - 22 - 21 - 21 - 2 - 21 - 22 - 6 - 2 - 21 - 21 - 19 - 2 - 20'),
 (108, 0, 'CTM_33652587', 'Nhân', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (109, 0, 'CTM_12160918', 'le trong nhan', NULL, NULL, NULL, 'tronggnhan@gmail.com', NULL, '0901231234', NULL, '18'),
-(110, 0, NULL, 'Lê Trọng Nhân', NULL, NULL, 'trongnhan722@gmail.com', NULL, '$2y$10$pKeFRVANMv8VximZhTZQ/.jxSPO7iiXE8R91lmOQF04.GRLxsKiG6', '0123123123', NULL, '1'),
-(111, 0, NULL, 'Trọng Nhân', 1, '16/06/2024', 'trongnhan000@gmail.com', NULL, '$2y$10$u.byKc06nYluw7OcnhWvLO2voaSc7RW6644eMadwGXSb8xvKIQ7o6', '0123123123', NULL, '1'),
 (112, 0, 'CTM_54751258', 'Trọng Nhânn', NULL, NULL, NULL, 'ltn001@gmail.com', NULL, '0132165458', NULL, '2'),
 (113, 0, 'CTM_82538510', 'Trọng Nhân', NULL, NULL, 'ltn001@gmail.com', NULL, '$2y$10$Yx3LRj0z0Ur0Zcci8zRrXeDz/96gWWupv8nN4CMAEkF6rhjsuUr7e', NULL, NULL, '2');
 
@@ -374,7 +369,7 @@ INSERT INTO `detail_room` (`detail_id`, `room_id`, `service_name`, `requirement`
 (10, 18, 'Vòi tắm đứng - Khu vực chờ - Máy lạnh - Quầy bar mini - Bàn làm việc - Nước đóng chai miễn phí - TV - Két an toàn tại phòng - Rèm cửa/màn che - Vòi tắm đứng - Bộ vệ sinh cá nhân', 'Không hút thuốc - Không đem theo thú cưng', 'superior_twin.jpg - superior_twin_01.jpg - superior_twin_02.jpg - superior_twin_03.jpg', 2, 29, 'Phòng sạch sẽ, thoáng mát, đầy đủ các tiện nghi cần thiết'),
 (11, 16, 'Khu ẩm thực riêng biệt - Vòi tắm đứng - Máy sấy tóc - Bộ vệ sinh cá nhân - Tủ lạnh - Khu vực chờ - Máy lạnh - Quầy bar mini - TV - Bàn làm việc - Nước đóng chai miễn phí', 'Không hút thuốc - Không đem theo thú cưng', 'executive_suite.jpg - executive_suite_01.jpg - executive_suite_02.jpg - executive_suite_03.jpg', 2, 55, 'Phòng được thiết kế theo phong cách hiện đại, đảm bảo đem lại cảm giác thoải mái nhất cho khách hàng'),
 (12, 21, 'Vòi tắm đứng - Nhà bếp - Tủ lạnh - Nước nóng - Máy lạnh - Wi-Fi miễn phí - Quầy bar mini - Nước đóng chai miễn phí - Bàn làm việc - Nước nóng - Máy sấy tóc - Bộ vệ sinh cá nhân - Phòng tắm riêng', 'Không hút thuốc - Không mang theo thú cưng', 'le_studio_suite.jpg - le_studio_suite_01.jpg - le_studio_suite_02.jpg - le_studio_suite_03.jpg', 2, 36, 'Le Studio Suite'),
-(13, 22, 'Vòi tắm đứng - Khu vực chờ - Nước nóng - Máy lạnh - Bữa sáng - WiFi miễn phí - Máy lạnh - A - B - B', 'Không hút thuốc - Không mang theo thú cưng', 'premium_deluxe_double_garden_view.jpg - premium_deluxe_double_garden_view_01.jpg - premium_deluxe_double_garden_view_02.jpg - premium_deluxe_double_garden_view_03.jpg', 2, 40, 'Ăn sáng mỗi ngày. - Miễn phí ghế bố, tắm biển, hồ bơi nước biển, hồ bơi nước ngọt và tắm nước ngọt tại resort.\n');
+(13, 22, 'Vòi tắm đứng - Khu vực chờ - Nước nóng - Máy lạnh - Bữa sáng - WiFi miễn phí - Máy lạnh - Phòng tắm riêng - Bộ vệ sinh cá nhân - Áo choàng tắm', 'Không hút thuốc - Không mang theo thú cưng', 'premium_deluxe_double_garden_view.jpg - premium_deluxe_double_garden_view_01.jpg - premium_deluxe_double_garden_view_02.jpg - premium_deluxe_double_garden_view_03.jpg', 2, 40, 'Ăn sáng mỗi ngày. - Miễn phí ghế bố, tắm biển, hồ bơi nước biển, hồ bơi nước ngọt và tắm nước ngọt tại resort.\n');
 
 -- --------------------------------------------------------
 
@@ -627,12 +622,14 @@ INSERT INTO `user_authority` (`user_auth_id`, `user_auth_admin_id`, `user_auth_a
 (208, 2, 1),
 (209, 2, 4),
 (211, 2, 15),
-(218, 3, 1),
-(219, 3, 6),
-(220, 3, 7),
-(221, 3, 11),
-(223, 3, 15),
-(224, 1, 18);
+(224, 1, 18),
+(225, 1, 19),
+(226, 1, 20),
+(402, 3, 1),
+(403, 3, 6),
+(404, 3, 7),
+(405, 3, 11),
+(406, 3, 15);
 
 --
 -- Indexes for dumped tables
@@ -648,7 +645,8 @@ ALTER TABLE `admin`
 -- Indexes for table `authority`
 --
 ALTER TABLE `authority`
-  ADD PRIMARY KEY (`auth_id`);
+  ADD PRIMARY KEY (`auth_id`),
+  ADD KEY `FK_auth_gr_id` (`auth_gr_id`);
 
 --
 -- Indexes for table `authority_group`
@@ -666,7 +664,9 @@ ALTER TABLE `bill`
 -- Indexes for table `booked_room`
 --
 ALTER TABLE `booked_room`
-  ADD PRIMARY KEY (`booked_id`);
+  ADD PRIMARY KEY (`booked_id`),
+  ADD KEY `FK_room_id` (`room_id`),
+  ADD KEY `FK_customer_id` (`customer_id`);
 
 --
 -- Indexes for table `customers`
@@ -737,7 +737,9 @@ ALTER TABLE `status`
 -- Indexes for table `user_authority`
 --
 ALTER TABLE `user_authority`
-  ADD PRIMARY KEY (`user_auth_id`);
+  ADD PRIMARY KEY (`user_auth_id`),
+  ADD KEY `FK_admin_id` (`user_auth_admin_id`),
+  ADD KEY `FK_auth_id` (`user_auth_auth_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -753,31 +755,31 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `authority`
 --
 ALTER TABLE `authority`
-  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `authority_group`
 --
 ALTER TABLE `authority_group`
-  MODIFY `auth_gr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `auth_gr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=116;
+  MODIFY `bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
 
 --
 -- AUTO_INCREMENT for table `booked_room`
 --
 ALTER TABLE `booked_room`
-  MODIFY `booked_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `booked_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=114;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `detail_room`
@@ -837,11 +839,24 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT for table `user_authority`
 --
 ALTER TABLE `user_authority`
-  MODIFY `user_auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=225;
+  MODIFY `user_auth_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=407;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `authority`
+--
+ALTER TABLE `authority`
+  ADD CONSTRAINT `FK_auth_gr_id` FOREIGN KEY (`auth_gr_id`) REFERENCES `authority_group` (`auth_gr_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `booked_room`
+--
+ALTER TABLE `booked_room`
+  ADD CONSTRAINT `FK_customer_id` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_room_id` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detail_room`
@@ -862,6 +877,13 @@ ALTER TABLE `receptionist`
 ALTER TABLE `room`
   ADD CONSTRAINT `FK_kind_id` FOREIGN KEY (`kind_id`) REFERENCES `kind` (`kind_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_status_id` FOREIGN KEY (`status_id`) REFERENCES `status` (`status_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user_authority`
+--
+ALTER TABLE `user_authority`
+  ADD CONSTRAINT `FK_admin_id` FOREIGN KEY (`user_auth_admin_id`) REFERENCES `admin` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_auth_id` FOREIGN KEY (`user_auth_auth_id`) REFERENCES `authority` (`auth_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
