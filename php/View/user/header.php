@@ -39,7 +39,7 @@
                 <li><a href="index.php?action=booking">Đặt phòng</a></li>
                 <li><a href="index.php?action=user_info">Tài khoản</a></li>
                 <li><a href="index.php?action=contact">Liên hệ</a></li>
-                <li><a href="reservation.html">Reservation</a></li>
+                <li><a href="admin_index.php">Đi tới trang quản trị</a></li>
               </ul>
             </div>
           </div>
